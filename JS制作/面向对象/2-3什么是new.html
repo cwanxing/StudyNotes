@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script>
+        //实现一个自己的对象
+        //不能在系统对象中随意附加方法、属性，
+        //否则会覆盖已有方法, 属性;
+        //所以引入object对象
+        /*
+            Date   日期
+            array  存东西
+           RegExp 正则
+ 
+            Object 没有功能的对象
+            可以在它上面写属性方法，以至于不会覆盖其他系统
+            对象(别人)
+            刚好符合自定义对象(自己定义的对象)
+        */
+        //怎么写
+        function createPerson(name, age) {
+            //构造函数: 就是普通的函数，只是工作内容不一样
+            
+            //当函数前加了new 
+            //系统会偷偷的做了：
+            //var obj = new Object();
+            //函数前没加new(调用) 时需手写
+            //var obj = new Object();
+
+            //加工
+            this.name = name;
+            this.age = age;
+            this.showName = function () {
+                alert('我的名字：' + this.name);
+            }
+            this.showAge = function () {
+                alert('我' + this.age + '岁了');
+            }
+            
+            //也会偷偷的做一些
+            //return this;函数前没加new(调用) 时需手写return obj
+            //注意：你让系统做了你应该做的
+        }
+        
+        var obj = new createPerson('Aloe', 12);
+        var obj2 = new createPerson('对象', 32);
+        //任何函数都可以加new
+        /*当我在函数前加上一个new 时， 函数createPerson
+            中的this不再表示为window了，而是一个新创建的对象
+        */
+        /*
+        工厂方式：
+            问题1. 没有new
+            var arr = new Data;
+
+            var obj2 = createPerson('对象', 32);
+            问题2. 函数重复
+        */
+        /*问题1. 没有new
+        function show(){
+            alert(this)// window
+        }
+        show();//--->window
+        new show() // ---> 新new 出来的 Object
+        任何函数都可以加new*/
+
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>String.raw和模板字串的相关限制</title>
+</head>
+<body>
+<script>
+    // raw 方法：ES6位String提供的，即String.raw()
+    // 简介：往往用来当模板字符串的处理函数，返回一个连斜杆都转义的【字符串】，对应于替换变量后的模板字符串
+    String.raw`Hi\n${2+3}!`;
+    // 返回 "Hi\\n5!"  H，i，\，n，5
+
+    String.raw`Hi\u000A!`;
+    // 返回 "Hi\\u000A!"  H，i，\，u，0, 0，0，A，!
+    /* 注：原字串斜杆已被转义，那它也会在给你转义一次 String.raw`Hi\\n` 返回 "Hi\\\\n" */
+
+    /* String.raw方法可作为处理【模板字符串】的基本方法，它会将所有变量替换，且对斜杠转义，方便下面作为字符串来使用 */
+
+    // 让它像正常函数一样使用会怎样呢：
+    String.raw({ raw: 'test' }, 0, 1, 2);// 't0e1s2t'
+    // 等同于
+    String.raw({ raw: ['t','e','s','t'] }, 0, 1, 2);// 't0e1s2t'
+    /*
+    * 参数1：应是个有raw属性的【对象】，且raw属性值应是一个数组。
+    * */
+    // 下面String.raw基本实现【就是内部实现，官方就不是人话】，基本看不懂，又得百度了啊啊啊
+    String.raw = function (strings, ...values) {
+      let output = '';
+      let index;
+      for (index = 0; index < values.length; index++) {
+        output += strings.raw[index] + values[index];
+      }
+
+      output += strings.raw[index]
+      return output;
+    }
+
+    /* 接下来就是模板字串的【限制】了 */
+    // 问题由来：模板字串里能嵌套其他语言，而模板字串又会将字串转义
+    // 那么问题来了，报错等着你。例子：
+    function latex(strings) {
+      // 乱七八糟的处理
+    }
+    /* 由于编辑器报错，只能注释了
+    let document = latex`
+    \newcommand{\fun}{\textbf{Fun!}}  // 正常工作
+    \newcommand{\unicode}{\textbf{Unicode!}} // 报错
+    \newcommand{\xerxes}{\textbf{King!}} // 报错
+
+    Breve over the h goes \u{h}ere // 报错
+    `
+    */
+    // 解析：在字串里(这是LaTEX语言反正看不懂)，
+    // 对于语言来说\u 和 \x 开头都是带有特殊意义的，但被转义了【就是放在`这里的`，只要符合规则就转义】
+    /* 解决方法：
+     ES2018 放松了对标签模板里面的字符串转义的限制
+     如果遇到不合法的字符串转义，就返回undefined，而不是报错，
+     并且从raw属性上面可以得到原始字符串【此句重点，在下面有解释】
+    */
+    function tag(strs) { // strs => [undefined, raw: Array(1)]
+                        // raw 中保存着 ["\unicode and \u{55}"]
+                        // ES2018对它的放松，还是能操作原始字串【raw属性中】
+      strs[0] === undefined; // true
+      strs.raw[0] === "\\unicode and \\u{55}"; // true 为啥是true呢，不是说保存着原值吗，
+                                                // 那是因为strs 调用了 raw方法，而 raw就是返回这个的【忘了看上面】
+    }
+    // tag`\unicode and \u{55}` 【编辑器报错， 所以注释】本来就是错的，看解决方法 在上面
+    /* 注意：这种对字符串转义的放松，只在【标签模板】解析字符串时生效，不是【标签模板】的场合，依然会报错
+    * 如：let bad = `bad escape sequence: \unicode`; ==》 报错
+    * */
+</script>
+</body>
+</html>

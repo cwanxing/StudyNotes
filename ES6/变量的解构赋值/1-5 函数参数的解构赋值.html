@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>函数参数的解构赋值</title>
+</head>
+<body>
+    <script>
+    function add([x, y]){
+        return x + y;
+    }
+    add([1, 2]); // 3
+    
+    // 总有看不懂的地方
+    [[1, 2], [3, 4]].map(([a, b]) => a + b);
+    // [ 3, 7 ]
+
+    // 函数参数还可以使用默认值【恕在下愚笨，看不懂】
+    function move({x = 0, y = 0} = {}) {
+        return [x, y];
+    }
+    move({x: 3, y: 8}); // [3, 8] 替换
+    move({x: 3}); // [3, 0] 替换一个
+    move({}); // [0, 0] // 默认
+    move(); // [0, 0] // 默认
+    // 函数move的参数是一个对象，通过对这个对象进行解构，得到变量x和y的值。如果解构失败，x和y等于默认值。
+
+    function move({x, y} = { x: 0, y: 0 }) {
+        return [x, y];
+    }
+    move({x: 3, y: 8}); // [3, 8]
+    move({x: 3}); // [3, undefined]
+    move({}); // [undefined, undefined]
+    move(); // [0, 0]
+    // 上面代码是为函数 move 的参数指定默认值，而不是为变量 x 和 y 【解构赋值】指定默认值，所以会得到与前一种写法不同的结果
+    </script>
+</body>
+</html>

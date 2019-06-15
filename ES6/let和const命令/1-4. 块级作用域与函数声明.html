@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>块级作用域与函数声明</title>
+</head>
+<body>
+    <script>
+        // ES5 规定：函数只能在顶层作用域 和 函数作用域中声明，不能在块级作用域中声明
+        // 情况一
+        if (true) {
+            function f() {}
+        }
+        // 情况二
+        try {
+            function f() {}
+        } catch(e) {
+            // ...
+        }
+        //以上运行成功
+        //根据ES5语法，以上规定是非法的。但因浏览器没有遵守次规则，所以这样可以运行
+        //ES6 规定，块级作用域之中，函数声明语句 的行为类似于let，在块级作用域之外 不可引用。
+        function f() { console.log('I am outside!'); }
+        (function () {
+            if (false) {
+            // 重复声明一次函数f
+                 function f() { console.log('I am inside!'); }
+            }
+            f();// ==> I am inside
+        }());
+
+        // ES5 环境
+        function f() { console.log('I am outside!'); }
+        (function () {
+            function f() { console.log('I am inside!'); }
+            if (false) {
+            }
+            f();//I am inside!
+        }());
+
+        // 浏览器的 ES6 环境
+        function f() { console.log('I am outside!'); }
+        (function () {
+        if (false) {
+            // 重复声明一次函数f
+            function f() { console.log('I am inside!'); }
+        }
+        f();
+        }());
+        // Uncaught TypeError: f is not a function
+        //以上代码的实际运行：
+        // 浏览器的 ES6 环境
+        function f() { console.log('I am outside!'); }
+        (function () {
+        var f = undefined;
+        if (false) {
+            function f() { console.log('I am inside!'); }
+        }
+        f();
+        }());
+        // Uncaught TypeError: f is not a function
+
+
+        //////////////////
+        if(true){
+            function fn1(){
+                console.log(1)
+            }
+        }else{
+            function fn1(){
+                console.log(2)
+            }
+        }
+        fn1();
+        //以上代码ES5 和 ES6 打印的不一样
+        /*
+            ES5: 2 
+                前面的函数声明会被后面的覆盖，函数声明会提升至全局作用域或函数作用域顶部
+            ES6: 
+        *///函数不能在块级作用域中声明，如果能在块级中声明函数，那么对浏览器来说需要修改无数的代码，这是不可能的
+        
+        /*
+            虽然ES6可以在块级中声明函数，且不会在作用域中访问到，但因兼容问题。浏览可以不遵守。
+            以下是浏览器对块级内函数声明的规范：
+              1、允许在块级作用域内声明函数
+
+              2、函数声明类似于var，即会提升至全局作用域或函数作用域的头部
+
+              3、函数声明还会提升到所在块级作用域的头部
+                解析: 在块级作用域内函数，函数声明与函数体一块提升
+
+        结合以上三种规范，解析fn1函数：
+            函数fn1只会提升 函数名 到全局作用域，所以访问fn1会得到 fn1() is not function
+            类似于var，只会提升定义，并不会提升赋值 *
+        */
+        /////总结：环境不同，运行不一致，少在块级中声明函数；如需声明，请使用函数表达式声明函数(let a = function(){})
+        //如下：
+        // 函数声明语句
+        {
+            let a = 'secret';
+            function f() {
+                return a;
+            }
+        }
+        // 函数表达式
+        {
+            let a = 'secret';
+            let f = function () {
+                return a;
+            };
+        }
+        //*需注意：块级需要有{}两个大括号哟，这才算块级
+        // 不报错
+        'use strict';
+        if (true) {
+            function f() {}
+        }
+        // 报错
+        'use strict';
+        if (true)
+        function f() {}       
+    </script>
+</body>
+</html>

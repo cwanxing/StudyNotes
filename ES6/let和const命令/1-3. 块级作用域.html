@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>块级作用域</title>
+</head>
+<body>
+    <script>
+        /////在 ES5 语法中，只有全局作用域 和 函数作用域//////
+        //会造成以下几种 代码意思不明确
+        /* 
+         * 1. 内层变量可能会覆盖外层变量
+               var a = '11';
+               function c(){
+                   console.log(a)
+                   if(false){
+                       var a = '00';
+                   }
+               }
+               c() ==> undefined
+            解析：console.log(a) 的a 其实是if语句后定义的 a('00')；而不是全局的a('11')
+                 由于变量提升 '00' 提升为全局变量，就覆盖了 '11' 变量
+
+         * 2. 用来计数的循环变量泄露为全局变量
+                var s = 'hello';
+                for (var i = 0; i < s.length; i++) {
+                    console.log(s[i]);
+                }
+                console.log(i); ==> 5
+            解析：变量 i 提升为了全局变量
+        */
+        ////ES6 为JavaScript 新增了块级作用域
+        function a(){
+            let b = '12'
+            if(false){
+                let b = '00'// b变量只属于if语句块
+            }
+            console.log(b);//==> '12'
+        }
+        //* ES6 允许块级作用域的任意嵌套
+        {{{
+            let a = 14;
+            {
+                let a = 12;
+            }
+            console.log(a)// ==> 14
+        }}}    
+    </script>
+</body>
+</html>

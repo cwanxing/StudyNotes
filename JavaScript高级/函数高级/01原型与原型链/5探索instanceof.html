@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>5探索instanceof</title>
+</head>
+<body>
+1. instanceof 如何判断
+    * 表达式：A instanceof B
+        A: 实例：有隐式原型属性__proto__
+        B：函数对象：有显式原型属性prototype
+    * 函数B显式原型链上有A实例的隐式原型，
+    * 如果B函数的显式原型对象在A对象的原型链上，返回true，没有返回false
+<script type='text/javascript'>
+//    实例1
+    function Fn() {
+
+    }
+    var fn = new Fn();
+    console.log(fn instanceof Fn);//true
+    console.log(fn instanceof Object);//true
+
+    console.log(Object instanceof Function);//true
+    console.log(Object instanceof Object);//true
+    console.log(Function instanceof Function);//true
+    console.log(Function instanceof Object);//true
+
+    function Foo() {}
+    console.log(Object instanceof Foo);//false
+</script>
+</body>
+</html>

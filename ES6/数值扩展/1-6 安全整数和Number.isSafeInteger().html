@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>安全整数和Number.isSafeInteger</title>
+</head>
+<body>
+<script>
+    /* JS 能表示的【整数】范围：(-2^53, 2^53) 超出：无法精确表示 */
+    Math.pow(2, 53) // 9007199254740992
+    9007199254740992  // 9007199254740992
+    9007199254740993  // 9007199254740992
+    Math.pow(2, 53) === Math.pow(2, 53) + 1; // true 这里不应该是true
+
+    // 1. 安全数：
+    // 强大的ES6 提供：Number.MIX_SAFE_INTEGER【范围下限】和 Number.MAX_SAFE_INTEGER【范围上限】
+    Number.MAX_SAFE_INTEGER === Math.pow(2, 53) - 1 // true
+    Number.MAX_SAFE_INTEGER === 9007199254740991 // true
+
+    Number.MIN_SAFE_INTEGER === -Number.MAX_SAFE_INTEGER // true
+    Number.MIN_SAFE_INTEGER === -9007199254740991 // true
+    /* JS 能够精确表示的极限 */
+
+    // 2. Number.isSafeInteger(参数)：判断一个整数是否落在上面提到的两个【安全数】这个范围内
+    Number.isSafeInteger('a') // false
+    Number.isSafeInteger(null) // false
+    Number.isSafeInteger(NaN) // false
+    Number.isSafeInteger(Infinity) // false
+    Number.isSafeInteger(-Infinity) // false
+
+    Number.isSafeInteger(3) // true
+    Number.isSafeInteger(1.2) // false
+    Number.isSafeInteger(9007199254740990) // true
+    Number.isSafeInteger(9007199254740992) // false
+
+    Number.isSafeInteger(Number.MIN_SAFE_INTEGER - 1) // false
+    Number.isSafeInteger(Number.MIN_SAFE_INTEGER) // true
+    Number.isSafeInteger(Number.MAX_SAFE_INTEGER) // true
+    Number.isSafeInteger(Number.MAX_SAFE_INTEGER + 1) // false
+    /*
+     函数实现：
+         Number.isSafeInteger = function (n) {
+            return (typeof n === 'number' &&
+                Math.round(n) === n &&
+                Number.MIN_SAFE_INTEGER <= n &&
+                n <= Number.MAX_SAFE_INTEGER);
+         }
+     */
+
+    // 使用函数时，需注意：
+    Number.isSafeInteger(9007199254740993); // false 超出范围
+    /*
+        超出范围的数：在计算机内是以9007199254740992的形式储存
+        9007199254740993 === 9007199254740992 ==> true 一个超出范围的 等于 上限
+        这就是计算机内对 超出范围的数 进行的处理
+    */
+
+    Number.isSafeInteger(990); // true // 安全数
+    Number.isSafeInteger(9007199254740993 - 990); // true
+    9007199254740993 - 990
+    // 返回结果 9007199254740002
+    // 正确答案应该是 9007199254740003
+
+    // 综上所述：只验证运算结果是否为安全整数，很可能得到错误结果。
+    // 官方体贴：提供了所以同时验证两个运算数和运算结果 的函数
+    function trusty (left, right, result) {
+      if (
+        Number.isSafeInteger(left) &&
+        Number.isSafeInteger(right) &&
+        Number.isSafeInteger(result)
+      ) {
+        return result;
+      }
+      throw new RangeError('Operation cannot be trusted!');
+    }
+    trusty(9007199254740993, 990, 9007199254740993 - 990)
+    // RangeError: Operation cannot be trusted!
+    trusty(1, 2, 3) // 3
+
+</script>
+</body>
+</html>

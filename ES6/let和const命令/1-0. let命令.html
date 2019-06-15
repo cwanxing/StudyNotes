@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /**
+         * 可能有用的 for 循环顺序【深度解析】：
+         * for(表达式1；表达式2；表达式3){
+         *
+         *      表达式4；
+         *
+         * }
+         * 第一次循环：表达式1【初始化】 --> 表达式2【判断】：期间会判断表达式1 是否满足 表达式2
+         *                                                              是：执行 表达式4
+         *                                                              否：停止执行，最后执行 表达式3
+         * 第二次循环：表达式2【判断表示3 是否满足 表达式2】：是：执行 表达式4
+         *                                              否：停止执行，最后执行 表达式3
+         * 如此往复【循环下的代码需要等for 执行完后才能执行】
+         * */
+        //let 它的用法类似于var，但是所声明的变量，只在 let 命令所在的代码块内有效
+        {
+            var a = 1;
+            let b = 1;
+        }
+        console.log(a);// 1
+        console.log(b);// ReferenceError: a is not defined.
+
+        //对于 let 声明的变量仅在块级作用域内有效
+        var a = [];
+        var b = [];
+        //var i; 声明的是全局变量
+        //for(i = 0; i < 9; i++)
+        for(var i = 0; i < 9; i++){
+            a[i] = function(){
+                console.log(i)
+            }
+        }
+        for(let i = 0; i < 9; i++){
+            a[i] = function(){
+                console.log(i)
+            }
+        }
+        //变量i是 var 声明的，它是全局变量，
+        a[3]()// 9
+        a[4]()// 9
+        //变量i是 let 声明的，当前的i只在本轮循环有效，所以每一次循环的i其实都是一个新的变量，所以最后输出的是 
+        b[3]()// 3
+        b[4]()// 4
+        /* for循环还有一个特别之处，就是设置循环变量的那部分是一个父作用域，而循环体内部是一个单独的子作用域 */
+        for(let b = 0; b < 3; b++){ //设置循环变量的那部分是一个父作用域
+            let c = 'abc'
+            console.log(c) //循环体内部是一个单独的子作用域
+        }
+        //abc 输出三次  证明了变量 b(即循环变量) 和 变量 c(即循环体内的变量) 不在同一作用域【我觉有点牵强】
+    </script>
+</body>
+</html>

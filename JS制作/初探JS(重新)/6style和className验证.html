@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+#div1{width:200px;height:200px;border:1px solid red}
+.box{background:red}
+</style>
+<script>
+//这里涉及到了样式的优先级问题：
+//*<标签<class<ID<行间(重点)
+function toRed()
+{
+	var oDiv=document.getElementById('div1');
+	oDiv.className='box';//这里是加了class样式，根据优先级行间先执行
+	}
+function toGreen()
+{
+	var oDiv=document.getElementById('div1');
+	
+	oDiv.style.background='green';//这里样式是加在了行间，根据优先级行间先执行
+	}
+//效果：
+/*
+先加行间样式，后加class样式
+<div id='div1' style="background='green'" class='box'></div>
+只能变绿，变不了红色（因为优先级）
+
+先加class样式，后加行间样式
+<div id='div1'  class='box' style="background='green'"></div>
+可以先变红后变绿
+*/
+</script>
+</head>
+
+<body>
+<input type="button" value="变红" onclick="toRed()"/>
+<input type="button" value="变绿" onclick="toGreen()" />
+<div id="div1">
+</div>
+</body>
+</html>

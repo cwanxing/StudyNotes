@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JS面向对象的选项卡</title>
+    <style>
+        #div1 div{width: 150px;height: 100px;background: rgb(255, 139, 139);display: none}
+        input{border:none}
+        .box{background: mediumturquoise}
+    </style>
+    <script type="text/javascript">
+        /*原程序-面向过程的选项卡
+        window.onload = function () {
+            var oDiv = document.getElementById('div1');
+            var oBtn = oDiv.getElementsByTagName('input');
+            var aDiv = oDiv.getElementsByTagName('div');
+
+            for (var i = 0; i < oBtn.length; i++) {
+                oBtn[i].index = i;
+                oBtn[i].onmouseover = function () {
+                    for (var i = 0; i < oBtn.length; i++) {
+                        oBtn[i].className = '';
+                        aDiv[i].style.display = 'none';
+                    }
+                    aDiv[this.index].style.display = 'block';
+                    this.className = 'box';
+                }
+            };
+        }*/
+        window.onload = function(){
+            //使用
+            new TabSwitch('div1');
+        }
+        /*面向过程 ---> 面向对象
+            没什么好写的，这个有点绕，还是在以后接触后；
+            这个要在大项目中才能体现它的作用
+        */
+        //1, 函数无嵌套
+        //2, 瞎几把添加this
+        function TabSwitch(id){
+            //解决错误3的方法2
+            var _this = this;
+            var oDiv = document.getElementById(id);
+
+            this.aDiv = oDiv.getElementsByTagName('div');
+            this.oBtn = oDiv.getElementsByTagName('input');
+            for(var i = 0; i < this.oBtn.length; i++){
+                this.oBtn[i].index = i;
+                //错误1：this.oBtn[i].onmouseover = fnClick;中
+                //fnClick未定义：因为它已经不是个函数了，是个方法
+                //this.oBtn[i].onmouseover = this.fnClick;
+
+                //解决错误3的方法1:
+                /*this.oBtn[i].onmouseover = function(){
+                    this.fnClick();(此时的this还是表示上面按钮的this)
+                    这是错误方法
+                };*/
+                this.oBtn[i].onmouseover = function(){
+                    //解决错误3方法2(正确)：
+                    //_this.fnClick();
+                    //解决错误4第二步
+                    _this.fnClick(this);
+                }
+            }
+        }
+        //TabSwitch.prototype.fnClick=function() {
+        //解决错误4第一步：把oBtn当参数
+        TabSwitch.prototype.fnClick=function(oBtn) {
+
+            //以下是错误3的解释
+            //alert(this) ---> 正常应该是弹出new TabSwitch('div1')
+            //                  可却是按钮HTML INPUT
+                            //因为我把fnClick这个方法赋值给了
+                            //this.oBtn[i].onmouseover,所以它是按钮的
+
+            //错误2：oBtn未定义
+            //for (var i = 0; i < oBtn.length; i++) {
+            //错误2解决方法
+            //for (var i = 0; i < this.oBtn.length; i++) { 
+
+            //错误3：length未定义  this.oBtn.  length
+            for (var i = 0; i < this.oBtn.length; i++) {   
+                this.oBtn[i].className = '';
+                this.aDiv[i].style.display = 'none';
+            }
+            this.aDiv[oBtn.index].style.display = 'block';
+            //错误4：oBtn未定义;把oBtn当参数
+            oBtn.className = 'box';
+        }
+    /*
+        面向过程                面向对象
+        window.onload   --->    构造函数
+            初始化整个程序          初始化整个对象
+        变量                    属性      
+        函数                    方法
+    */
+
+    </script>
+</head>
+
+<body>
+    <div id="div1">
+        <input class="box" type="button" value="内容1">
+        <input type="button" value="内容2">
+        <input type="button" value="内容3">
+        <div style="display: block;">我是内容1111111</div>
+        <div>我是内容2222222</div>
+        <div>我是内容3333333</div>
+    </div>
+</body>
+
+</html>

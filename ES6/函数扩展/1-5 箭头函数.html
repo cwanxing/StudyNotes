@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>重大写法改变==箭头</title>
+</head>
+<body>
+<script>
+    /* 基本用法： */
+    // ES6 允许使用“箭头”（=>）定义函数
+
+    var f = v => v; // 函数名 = 参数名 => 返回值
+    // 等同于
+    var f = function (v) {
+      return v;
+    };
+
+    /* 写法： */
+    // 1. 没有参数【使用圆括号替代】
+
+        var f = () => 5;
+        // 等同于
+        var f = function () { return 5 };
+
+        var sum = (num1, num2) => num1 + num2;
+        // 等同于
+        var sum = function(num1, num2) {
+          return num1 + num2;
+        };
+
+    // 2. 函数体内不止一句语句：使用{}括起来
+        var sum = (num1, num2) => { return num1 + num2; }
+
+    // 3. 如果箭头函数直接返回一个对象，必须在对象外面加上括号
+        /* 编辑器
+        let getTempItem = id => { id1: id, name: "Temp" }; // 报错
+        let getTempItem2 = id => ({ id: id, name: "Temp" });// 不报错
+        */
+
+    // 4. 没有返回值
+        /* 【例子】
+        * let foo = () => {a: 1}
+        * foo(); undefined 疑惑：3 中的代码为啥不可以，这就可以呢？（和有无参数没关系）
+        *                       可能是只有一个a ：1 吧，而3 中有多个
+        * 执行后得到错误的结果，官方解释也看不懂
+        * 说什么{a : 1}引擎认为是代码块，所以执行 a ：1；a 可以被解释为语句的标签，
+        * 因此实际执行的语句是1;，然后函数就结束了，没有返回值
+        *
+        * */
+        // 还是来看看官方对没有返回值的箭头函数怎么写：
+        let fn = () => void doesNotReturn();
+
+    /* 用法： */
+    // 1. 与解构赋值结合
+        const full = ({ first, last }) => first + ' ' + last;
+
+        // 等同于
+        function full(person) {
+          return person.first + ' ' + person.last;
+        }
+
+    // 2. 表达更加简明
+        const isEven = n => n % 2 === 0;
+        const square = n => n * n;
+        // 如果传统写法，会很多，而它一行
+        // 1. 简化回调函数：
+            // 正常函数写法
+            [1,2,3].map(function (x) {
+              return x * x;
+            });
+            // 箭头函数写法
+            [1,2,3].map(x => x * x);
+            /* 数组的 map(function(currentValue, index, arr){ 处理数组的代码 }, thisValue)：
+            *     currentValue: 必须 当前元素值
+            *     index: 可选 当前元素的索引
+            *     arr: 当前数组对象
+            *     thisValue：回调this的指向【省略，或传入null、undefined，回调函数的this则指向全局】
+            * */
+
+            // 正常函数写法
+            var result = values.sort(function (a, b) {
+              return a - b;
+            });
+            // 箭头函数写法
+            var result = values.sort((a, b) => a - b);
+
+    /* 结合rest参数 */
+    const numbers = (...nums) => nums;
+    /*
+    function number(...nums){
+      return nums;
+    }*/
+    numbers(1, 2, 3, 4, 5)
+    // [1,2,3,4,5]
+
+    const headAndTail = (head, ...tail) => [head, tail];
+    /*
+    function headAndTail(head, ...tail){
+      return [head, tail]
+    }*/
+    headAndTail(1, 2, 3, 4, 5)
+    // [1,[2,3,4,5]]
+</script>
+</body>
+</html>

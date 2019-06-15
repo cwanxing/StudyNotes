@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		#div1{
+			width: 50px;
+			height: 100px;
+			background: #ccc;
+			margin-top: 5px;
+			display: none;
+		}
+		#btn1{
+			border-style: none;
+			width: 50px;
+			height: 20px;
+			background-color: blue;
+		}
+		#btn1:hover{
+			background-color: yellow;
+		}
+	</style>
+	<script type="text/javascript">
+		function show(){
+		var oDiv=document.getElementById('div1');
+		if(oDiv.style.display=='none')
+			{oDiv.style.display='block'}
+		else
+			{oDiv.style.display='none'}
+	}
+	</script>
+</head>
+<body>
+	<div id="btn1" onclick="show()">
+	</div>
+	<div id="div1">
+	</div>
+</body>
+</html>

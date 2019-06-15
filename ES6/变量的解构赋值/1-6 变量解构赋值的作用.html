@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>变量解构赋值的作用</title>
+</head>
+<body>
+    <script>
+        // 终于到了激动人心一刻了
+        
+        // 1. 交换变量的值
+        let x = 1;
+        let y = 2;
+        [x, y] = [y, x]; // 优点：简洁且语义非常请求
+
+        // 2. 从函数返回多个值( 有了解构赋值，取出这些值就非常方便 )
+        // 返回一个【数组】
+        function example() {
+            return [1, 2, 3];
+        }
+        let [a, b, c] = example(); // 写法：let [变量1，变量2，...] = 函数()【调用函数】
+        // 返回一个【对象】
+        function example() {
+            return { // 有返回值
+                foo: 1,
+                bar: 2
+            };
+        }
+        let { foo, bar } = example(); // 写法：let {变量1，变量2，...} = 函数()【调用函数】
+
+        // 3. 函数【参数】的定义（解构赋值可以方便地将一组参数与变量名对应起来）
+        // 参数是一组有次序的值
+        function f([x, y, z]) { }// 语句
+        f([1, 2, 3]);
+
+        // 参数是一组无次序的值
+        function f({x, y, z}) { }// 语句
+        f({z: 3, y: 2, x: 1});
+
+        // 4. 提取 【JSON】 数据
+        let jsonData = {
+            id: 42,
+            status: "OK",
+            data: [867, 5309]
+        };
+        let { id, status, data: number } = jsonData;
+        console.log(id, status, number);// 42 OK [867, 5309]
+
+        // 5. 函数参数的默认值
+        jQuery.ajax = function (url, {
+            async = true,
+            beforeSend = function () {},
+            cache = true,
+            complete = function () {},
+            crossDomain = false,
+            global = true,
+            // ... more config
+        } = {}) {
+            // ... do stuff
+        };
+        // 【指定参数的默认值，就避免了在函数体内部再写var foo = config.foo || 'default foo';这样的语句】
+
+        // 6. 遍历 Map 结构
+        const map = new Map();
+        map.set('first', 'hello');
+        map.set('second', 'world');
+        for (let [key, value] of map) {
+            console.log(key + " is " + value);
+        }
+        // first is hello
+        // second is world
+        // 获取键名
+        for (let [key] of map) {
+            // ...
+        }
+        // 获取键值
+        for (let [,value] of map) {// 注意这里[,value]写法
+            // ...
+        }
+        // Map 结构原生支持 Iterator 接口，配合变量的解构赋值，获取键名和键值就非常方便
+
+        // *7. 输入模块的指定方法
+        const { SourceMapConsumer, SourceNode } = require("source-map");
+        // 加载模块时，往往需要指定输入哪些方法。解构赋值使得输入语句非常清晰。
+    </script>
+</body>
+</html>

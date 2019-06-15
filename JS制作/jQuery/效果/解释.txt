@@ -1,0 +1,8 @@
+toggle()、fadeIn()、fadeOut()、fadeToggle()、hide()各自有两个参数都是可选的
+1.速度（fast/slow/毫秒）
+2.完成后所执行的函数名称。
+
+fadeTo()有三个参数
+1.必选速度(fast/slow/毫秒)
+2.可选的完成后所执行的函数名称。
+3.必选的透明度值(0--1)

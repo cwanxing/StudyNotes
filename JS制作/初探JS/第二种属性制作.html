@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<script>
+function setText()
+{    //第一种属性操作”.“
+	var Text=document.getElementById('div')
+	Text.value="改文字成功！！！"                   
+}        //第二种属性操作”[]“  
+        // Text=document.getElementById('div')
+        // Text=['value']="能改！"
+		
+		//var a='value'
+		//Text=document.getElementById('div')
+		//Text=[a]="能改！"
+		
+		//function setText(name)
+		//{var Text=document.getElementById('div')
+	   //	   Text[name]="改文字成！！"
+	   //	   }
+</script>    
+</head>
+
+<body>
+<input type="text" id="div" />      <!--注意value和title-->
+<input type="button" value="改文字" onclick="setText()" />
+<!--<input type="button" value="改文字" onclick="setText('value或者任意属性')" />-->
+</body>
+</html>

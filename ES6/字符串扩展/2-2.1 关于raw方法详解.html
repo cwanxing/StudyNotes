@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>关于raw方法详解</title>
+</head>
+<body>
+<script>
+    /* 语法：
+    *       语法1：String.raw`templateStr`;  返回一个模板字符串的原始字面量值【已经被转义】
+    *       语法2：String.raw(obj, ...theArgs) 当做正常函数
+    *  参数：
+    *       templateStr：必需。模板字串
+    *       obj：必需。一个对象【以键对值形式出现】如 {abc: 'value'}
+    *       ...theArgs：可选。数组【rest参数，不清楚可以看rest和arguments那张】
+    *  注意：此方法和模板字串一起使用。【`这里的字串会被转义`】
+    * */
+    // 例子：以下打印为  t1e2s3t 【1,2,3】中，多了也只打印t1e2s3t; 少了自己试
+    String.raw({raw: 'test'}, 1,2,3) // 同效于：String.raw({raw: ['t', 'e', 's', 't']}, 1, 2, 3)
+    // 注意：第一个参数的属性名必须是 raw
+
+    // 想知道内部执行过程吗，哈哈有，不过还好我 看不懂【其实大部分看懂了，就是不知道为啥要这样】
+    String.raw = function (strs, ...theArgs) {
+      var output = ""; // 定义用于输出保存的字串
+      for(var i = 0, len = theArgs.length; i < len; i++){
+        output += strs.raw[i] + theArgs[i];
+      }
+        output += strs.raw[i];
+        return output;
+    }
+</script>
+</body>
+</html>

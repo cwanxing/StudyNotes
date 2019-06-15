@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+</head>
+<input type="button" id="btn1" value="按钮">
+<script>
+var oBtn=document.getElementById('btn1');
+//直接放一整个函数，方便不用取名
+oBtn.onclick=function ()//function abc() 函数没有名字时，叫匿名函数
+{
+	alert('a');
+	}
+	
+	
+	//oBtn.value='哈哈哈' onclick也是oBtn的一个属性，不过它要跟一个函数；
+	//oBtn.onclick=abc;放函数名
+</script>
+<body>
+</body>
+</html>

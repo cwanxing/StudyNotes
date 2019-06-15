@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+#div1{
+	width:100px;
+	height:300px;
+	position:absolute;
+	bottom:0;
+	left:0;
+	background-color:red;
+}
+</style>
+<script>
+window.onscroll=function(){
+	
+	var oDiv=document.getElementById('div1');
+	var scrollTop=document.documentElement.scrollTop || document.body.scrollTop;
+	//oDiv.style.top=document.documentElement.clientHeight-oDiv.offsetHeight+scrollTop+'px';
+	//startMove(document.documentElement.clientHeight-oDiv.offsetHeight+scrollTop);
+	startMove(parseInt((document.documentElement.clientHeight-oDiv.offsetHeight)/2+scrollTop));
+};
+var timer=null;
+function startMove(iTarget){//参数:目标点
+	var oDiv=document.getElementById('div1');
+	
+	clearInterval(timer)//当我没有加的时候，滑动滚动条div不会动，反而上下抖动
+	timer=setInterval(function(){
+		var speed=(iTarget-oDiv.offsetTop)/6;
+		
+		speed=speed>0?Math.ceil(speed):Math.floor(speed);
+		
+		if(oDiv.offsetTop==iTarget)
+		{
+			clearInterval(timer);
+		}
+		else
+		{
+			document.title=iTarget+','+oDiv.offsetTop+','+oDiv.style.top;
+			oDiv.style.top=oDiv.offsetTop+speed+'px';
+		}
+		;
+		/**/
+	},30)
+};
+</script>
+</head>
+
+<body style="height:2000px;">
+<input type="txt1" style="position:fixed;top:0;left:0;"/>
+<div id="div1">
+</div>
+
+</body>
+</html>

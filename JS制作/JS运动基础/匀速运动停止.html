@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+#div1{
+	background:red;
+	width:100px;
+	height:100px;
+	position:absolute;
+	left:600px;
+	top:50px;
+}
+#div2{
+	background:black;
+	width:1px;
+	height:300px;
+	position:absolute;
+	left:100px;
+	top:50px;
+}
+#div3{
+	background:black;
+	width:1px;
+	height:300px;
+	position:absolute;
+	left:300px;
+	top:50px;
+}
+</style>
+<script>
+function startMove(iTarget){
+	var speed=0;
+	var timer=null;
+	clearInterval(timer);
+	timer=setInterval(
+		function (){
+			var oDiv=document.getElementById('div1');
+			if(oDiv.offsetLeft<iTarget)
+			{
+				speed=7;
+			}
+			else
+			{
+				speed=-7;
+			};
+			/*
+			if(oDiv.offsetLeft==iTarget)
+			{
+				clearInterval(timer);
+			}
+			else
+			{}*/
+			if(Math.abs(iTarget-oDiv.offsetLeft)<=7)
+			{
+				clearInterval(timer);
+				oDiv.style.left=iTarget+'px';
+				//到最后
+			}
+			else
+			{
+				oDiv.style.left=oDiv.offsetLeft+speed+'px';
+			}
+			
+			document.title=oDiv.offsetLeft;
+	},30)
+};
+</script>
+</head>
+
+<body>
+<input type="button" value="匀速运动100" onclick="startMove(100)" />
+<input type="button" value="匀速运动300" onclick="startMove(300)"/>
+
+<div id="div1"></div>
+<div id="div2"></div>
+<div id="div3"></div>
+</body>
+</html>

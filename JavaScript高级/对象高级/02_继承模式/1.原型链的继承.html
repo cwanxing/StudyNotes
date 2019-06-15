@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>1.原型链的继承</title>
+</head>
+<body>
+原型链继承
+    1. 定义父类型构造函数
+    2. 向父类型的原型添加方法
+    3. 定义子类型的构造函数
+    4. 创建父类型的对象(new实例)赋值给子类型的原型
+    5.
+    6. 向子类型的原型添加方法
+    7. 实例化子类型：就可以调用父类型的方法了
+
+需要实现：子类型能调用父类型的方法
+    关键：子类型的原型为父类型的实例
+<script type='text/javascript'>
+    //父类型
+    function Supper() {
+        this.supProp = 'cwx Supper prototype父'
+    }
+    Supper.prototype.showSupper = function () {
+        console.log(this.supProp);
+    }
+
+    //子类型
+    function Sub() {
+        this.subProp = 'cwx Sub prototype子'
+    }
+    //Sub.prototype = new Object();内部实现，所以Sub的实例能看见Object上的方法
+    Sub.prototype.constructor = Sub;//问1 解决
+    Sub.prototype = new Supper();//子类型的原型为父类型的实例对象.
+    Sub.prototype.showSub = function () {
+        console.log(this.subProp);
+    }
+
+    var sub = new Sub()
+    sub.showSupper()//在没有Sub.prototype = new Supper()的时候，弹出is not a function
+    sub.showSub()//没有继承，因为showSub方法本就属于Sub原型的方法
+    sub.toString();//
+
+    console.log(sub);// Sub中的constructor属性指向了Supper对象上，它本应该指向Sub对象--问1
+</script>
+</body>
+</html>

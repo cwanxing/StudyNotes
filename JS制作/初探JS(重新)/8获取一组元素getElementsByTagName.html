@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+div{width:100px;height:100px;float:left;border:1px black solid;margin:10px;}
+</style>
+<script>
+window.onload=function(){
+	var aDiv=document.getElementsByTagName('div');
+	//alert(aDiv.length);div个数
+	//错误：aDiv.style.background='red';因为它不确定要变哪个
+	/*下面的写法可以，但适用于比较少的情况下。多的时候我们引入  循环
+	aDiv[0].style.background='red';
+	aDiv[1].style.background='green';
+	aDiv[2].style.background='yellow';
+	aDiv[3].style.background='black';
+	aDiv[4].style.background='blue';
+	*/
+	//JS中的循环四个部分：
+	/*
+	1.初始化
+	2.条件
+	3.语句
+	4.自增(跳出口)
+	*/
+	/*
+	while循环
+	var i=0;
+	while(i<5)
+	{
+		aDiv[i].style.background='red';
+		i++;
+		}
+	*/
+	for(var i=0;i<aDiv.length;i++)
+	{
+		aDiv[i].style.background='green';
+		}
+}
+</script>
+</head>
+
+<body>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+</body>
+</html>

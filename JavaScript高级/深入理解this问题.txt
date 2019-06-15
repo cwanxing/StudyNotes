@@ -1,0 +1,27 @@
+一、为啥弄不明白this指向谁
+   1. var obj = {foo: function () {} }
+      var foo1 = obj.foo
+      调用obj.foo() 和 foo1() 都是指向 函数foo
+      但下面的执行结果可能会让你大吃一惊
+        var obj = {
+            foo: function () { console.log(this.bar) } // obj下的
+            bar: 1 // obj下的
+        };
+
+        var foo1 = obj.foo; // window.foo1 全局下
+        var bar = 2; // window.bar 全局下
+
+        obj.foo() // 1
+        foo1() // 2
+
+    以上有两个作用域：全局 和 obj 作用域，查找属性是按作用域链的(找到放回)
+    作用域链是向上查询的(从当前向外)，内能访问外部(obj 能访问 foo1)，外部不能访问内部(即foo1 不能 访问到obj下的任何东西)
+
+二、内存的结构【具体可以图-this指向理解】
+
+三、函数(其实函数在内存里是独立的)【具体可以图-this指向理解】
+
+四、环境变量【结合this指向2 理解】
+    JavaScript 允许在函数体内部，引用当前环境的其他变量
+    由于函数能在不同环境指向，所以需要一种机制，能够在函数体内获得当前的运行环境(context)
+    于是this出现了：它的设计目的就是在函数体内部，指代函数当前的运行环境。

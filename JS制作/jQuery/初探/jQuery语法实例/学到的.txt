@@ -1,0 +1,4 @@
+$(this).hide() - 隐藏当前元素
+$("p").hide() - 隐藏所有段落
+$(".test").hide() - 隐藏所有 class="test" 的所有元素
+$("#test").hide() - 隐藏所有 id="test" 的元素

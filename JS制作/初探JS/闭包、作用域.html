@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<script>
+/*
+	var a;     //全局变量，任何地方都能用
+	function aaa()
+	{
+		a=12;   //局部变量，只对这个函数有用
+	}
+	function bbb()
+	{
+		alert(a);
+	}
+	//结束
+	aaa();
+	bbb();
+*/
+
+//子函数可以使用父函数的局部变量
+function aaa()			//父函数
+{
+	var a=12;
+		function bbb()	//子函数
+		{
+			alert(a);
+		}
+		bbb();
+}
+aaa();
+</script>
+</head>
+
+<body>
+</body>
+</html>

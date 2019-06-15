@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>双冒号运算符</title>
+</head>
+<body>
+<script>
+    /* 箭头函数可以绑定this对象，大大减少了显式绑定this对象的写法（call、apply、bind）*/
+    // 可惜，箭头函数并不是所有地方都能用的【于是出现了双冒号运算符：取代call/apply/bind】还是提案
+    /* 绑定运算符：就是双冒号
+    *       格式：对象 :: 函数
+    *       实现：自动 将左边对象的上下文环境【即 this】 绑定到右边函数
+    * */
+    foo::bar;// 同于下句
+    bar.bind(foo);
+
+    foo1:bar(...thisArg);// 同于下句
+    bar.apply(foo1, thisArg);
+
+    const hasOwnProperty = Object.prototype.hasOwnProperty;// 定义一个常量指向Object原型下的hasOwnProperty方法
+    function hasOwn(obj, key){
+      return obj::hasOwnProperty(key);
+    }
+
+    // 如果双冒号左边为空，右边是一个对象的方法，则等于将该方法绑定在该对象上面
+    var method = obj::obj.foo;// 等同于下句
+    var method = ::obj.foo;
+
+    let log = ::console.log;// 等同于下句
+    var log = console.log.bind(console);
+
+    // 如果双冒号运算符的运算结果，还是一个对象，就可以采用【链式写法】
+    import { map, takeWhile, forEach } from "iterlib";
+
+    getPlayers()
+      ::map(x => x.character())
+      ::takeWhile(x => x.strength > 100)
+      ::forEach(x => console.log(x));
+</script>
+</body>
+</html>

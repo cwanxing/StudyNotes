@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>视频弹幕</title>
+    <style>
+        a{
+            text-decoration: none
+        }
+        h1,h2,h3,h4,h5,h6{
+            padding:0;
+            margin:0;
+        }
+        .v-wrap{
+            width:610px;
+            border-radius: 20px;
+            background-color: #695f5f;
+            height:100%;
+            position: relative;
+            padding: 28px 40px 28px 10px
+        }
+
+        .v-b-wrap{
+            background-color: rgb(0,0,0);
+            width:570px;
+            margin: 0 auto;
+            border-radius: 6px;
+            height:400px;
+        }
+        video{
+            width: 570px;
+            height:360px;
+            border-radius: 6px;
+        }
+        canvas{
+            position: absolute;
+            right: -26px;
+            top: 178px;
+            width: 80px;
+            height: 40px;
+        }
+
+        .send{
+            position: absolute;
+            bottom:46px;
+            left:206px;
+        }
+        .send-btn{
+            width: 64px;
+            height: 32px;
+            text-align: center;
+            font-size: 12px;
+            display: inline-block;
+            line-height: 30px;
+            margin-left: -5px;
+            color: #FFF;
+            background-color: #28a745;
+            border-radius: 0 4px 4px 0;
+        }
+        .con{
+            border:none;
+            padding-left:10px;
+            font-size: 12px;
+            height: 30px;
+            outline: none;
+            border-radius: 4px 0 0 4px;
+        }
+        .send a:hover{
+            text-decoration: none;
+            color: #fff3cd;
+            background-color: #e83e8c;
+        }
+        .modal{
+            background-color: rgba(255, 216, 216, 0.4);
+            position: absolute;
+            left: 30px;
+            top: 28px;
+            height: 88%;
+            border-radius: 6px;
+            width: 570px;
+        }
+        /*滑入*/
+        @-webkit-keyframes t{
+            from {-webkit-transform:translateY(0px);}
+            to {-webkit-transform:translateY(160px);}
+        }
+        .m-wrap{
+            width: 59%;
+            height: 38%;
+            -webkit-border-radius:10px;
+            -moz-border-radius:10px;
+            border-radius: 10px;
+            background-color: #fff;
+            position: absolute;
+            /*top: -160px;*/
+            /*left: 112px;*/
+            /*transform: translateX(100px);infinite*/
+            /*animation: t 5s linear 1;*/
+            /*transition: left .2s linear;*/
+        }
+        .top{
+            height:12px;
+            padding:6px 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .top a{
+            background-image: url("img/glyphicons.png");
+            background-position: -312px 0px;
+            width: 15px;
+        }
+        .content{
+            height:80px;
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            margin-top:14px;
+        }
+    </style>
+</head>
+<body>
+原理：实时展示留言
+注意：1. 实用性
+     2. 动画效果
+     3. 数据储存
+<br>
+
+<div class="v-wrap">
+    <canvas id="myCan"></canvas>
+    <div class="v-b-wrap">
+        <video id="v" src="videos/hu1.mp4"  width="60%" height="40%" controls="controls" autoplay="autoplay"></video>
+    </div>
+    <div class="send">
+        <input id="s_txt" type="text" class="con" placeholder="弹幕发送[]~(^v^)~*">
+        <a id="s_btn" href="#" class="send-btn">发送</a>
+    </div>
+    <div class="modal" style="display: none;">
+        <div class="m-wrap">
+            <div class="top">
+                <h6>提示框标题</h6>
+                <a href="#"></a>
+            </div>
+            <div class="content">
+
+            </div>
+            <div class="footer"></div>
+        </div>
+    </div>
+</div>
+<script>
+    // home键
+    let oCan = document.querySelector('#myCan');
+    let ctx = oCan.getContext("2d");
+    ctx.fillStyle = "#eee";
+    ctx.beginPath();
+    ctx.arc(100,76,68,0,2*Math.PI);
+    ctx.fill();
+
+//    弹幕
+//    获取元素
+    let oVideo = document.querySelector('#v');
+    let oSendTxt = document.querySelector('#s_txt');
+    let oSendBtn = document.querySelector('#s_btn');
+
+//    输入框回车判断 let
+    oSendTxt.addEventListener('keydown', function(e){
+      e = e || window.event;
+      if(e.keyCode === 13){ // 键盘按下回车
+        send();
+      }
+    });
+
+//    按钮
+    oSendBtn.addEventListener('click', send);
+
+//    发射函数
+    function send(){
+//      判断输入框中是否有内容
+      if(oSendTxt.value.length <= 0 || (/^\s+$/).test(oSendTxt.value)){
+        oSendTxt.style.placeholder = '无';
+      }
+
+
+    }
+
+
+
+
+</script>
+
+
+
+</body>
+</html>

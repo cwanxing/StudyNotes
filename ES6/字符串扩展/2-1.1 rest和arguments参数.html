@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>rest和arguments参数比较</title>
+</head>
+<body>
+    <script type='text/javascript'>
+        // rest 参数：解决传入的【参数】数量不一定问题，本身是数组，能用数组相关的方法
+        function fn(a, b, ...theArgs){}
+        // a 和 b 都会被存入 arguments里【包括rest参数】，而...theArgs就是rest参数【参数没有对应的变量和它匹配】
+        fn(1, 2, 3, 4) // 这里，1==>a; 2==>b; [3,4]就是我们说的rest参数，它们是没有名字的参数
+
+        // 我们来讨论下好处：
+        // 1. Rest 参数简化了使用 arguments 获取多余参数的方法
+        // arguments 方法
+        function func(a, b){
+          var args = Array.prototype.slice.call(arguments);
+          console.log(args)
+        }
+        func(1,2)
+        // Rest 方法
+        function func(a, b, ...args){
+          // ...
+        }
+        /* 注意： ...theArgs 后面不能在跟变量了哦，会报错
+        function func(a, ...b, c) {} ==> Rest parameter must be last formal parameter
+        */
+        // 2. 还可以解构哦
+        function f(...[a, b, c]) {
+          return a + b + c;
+        }
+        f(1)          //NaN 因为只传递一个值，其实需要三个值
+        f(1, 2, 3)    // 6
+        f(1, 2, 3, 4) // 6 (第四值没有与之对应的变量名)
+
+        function multiply(multiplier, ...theArgs) { // multiplier: 2；...theArgs: [1, 2, 3]【是个数组】
+          return theArgs.map(function(element) { // element: [1, 2, 3]
+            return multiplier * element; // 2 * [1, 2, 3]
+          });
+        }
+        var arr = multiply(2, 1, 2, 3);
+        console.log(arr); // [2, 4, 6]
+
+        /* 以下为 arguments 不能做，rest能做的例子 */
+        // 1. 排序
+        function sortRestArgs(...theArgs) {
+          var sortedArgs = theArgs.sort();
+          return sortedArgs;
+        }
+        // 好像一位和两位混合不能进行排序，这需要看一下为甚？主要第一个为主
+        console.log(sortRestArgs(5, 3, 7, 1)); // 1, 3, 5, 7
+
+        function sortArguments() {
+          // arguments 是参数对象不能直接使用sort()方法，因为不是数组实例，需要转换
+          var sortedArgs = arguments.sort();
+          return sortedArgs; // this will never happen
+        }
+        // 会抛出类型异常，arguments.sort不是函数
+        console.log(sortArguments(5, 3, 7, 1)); // arguments.sort is not function
+    </script>
+</body>
+</html>

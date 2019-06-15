@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>s修饰符——称为dotAll模式</title>
+</head>
+<body>
+<script>
+    /*
+    * . 符号在正则里表示：匹配任意单字符：除两种情况，它无法匹配
+    *    1. 四个字节的UTF-16字符
+    *    2. 终止符：
+    *           U+000A 换行符（\n）
+                U+000D 回车符（\r）
+                U+2028 行分隔符（line separator）
+                U+2029 段分隔符（paragraph separator）
+    * */
+    // \n 修饰符的情况
+    /foo.bar/.test('foo\nbar'); // false
+    /foo[^]bar/.test('foo\nbar'); // true
+    // 写成第二种，就能识别了。不过 ES6 觉得这样写太他么难看了，于是：
+    // /s 修饰符 诞生：希望 .符号 能匹配正在意义的任意字符
+    /foo.bar/s.test('foo\nbar') // true
+
+    /* 但凡有 /s 修饰符的正则的，我们就称他们为：dotAll模式，即点（dot）代表一切字符 */
+    const re = /foo.bar/s;
+    // 另一种写法
+    // const re = new RegExp('foo.bar', 's');
+
+    re.test('foo\nbar') // true
+    re.dotAll // true
+    re.flags // 's'
+
+    /* /s 修饰符和多行修饰符 /m 不冲突，两者一起使用的情况下，. 匹配所有字符，而 ^ 和 $ 匹配每一行的行首和行尾*/
+
+</script>
+</body>
+</html>

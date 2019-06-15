@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>原型</title>
+</head>
+<body>
+重命名：shift + F6
+1. 函数的prototype属性(它函数的一个属性)
+    * 每个函数都有一个prototype属性，它默认指向一个Object空对象(即称为：原型对象)
+        可以通过prototype来为原型添加各种各样的属性(方法)
+        如：Fun.prototype.sum/abc/setColor=function.. 然后Fun就有了sum/abc/setColor..的属性了
+        有了如何调用呢？Fun.prototype.sum/abc/setColor(); 复杂了
+        然后就有了实例：var fun = new Fun(); fun.sum/abc/setColor();
+
+    * 原型对象中有一个属性constructor，它指向函数对象
+
+2. 给原型对象添加属性(一般是方法)
+    * 作用：函数的所有实例对象自动拥有原型对象中的属性(方法)
+
+<script type='text/javascript'>
+
+
+    //每个函数都有一个prototype属性，它默认指向一个Object空对象(即称为：原型对象)
+    console.log(Date.prototype);//getData,getDay
+    console.log(Array.prototype);
+    //原型上面的方法是给实例对象使用的
+    console.log(typeof Date.prototype);
+
+    function Fun() {
+
+    }
+    console.log('自定义函数fun的原型');
+    console.log(Fun.prototype);//它默认指向一个Object空对象(没有我们的属性)
+
+
+    
+    //原型对象中有一个属性constructor，它指向函数对象
+    console.log(Date.prototype.constructor === Date);
+    console.log(Fun.prototype.constructor === Fun);
+
+
+    //跟原型对象添加属性(不过这个属性一般指的是方法)==>实例对象可以方法
+    Fun.prototype.test = function () {
+        console.log('test()');
+    }
+    console.log(Fun.prototype);//有方法了，我自己添加的
+    //Fun.prototype.test();//这类方法调用太复杂了，于是实例诞生了(我是这么想的)
+    var fun = new Fun();
+    //var 实例名 = new 原型对象
+    fun.test();
+</script>
+</body>
+</html>

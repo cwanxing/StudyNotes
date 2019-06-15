@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Number.Integer:判断是否为整数</title>
+</head>
+<body>
+<script>
+    // 对于这个方法：如果对数据【精度】的要求较高，【不建议】使用Number.isInteger()判断一个数值是否为整数。
+    /* 用来判断一个数值是否为整数 */
+    Number.isInteger(25) // true
+    Number.isInteger(25.1) // false
+    Number.isInteger(25.0) // true 和数值25 一样
+
+    // 非数值：返回false
+    Number.isInteger() // false
+    Number.isInteger(null) // false
+    Number.isInteger('15') // false
+    Number.isInteger(true) // false
+
+    // 1. 位数超出表示范围
+    /*
+        由于 JavaScript 采用 IEEE 754 标准，数值存储为 64 位【双精度格式】
+        数值精度最多可以达到 53 个二进制位（1 个隐藏位与 52 个有效位）
+        如果数值的精度【超过】这个限度，第54位及后面的位就会【被丢弃】
+        这种情况下，Number.isInteger可能【会误判 】
+    */
+    Number.isInteger(3.0000000000000002) // true 这就是超出限度了
+    // 原因: 小数的精度达到了小数点后 16 个十进制位，转成二进制位超过了 53 个二进制位，所以2 被省略
+    // 2. 数值小于表示范围
+    Number.isInteger(5E-324) // false
+    Number.isInteger(5E-325) // true 太小，被转为 0 了
+    /* 数值的绝对值小于Number.MIN_VALUE（5E-324），即小于 JavaScript 能够分辨的最小值，会被自动转为 0 */
+</script>
+</body>
+</html>

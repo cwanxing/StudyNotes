@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>字串模板(反引号)</title>
+</head>
+<body>
+    <script type='text/javascript'>
+        // 终于看懂正常的内容了：模板字串的用途就是，当你想在js文件写html/css时，可以使用模板字串
+        /*
+        我们先来看看 什么是字串模板
+            $('#result').append( 这一句不用关心，主要看下面
+                'There are <b>' + basket.count + '</b> ' +
+                'items in your basket, ' +
+                '<em>' + basket.onSale +
+                '</em> are on sale!'
+            );
+        */
+        // 缺点：比较繁琐
+        /* 强大的ES6有来了，为我们表示模板字串提供了新方法 */
+        // 使用 反引号 即 (英文下)Tab键上的 ``
+        /*
+        $('#result').append(`
+          There are <b>${basket.count}</b> items
+           in your basket, <em>${basket.onSale}</em>
+          are on sale!
+        `);
+        */
+
+        /// 下面是它强大功能，三种情况。不要被吓到哦
+        // 1. 普通字符串 **
+        `In JavaScript '\n' is a line-feed.`;
+
+        // 2. 多行字符串 **
+        `In JavaScript this is
+        not legal.`;
+
+        console.log(`string text line 1
+        string text line 2`);
+
+        // 3. 字符串中【嵌入变量】 **
+        let name = "Bob", time = "today";
+        `Hello ${name}, how are you ${time}?`;
+        // 注：想要在字串当中出现反引号，前面加反斜杆 \ 即可，其他都是这样转义的
+
+        /* 强大吧！还有一点，在多行表示，它会【保留空格和缩进】；如： */
+        $('#list').html(`
+        <ul>
+          <li>first</li>
+          <li>second</li>
+        </ul>
+        `).trim(); // 不想要，当然可以，只要加上 trim();即可
+
+        /// 接下来，针对字串中【嵌入变量】加以说明：
+        // 首先，格式： ${ 变量 }
+        function authorize(user, action) {
+            throw new Error(
+                // 传统写法为
+                // 'User '
+                // + user.name 变量
+                // + ' is not authorized to do '
+                // + action 变量
+                // + '.'
+                `User ${user.name} is not authorized to do ${action}.`); // 强大的ES6 写法
+        }
+        // 注：大括号内可以是以下写法（表达式运算、还可以引用对象属性哦、调用函数都行，是不是很牛）
+        let x = 1;
+        let y = 2;
+        `${x} + ${y} = ${x + y}`; // "1 + 2 = 3"
+        `${x} + ${y * 2} = ${x + y * 2}`; // "1 + 4 = 5"
+
+        let obj = {x: 1, y: 2};
+        `${obj.x + obj.y}` // "3"
+        // 调用函数
+        function fn() {
+            return "Hello World";
+        }
+        `foo ${fn()} bar` // foo Hello World bar
+        /// 注：如果大括号中的值 not 字符串，将照一般规则转为字串。如: 大括号中是对象，将默认调用对象的toString方法【不懂】
+
+        // 哈！难道它没有缺点，哈哈哈，怎么可能呢？
+        // 1. 模板字符串中的变量没有声明，将报错
+        let msg = `Hello, ${place}`; // 报错 没有声明place
+        `Hello ${'World'}` // "Hello World" 最无聊的写法 { 这里就是字串 } 那么原样输出
+
+        /* 还可以嵌套哦 */// 这也看不懂
+        const tmpl = addrs => `
+          <table>
+          ${addrs.map(addr => `
+            <tr><td>${addr.first}</td></tr>
+            <tr><td>${addr.last}</td></tr>
+          `).join('')}
+          </table>
+        `;
+        // 使用：
+        const data = [
+            { first: '<Jane>', last: 'Bond' },
+            { first: 'Lars', last: '<Croft>' },
+        ];
+        console.log(tmpl(data));
+        // <table>
+
+        //   <tr><td><Jane></td></tr>
+        //   <tr><td>Bond</td></tr>
+
+        //   <tr><td>Lars</td></tr>
+        //   <tr><td><Croft></td></tr>
+
+        // </table>
+        /* 需要引用模板字符串本身，在需要时执行 *///说实话，看不懂
+        // 写法一
+        let str = 'return ' + '`Hello ${name}!`';
+        let func = new Function('name', str);
+        func('Jack') // "Hello Jack!"
+
+        // 写法二
+        let str = '(name) => `Hello ${name}!`';
+        let func = eval.call(null, str);
+        func('Jack') // "Hello Jack!"
+    </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<html>
+<!doctype html>
+<meta charset="utf-8" />
+<head>
+<title>
+</title>
+
+<style>
+#ul1{background:green;}
+#ul2{background:red;}
+</style>
+
+<script>
+window.onload=function(){
+	var Ul1=document.getElementById('ul1');
+	//var Ul2=document.getElementById('ul2');
+	var oBtn=document.getElementById('btn1');
+	
+	oBtn.onclick=function()
+	{
+		//原理：从li中找到最小的那个数，appendChild到父级中
+		var oLi=Ul1.getElementsByTagName('li');
+		var arr=[];
+		for(var i=0;i<oLi.length;i++)
+		{
+			arr[i]=oLi[i];
+		}
+		//现在arr数组中存放了aLi，所以现在能用sort函数了
+		arr.sort(function(li1,li2){//arr里面是什么参数就是什么，arr里面是li1 li2 li3 li4
+			var n1=parseInt(li1.innerHTML);
+			var n2=parseInt(li2.innerHTML);
+			return n1-n2;//
+		})
+		//alert(arr[0].innerHTML);//已经排好了arr就是oLi
+		for(var i=0;i<arr.length;i++)
+		{
+			alert("把"+arr[i].innerHTML+"插到最后");
+			Ul1.appendChild(arr[i]);
+			//UL1.appendChild(li) 父级中加li，可现在的li就是一个数组，已经变成了arr
+		}
+	};
+}
+</script>
+
+</head>
+
+<body>
+<input id="btn1" type="button" value="移动" />
+<ul id="ul1">
+	<li>34</li>
+    <li>54</li>
+    <li>12</li>
+    <li>78</li>
+</ul>
+
+</body>
+</html>

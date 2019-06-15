@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script>
+        //实现一个自己的对象
+        //不能在系统对象中随意附加方法、属性，
+        //否则会覆盖已有方法, 属性;
+        //所以引入object对象
+        /*
+            Date   日期
+            array  存东西
+           RegExp 正则
+ 
+            Object 没有功能的对象
+            可以在它上面写属性方法，以至于不会覆盖其他系统
+            对象(别人)
+            刚好符合自定义对象(自己定义的对象)
+        */
+        //怎么写
+        function createPerson(name, age) {
+            //构造函数: 就是普通的函数，只是工作内容不一样
+            //这个函数功能：构造一个对象，所以叫 构造函数
+            /*无聊的例子：每个人的工作都不一样，比如他是
+            抓小偷的，所以叫他警察
+            */
+            //工厂方式：
+            //原料
+            var obj = new Object();
+
+            //加工
+            obj.name = name;
+            obj.age = age;
+            obj.showName = function () {
+                alert('我的名字：' + this.name);
+            }
+            obj.showAge = function () {
+                alert('我' + this.age + '岁了');
+            }
+            
+            //出厂
+            return obj;
+        }
+        
+        var obj = createPerson('Aloe', 12);
+        // obj.showName();
+        // obj.showAge();
+
+        var obj2 = createPerson('对象', 32);
+        // obj2.showName();
+        // obj2.showAge();
+        /*
+        工厂方式：
+            问题1. 没有new
+            var arr = new Data;
+
+            var obj2 = createPerson('对象', 32);
+            问题2. 函数重复
+        */
+        //问题1. 没有new
+        function show(){
+            alert(this)// window
+        }
+        show();//--->window
+        new show() // ---> Object
+        //任何函数都可以加new
+
+        //问题2. 函数重复
+        //alert(obj.showName);
+        //alert(obj2.showName);
+        //但obj.showName == obj2.showName ---> false
+        //同样的名字，功能。却是不同方法，
+        //这样会浪费资源
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

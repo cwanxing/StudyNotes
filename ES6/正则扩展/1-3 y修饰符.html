@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>/y 修饰符 和 /g 修饰符</title>
+</head>
+<body>
+<script type='text/javascript'>
+    let str = "anta";
+    let noY = /a/g; // 注意
+    // lastIndex = 0【默认】
+    console.log(noY.exec(str)); // ["a", index: 0, input: "anta"]
+    // lastIndex == 1【不懂看正则方法和属性】
+    /* 第一个【lastIndex】位置没有也可以，咱找下一个，找到为止 */
+    console.log(noY.exec(str)); // ["a", index: 3, input: "anta"]
+
+    let str1 = "anta";
+    let y = /a/y;  // 注意
+    // lastIndex = 0【默认】
+    console.log(y.exec(str1)); // ["a", index: 0, input: "anta"]
+    // lastIndex == 1【不懂看正则方法和属性】
+    /* 这时y修饰符表现出来：它必须要在 lastIndex 位置处看见满足正则规则的字符，否则就终止查询，也就是null*/
+    console.log(y.exec(str1)); // null
+
+    // 小例子时间到：
+    // 1. replace【替换】
+    const REGEX = /a/gy;
+    'aaxa'.replace(REGEX, '-') // '--xa' 最后一个a因为不是出现在下一次匹配的头部，所以不会被替换
+
+    // 2. 单单一个 y 修饰符对 match 方法，只能返回【第一个匹配】，必须与 g 修饰符联用，才能【返回所有匹配】
+    'a1a2a3'.match(/a\d/y) // ["a1"]
+    'a1a2a3'.match(/a\d/gy) // ["a1", "a2", "a3"]
+
+    /* 应用 */
+    const TOKEN_Y = /\s*(\+|[0-9]+)\s*/y;
+    const TOKEN_G  = /\s*(\+|[0-9]+)\s*/g;
+    function tokenize(TOKEN_REGEX, str) {
+      let result = [];
+      let match;
+      while (match = TOKEN_REGEX.exec(str)) {
+        result.push(match[1]);
+      }
+      return result;
+    }
+
+    tokenize(TOKEN_Y, '3 + 4'); // [ '3', '+', '4' ]
+    tokenize(TOKEN_G, '3 + 4'); // [ '3', '+', '4' ]
+    // 是不是很正常啊，当然不是啦，如果 y 修饰符设计出来和 g 一样，那还有什么用呢：
+    // 一旦出现非法字符，那就不一样了哦
+    tokenize(TOKEN_Y, '3x + 4'); // [ '3' ] /y 修饰符对非法字符零容忍
+    tokenize(TOKEN_G, '3x + 4'); // [ '3', '+', '4' ] /y 则容忍了非法字符的凌辱
+
+    /* 检测正则是否带有 /y 修饰符 */
+    // RegExp.prototype.sticky 属性
+    var r = /hello\d/y;
+    r.sticky // true
+
+    /* RegExp.prototype.flags 属性：返回正则字串 和 返回正则修饰符
+         ES5 的 source 属性：
+         返回正则表达式的正文
+          /abc/ig.source
+         "abc"
+
+         ES6 的 flags 属性：
+         返回正则表达式的修饰符
+          /abc/ig.flags
+         'gi'
+    */
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ES6中声明变量的6种方法</title>
+</head>
+<body>
+    <script>
+        /*ES5声明变量：var 和 function【函数名也是变量哦】*/
+        /*ES6声明变量：import 和 class 【】*/
+        ///基本关系：
+                //顶层对象，在浏览器环境指的是window对象，在 Node 指的是global对象。ES5 之中，顶层对象的属性与全局变量是等价的
+                // window.a = 1; a => 1; a = 2; window.a => 2
+        
+        //ES6 的出现，使得全局变量逐步与顶层对象的属性脱钩：
+        var a = 1;
+        // 如果在 Node 的 REPL 环境，可以写成 global.a
+        // 或者采用通用方法，写成 this.a
+        window.a // 1
+        let b = 1;
+        window.b // undefined
+
+        /* ES5 的顶层对象，它在各种实现里面是不统一的
+        
+            浏览器里面，顶层对象是window，但 Node 和 Web Worker 没有window。
+
+            浏览器和 Web Worker 里面，self也指向顶层对象，但是 Node 没有self。
+
+            Node 里面，顶层对象是global，但其他环境都不支持。
+        */
+    </script>
+</body>
+</html>

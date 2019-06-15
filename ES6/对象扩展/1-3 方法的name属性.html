@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>方法中的name属性</title>
+</head>
+<body>
+<script>
+    /**
+     * 属性：name
+     * 属于：函数
+     * 返回：函数名
+     *      对象的方法也是函数，所以也有
+     * */
+    const person = {
+      sayName() {
+        console.log('hello!');
+      },
+    };
+
+    person.sayName.name   // "sayName" 即方法名
+
+    /* 以下基本上是天书论坛，至少对于现在的我来说 */
+    /**
+     * 如果对象的方法使用了取值函数（getter）和存值函数（setter），
+     * 则 name 属性不是在该方法上面，而在该方法的属性描述对象的 get 和 set 属性上面，返回值是方法名前加上get和set
+     * */
+    const obj = {
+      get foo() {},
+      set foo(x) {}
+    };
+    obj.foo.name// TypeError: Cannot read property 'name' of undefined
+    const descriptor = Object.getOwnPropertyDescriptor(obj, 'foo');
+
+    descriptor.get.name // "get foo"
+    descriptor.set.name // "set foo"
+
+    // 两种比较特殊情况：
+    // 1. bind 方法创造的函数，name属性返回bound 加上原来的函数名
+    // 2. Function 构造函数创造的函数，name 属性返回 anonymous
+    /*
+    (new Function()).name // "anonymous" => 2
+    var doSomething = function() {
+      // ...
+    };
+    doSomething.bind().name // "bound doSomething" => 1
+    */
+
+    // 对象的方法是一个 Symbol 值，那么name属性返回的是这个 Symbol 【值】的描述
+    const key1 = Symbol('description');
+    const key2 = Symbol();
+    let obj = {
+      [key1]() {},
+      [key2]() {},
+    };
+    obj[key1].name // "[description]" Symbol 值有描述
+    obj[key2].name // ""              key2没有
+</script>
+</body>
+</html>

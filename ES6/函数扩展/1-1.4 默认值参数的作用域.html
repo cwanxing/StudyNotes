@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>函数参数默认值的作用域</title>
+</head>
+<body>
+<script>
+/* 为函数设置默认值后，在参数声明初始化时，参数会自动创建一个作用域，直至初始化结束 */
+    var a = 1;
+    function b(x, y = x) { // 参数 y 的默认值等于 x
+      console.log(y);
+    }
+    b(2) // 2
+    // 问题：为啥不是 1
+    /*【解析：】
+    *       自动创建的参数作用域：
+    *       {
+    *           x = 2; // 由函数调用时传入的
+    *           y = x; // 所以 y 等于 2
+    *       }
+    * */
+    // 在看第二例子：
+    var a1 = 1;
+    function b1(x = a1){
+      // console.log(a1); 报错
+      let a1 = 2; // let 声明的变量，在之前是不能使用的哦
+      console.log(x);
+    }
+    b1() // 1
+    /*【解析：】
+     *       自动创建的参数作用域：
+     *       {
+     *           a1 = 1; 全局下的
+     *           x = a1; a1 本身没有定义【函数调用时也没传给它，如果传了就是传的参了】自然指向全局的了
+     *       }
+     * */
+    // 以上我也不知道懂了没，知道也好
+    var x = 1;
+    function foo(x = x) {
+      // ...
+    }
+    foo() // ReferenceError: x is not defined
+    /*
+    * 参数作用域:
+    *       {
+    *           let x = x; let的暂时性死区
+    *       }
+    * */
+    // 这个let暂时性死区还有以下例子：参数默认值为一个函数
+    let foo = 'outer';
+    function bar(func = () => foo) {// 参数func 默认是个匿名函数，返回变量foo
+                                    // 而在函数参数单独形成的作用域里，没有定义变量 foo
+                                    // 所以foo执行全局 foo
+      let foo = 'inner';
+      console.log(func());
+    }
+
+    bar(); // outer
+    /* 另一种写法：*/
+    function bar1(func = () => foo) { // 参数func 默认是个匿名函数，返回变量foo
+                                      // 而在函数参数单独形成的作用域里，没有定义变量 foo
+                                      // 所以foo执行全局 foo【而全局没有，那就报错呗】
+      let foo = 'inner';
+      console.log(func());
+    }
+
+    bar1() // ReferenceError: foo is not defined
+
+    /* 在下愚钝了，实在看不懂复杂的例子：这里也只能把拿过来放这，加深印象 */
+    var x1 = 1;
+    function foo1(x, y = function() { x = 2; }) {
+      var x1 = 3;
+      y();
+      console.log(x);
+    }
+
+    foo1() // 3
+    x1 // 1
+    /*【解析：】
+         函数foo的参数形成一个单独作用域
+         这个作用域里面，首先声明了变量x，然后声明了变量y，y的默认值是一个匿名函数
+         这个匿名函数内部的变量x，指向同一个作用域的第一个参数x
+         函数foo内部又声明了一个内部变量x，该变量与第一个参数x由于不是同一个作用域，所以不是同一个变量
+         因此执行y后，内部变量x和外部全局变量x的值都没变
+     * */
+    // 如果将var x = 3的var去除，函数foo的内部变量x就指向第一个参数x，
+    // 与匿名函数内部的x是一致的，所以最后输出的就是2，而外层的全局变量x依然不受影响
+    var x = 1;
+    function foo(x, y = function() { x = 2; }) {
+      x = 3;
+      y();
+      console.log(x);
+    }
+
+    foo() // 2
+    x // 1
+    /* 【解析】
+    * 如果将var x = 3的var去除，函数foo的内部变量x就指向第一个参数x，与匿名函数内部的x是一致的，
+    * 所以最后输出的就是2，而外层的全局变量x依然不受影响
+    * */
+</script>
+</body>
+</html>

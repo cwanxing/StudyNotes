@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>对象解构与圆括号的关系</title>
+</head>
+<body>
+    <script>
+        // 解构赋值允许等号左边的模式之中，不放置任何变量名。如：
+        ({} = [true, false]);
+        ({} = 'abc');
+        ({} = []); // ==> 毫无意义
+
+        //// 有可能就少用 不要在模式中放置圆括号。 ////
+
+        /* 下面三种不得使用()号 */
+        /// 1. 变量【声明】语句
+        /* 全部报错
+        let [(a)] = [1];
+
+        let {x: (c)} = {};
+        let ({x: c}) = {};
+        let {(x: c)} = {};
+        let {(x): c} = {};
+
+        let { o: ({ p: p }) } = { o: { p: 2 } }; // 左边 的第一个 p 是模式
+            因为：都是变量声明语句，模式不能使用圆括号。
+         */       
+
+         /// 2. 函数参数
+        /* 报错
+        function f([(z)]) { return z; }
+        // 报错
+        function f([z,(x)]) { return x; }*/
+
+        /// 3. 赋值语句的模式
+        // 全部报错（全部模式包含在()内）
+        ({ p: a }) = { p: 42 };
+        ([a]) = [5];
+        // 报错（部分模式包含在()号内）
+        [({ p: a }), { x: c }] = [{}, {}];
+
+        /* 下面讲能使用()号的 */
+        // 1. 赋值语句的非模式部分，可以使用圆括号
+        [(b)] = [3]; // 正确 模式是取数组的第一个成员
+        ({ p: (d) } = {}); // 正确 模式是 p 不是 d
+        [(parseInt.prop)] = [3]; // 正确 模式是取数组的第一个成员
+    </script>
+</body>
+</html>

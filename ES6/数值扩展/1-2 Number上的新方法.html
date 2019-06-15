@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Number.isFinite()、Number.isNaN</title>
+</head>
+<body>
+<script>
+    // ES6 在 Number 对象上，新提供了Number.isFinite()和Number.isNaN()两个方法
+    // 这两方法呢，就很像机器的感觉了，是什么就干什么，
+    // 比如 '12' js就是闲的没事，给你转为 数值【就很烦】
+
+    // 1. Number.isFinite()：检查一个数值是否为有限(finite) 即不是 Infinity
+    Number.isFinite(15); // true
+    Number.isFinite(0.8); // true
+    Number.isFinite(NaN); // false
+    Number.isFinite(Infinity); // false
+    Number.isFinite(-Infinity); // false
+    Number.isFinite('foo'); // false 注
+    Number.isFinite('15'); // false 注
+    Number.isFinite(true); // false 注
+    /* 注意：如果参数类型不是数值，Number.isFinite 一律返回false */
+
+    // 2. Number.isNaN()用来检查一个值是否为NaN。
+    Number.isNaN(NaN) // true
+    Number.isNaN(15) // false
+    Number.isNaN('15') // false
+    Number.isNaN(true) // false
+    Number.isNaN(9/NaN) // true
+    Number.isNaN('true' / 0) // true
+    Number.isNaN('true' / 'true') // true
+    /* 如果参数类型不是NaN，Number.isNaN一律返回false */
+
+    // 它们和全局方法isFinite()和isNaN()的区别在于：它会调用Number()方法将非数值转为数值，再进行处理
+    isFinite(25) // true
+    isFinite("25") // true 内部已转
+    Number.isFinite(25) // true
+    Number.isFinite("25") // false 是字串就是字串，没那么多事
+
+    isNaN(NaN) // true
+    isNaN("NaN") // true
+    Number.isNaN(NaN) // true
+    Number.isNaN("NaN") // false
+    Number.isNaN(1) // false
+</script>
+</body>
+</html>

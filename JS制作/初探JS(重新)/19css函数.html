@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<script>
+//函数名就是个变量
+function abc(obj,name,value)
+{
+	//函数功能
+	//alert(arguments.length);
+	if(arguments.length==2)
+	{
+		return obj.style[name];//arguments[0].style.arguments[1] 没用，要把.换为[]才行
+			 //oDiv.style.width 获取哦Div的宽
+	}
+	else
+	{
+		return obj.style[name]=value;
+			 //oDiv.style.width='400px';
+	}
+}
+window.onload=function()
+{
+	var oDiv=document.getElementById('div1');
+	//alert(oDiv.style.background);普通的获取
+	//oDiv.style.background='green';普通的设置
+	//通过CSS()函数获取和设置
+	alert(abc(oDiv,'width'));//两个参数时 获取对象:oDiv 获取样式:width 通过css()函数，函数传参 结果:200px
+	abc(oDiv,'width','400px');//三个参数时 设置对象:oDiv 设置样式:width 通过css()函数 执行成功
+}
+</script>
+</head>
+
+<body>
+<div id="div1" style="width:200px;height:200px;background:red;"
+</body>
+</html>

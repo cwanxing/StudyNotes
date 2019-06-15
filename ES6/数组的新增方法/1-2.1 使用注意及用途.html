@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>assign使用注意事项和用途</title>
+</head>
+<body>
+<script>
+    /**
+     * 注意事项：
+     * */
+    // 1. 这个合并是浅拷贝，就是只是拷贝了对象的引用
+    const obj1 = {a: {b: 1}};
+    const obj2 = Object.assign({}, obj1);
+
+    obj1.a.b = 2; // 修改obj1 的话，还是会反应到obj2 上，说明只是引用拷贝
+    obj2.a.b; // 2
+
+    // 2. 同名属性的替换【遇到的是嵌套对象】
+    /* 对于这种嵌套的对象，一旦遇到同名属性，Object.assign的处理方法是替换，而不是添加 */
+    const target = { a: { b: 'c', d: 'e' } };
+    const source = { a: { b: 'hello' } };
+    Object.assign(target, source); // 输出：{ a: { b: 'hello' } }
+    // 注意区别：{ a: { b: 'hello', d: 'e' } } 直接是替换，而非添加，注意
+
+    // 3. Object.assign可以用来处理数组，但会把数组视为对象
+    Object.assign([1, 2, 3], [4, 5]) // [4, 5, 3]
+    /*
+    * Object.assign把数组视为属性名为 0、1、2 的对象，因此【源数组】的 0 号属性4 覆盖了 【目标数组】的 0 号属性1
+    * */
+
+    // 4. 只对值进行复制，如果复制的值是一个取值函数【就是函数】：1. 先求值 2. 再复制值
+    const source = {
+      get foo() { return 1 }
+    };
+    const target = {};
+
+    Object.assign(target, source)// { foo: 1 } 不会复制整个函数，只复制值
+
+    /**
+     * 常见用途
+     * */
+    // 1. 为对象添加属性
+    class Point { // 关于class类的概念，在以后的章节有介绍
+      constructor(x, y) {
+        Object.assign(this, {x, y});
+      }
+    }
+
+    // 2. 为对象添加方法：
+    Object.assign(SomeClass.prototype, {
+      someMethod(arg1, arg2) {
+      //···
+      },
+      anotherMethod() {
+      //···
+      }
+    });
+    // 等同于下面的写法
+    SomeClass.prototype.someMethod = function (arg1, arg2) {
+     // ···
+    };
+    SomeClass.prototype.anotherMethod = function () {
+     // ···
+    };
+
+    // 3. 克隆对象
+    function clone(origin) {
+      return Object.assign({}, origin);
+    } // 只会克隆原始对象的值，不会克隆对象继承的值。想要克隆：
+    function clone1(origin) {
+      let originProto = Object.getPrototypeOf(origin);
+      return Object.assign(Object.create(originProto), origin);
+    }
+
+    // 4. 合并多个对象
+    const merge = (target, ...sources) => Object.assign(target, ...sources); // 单单合并
+    const merge1 = (...sources) => Object.assign({}, ...sources); // 合并 且 返回新对象
+    /*
+    * const merge = function(target, ...sources){
+    *   return Object.assign(target, ...sources)
+    * }
+    * ==> 多个对象合并成某个对象
+    *
+    * const merge1 = function(...sources){
+    *   return Object.assign({}, ...sources)
+    * }
+    * ==> 合并 且 返回新对象
+    * */
+
+    // 5. 为属性添加默认值
+    const DEFAULTS = {
+      logLevel: 0,
+      outputFormat: 'html'
+    };
+
+    function processContent(options) {
+      options = Object.assign({}, DEFAULTS, options);
+      console.log(options);
+      // ...
+    }
+    /*
+    * DEFAULTS 为默认值， options 为用户输入的值
+    * 如果两者有同名属性，则 options 的属性值会覆盖 DEFAULTS 的属性值
+    *
+    * 对于为属性添加默认值，由于assign为浅拷贝，options和DEFAULTS最好为简单的数据类型【不要饮用类型】
+    *
+    * */
+    const DEFAULTS1 = { // 为引用类型
+      url: {
+        host: 'example.com',
+        port: 7070
+      },
+    };
+    processContent({ url: {port: 8000} }) // options => {url: {port: 8000}为引用类型
+    //  调用上面函数：原意是将url.port改成 8000，url.host不变。
+    //  实际结果却是options.url【覆盖】掉DEFAULTS.url，所以url.host就不存在了
+    // {
+    //   url: {port: 8000}
+    // }
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>遍历数组的三个新方法</title>
+</head>
+<body>
+<script>
+    /**
+     *  方法：Array.entries/keys/values
+     *  功能：遍历数组
+     *  返回值：一个遍历对象，可以使用 for of 循环进行遍历
+     *  区分：
+     *      1. entries：对【键值对】遍历
+     *      2. keys：对【键名】遍历
+     *      3. values：对【键值】遍历
+     * */
+    for (let index of ['a', 'b'].keys()) {
+      console.log(index);
+    }
+    // 0
+    // 1 ==> 键名
+
+    for (let elem of ['a', 'b'].values()) {
+      console.log(elem);
+    }
+    // 'a'
+    // 'b' ==> 键值
+
+    for (let [index, elem] of ['a', 'b'].entries()) {
+      console.log(index, elem);
+    }
+    // 0 "a"
+    // 1 "b" ==> 键值对
+
+    // 手动调用遍历器对象的next方法，进行遍历
+    let letter = ['a', 'b', 'c'];
+    let entries = letter.entries();
+    console.log(entries.next().value); // [0, 'a']
+    console.log(entries.next().value); // [1, 'b']
+    console.log(entries.next().value); // [2, 'c']
+</script>
+</body>
+</html>

@@ -1,0 +1,422 @@
+****************
+    导读：
+        1. 模板变化
+        2. 组件定义
+        3. 生命周期
+        4. 循环
+****************
+
+vue2.0: 尽量贴近原生js  |  独立出来
+	bower info vue
+
+	http://vuejs.org/
+***** 到了2.0以后，有哪些变化? ******
+
+1. 在每个组件模板，不再支持片段代码
+    *** 片段代码：没有总父级包含 ***
+
+    Vue.component("my-aaa",
+        template: "#aaa"
+    )
+
+	组件中模板:
+		之前:
+			<template>
+				<h3>我是组件</h3><strong>我是加粗标签</strong>
+			</template>
+
+		现在:  必须有根元素，包裹住所有的代码
+			<template id="aaa">
+			        <div> ！！ 2.0 必须要有父级哦
+			            <h3>我是组件</h3>
+			            <strong>我是加粗标签</strong>
+			        </div>
+			</template>
+	使用：
+	    <my-aaa></my-aaa>
+
+2. 关于组件定义
+	Vue.extend	这种方式，在2.0里面有，但是有一些改动，这种写法，即使能用，咱也不用——废弃
+
+	Vue.component(组件名称,{
+	    // 在2.0继续能用
+		data(){}
+		methods:{}
+		template:
+	});
+
+	2.0推出一个组件，简洁定义方式：
+	   1. 全局
+        var Home={
+            template:''		->   就是之前Vue.extend() 还是得有Vue.component(...)
+        };
+        Vue.component('my-aaa', Home)
+        html:
+            <my-aaa></my-aaa>
+
+       2. 局部
+        template#aaa :！！
+            div><h3>我是2.0组件</h3>
+                <h1>我是2.0组件</h1>
+
+        js :
+        var Home = { ！
+            template:'#aaa' ！！
+        }
+        new Vue({
+            data:{},
+            components:{
+                'my-aaa':Home！！！
+            }
+        }).$mount('#box')
+
+        html:
+        <my-aaa></my-aaa>！！！
+
+3. 生命周期
+	之前:
+		init          只是创建了实例
+		created       创建了实例，有些属性了，还诶有渲染到dom树
+		beforeCompile 编译之前
+		compiled      编译之后
+		ready		√	变成了     mounted
+		beforeDestroy
+		destroyed
+
+	现在:【多个钩子函数】
+		beforeCreate	组件实例刚刚被创建,属性都没有
+		created	        实例已经创建完成，属性已经绑定
+		beforeMount	    模板编译之前
+		mounted	        模板编译之后，代替之前 ready  *
+		beforeUpdate	组件（数据）更新之前   【貌似显示也是更新后的数据】
+		updated	        组件（数据）更新完毕 * 【显示更新的数据】
+		beforeDestroy	组件（数据）销毁前
+		destroyed	    组件（数据）销毁后
+
+3. 循环
+	1.
+	    2.0里面默认就可以添加重复数据
+
+    2.
+
+    原生js 循环：
+	arr.forEach(function(item,index){
+
+	});
+
+	去掉了隐式一些变量
+		$index	$key
+
+	之前:
+		v-for="(index,val) in array" 【不符合常规，常规：先value，再index】
+
+	现在:
+		v-for="(val,index) in array" 【更贴近原生js了】
+
+    重复数据的例子：
+    html:
+        input[button] @click="add()"
+        div#box
+            ul>li v-for="val in list" 【想添加重复数据 1.0 需要添加track-by="$index"】
+                                      【2.0 牛了，默认就可以添加重复数据】
+    js:
+        new Vue({
+            data:{
+                list:["width", 'height', 'border']
+            },
+            methods:{
+                add(){
+                    this.list.push('background')
+                }
+            }
+        })
+
+4. track-by="id"【只为提升循环性能用】
+	变成
+		<li v-for="(val,index) in list" :key="index">
+		                             注：可变  不可变
+
+5. 自定义键盘指令
+	之前：Vue.directive('on').keyCodes.ctrl=17; 报错
+
+	现在: Vue.config.keyCodes.ctrl=17
+
+6. 过滤器
+	之前:
+		系统就自带很多过滤
+		{{msg | currency}}  金钱符号
+		{{msg | json}}  2.0 直接识别 json
+		....
+		limitBy
+		filterBy
+		.....
+	一些简单功能, 自己通过js实现
+
+	******* 到了2.0, 内置过滤器，全部删除了 *******
+
+	lodash	工具库
+	_.debounce(fn,200)
+
+	自定义过滤器——还有
+		但是,自定义过滤器传参
+
+		之前:	{{msg | toDou '12' '5'}}
+		现在: 	{{msg | toDou('12','5')}}
+------------------------------------------------------
+组件通信:
+	vm.$emit()
+	vm.$on();
+
+	父组件和子组件:
+
+	子组件想要拿到父组件数据:
+		通过  props
+
+	之前，子组件可以更改父组件信息，可以是同步  sync
+	现在，不允许直接给父级的数据，做赋值操作
+
+	问题，就想更改：
+		a). 父组件每次传一个对象【里面有父级的各种数据】给子组件, 对象之间引用	√
+            例子：子获取父的数据
+                html:
+                    {{giveData.msg}}
+                    <my-aaa :db="giveData"></my-aaa>
+
+                 template#aaa
+                    input[button] value="获取" @click='get'
+                js:
+                    data > giveData > msg:'父数据'
+                    components > 'my-aaa'
+                        template: '#aaa', methods:get(){ this.db.msg = '改变，this.db.msg就是父的数据了' },
+                        props:['db']
+
+		b). 只是不报错, mounted中转【就是把父级的数据存到子级中来】
+
+------------------------------------------------------
+可以单一事件管理组件通信:	vuex
+	var Event=new Vue();
+
+	Event.$emit(事件名称, 数据)
+
+	Event.$on(事件名称,function(data){
+		//data
+	}.bind(this));
+
+	例子：兄弟组件之间的通讯
+	html:
+	    div#box
+	        {{giveData.boss}} // vue本身数据【父级】
+	        <my-aaa></my-aaa>
+	        <my-bbb></my-bbb>
+	        <my-ccc :msg:'giveData'></my-ccc> ！！！
+
+	    template#aaa
+	        span>我是a组件 我的数据为：{{a}}
+	        input[button] value="发送a组件数据" @click="send"
+
+	    template#bbb
+	        span>我是b组件 我的数据为：{{b}}
+	        input[button] value="发送b组件数据" @click="send"
+
+	    template#ccc
+	        span>我是c组件
+	        h2>接收兄弟组件数据：{{}}
+	        input[button] value="接收父级数据" @click="get"
+	        我是boss数据{{c_boss}}【即父数据】
+
+	js:
+	    let Event = new Vue();
+
+	    new Vue({
+	        data:{
+	            giveData:{
+	                boss:'我是大boss的数据'
+	            }
+	        },
+	        components:{
+	            'my-aaa':{
+	                template:'#aaa',
+	                methods:{
+                        send(){
+                            Event.$emit('brother-data', this.child-aaa)
+                        }
+                    },
+                    data () {
+                        return {
+                            child-aaa:'我是子组件AAA的数据'
+                        }
+                    }
+	            }
+                'my-bbb':{
+                    template:'#bbb',
+                    data () {
+                        return {
+                            child-bbb:'我是子组件CCC的数据'
+                        }
+                    },
+                    methods:{
+                        send(){
+                            Event.$emit('brother-data', this.child-bbb)
+                        }
+                    }
+                },
+                'my-ccc':{
+                    template: '#ccc',
+                    methods:{
+                        get(){
+                            this.c_boss = this.msg.boss;
+                        }
+                    },
+                    props:[msg],// 用来存在父级数据【类似中介】！！！
+                    data () {
+                        c_data:'' // 可以理解为用来存储兄弟组件发送来的数据【a组件】,
+                        c_boss:'' // 父级数据存放地！！！
+                    },
+                    mounted:{ // vue2.0钩子函数【生命周期中其中一个函数】模板加载完毕
+                        // let _this = this;
+                        Event.$on(function(a){
+                            console.log(a) // a 就是兄弟组件数据
+                            this.c_data = a; // 在没有绑定this前，这个this指的是在全局下Event的this，它可没有属性 a
+                        }.bind(this))        // 不绑定this的话！
+                    }
+                }
+	        }
+	    }).$mount('#box')
+
+------------------------------------------------------
+debounce	废弃
+	->   lodash    由于2.0 去除了全部的内置过滤器，
+	               它内部封装了诸多对字符串、数组、对象等常见数据类型的处理函数
+		_.debounce(fn,时间)
+------------------------------------------------------
+
+
+vue 动画
+-----------------------------------------------------
+依然叫 transition【看2.0初级动画.html、2.0高级动画.html】
+    之前是以属性形式做的
+        <p transition="fade"></p>
+
+        分别定义以下样式：
+        .fade-transition：动画时间，属性..
+        .fade-enter：进入
+        .fade-leave：离开
+
+    2.0 后就以组件形式
+        <transition> ！！只能给第一层加
+            运动的东西（元素、属性、路由...）
+        </transition>
+
+        class定义
+        .fade-enter{}           // 初始状态
+        .fade-enter-active{}    // 变化成什么样 -> 当元素出来【出现】
+
+        .fade-leave{}           // 上一个状态
+        .fade-leave-active{}    // 变成什么样 -> 当元素消失【离开】
+
+
+        例子：点击按钮显示隐藏方块
+            style:
+                p{w100px;h100px;bgc:#f20;}
+
+                // 注意：fade【它和组件transition> name='fade' 要一样哦】！
+                // 变化的时间
+                .fade-enter-active, .fade-leave-active{ transition: 1s all ease}
+
+                // 元素要变成以下定义的样式
+                .fade-enter-active{opacity:1;w200px;h200px;}
+
+                // 元素的初始状态
+                .fade-enter, fade-leave{opacity:0;w100px;h100px}
+
+            html:
+              div#vm
+                input[button 显示隐藏元素] @click="show=!show"
+                transition> name='fade'！
+                            @before-enter="beforeEnter"  ！动画进入之前
+                            @enter="Enter"               ！动画进入【正在执行动画中】
+                            @afterEnter="afterEnter"     ！动画进入之后【动画加载完成后】
+
+                            @before-leave="beforeLeave"  ！动画离开之前
+                            @leave="Leave"               ！动画离开【正在离开】
+                            @afterLeave="afterLeave"     ！动画离开之后【动画离开完成】
+                    <p v-show="show"></p> ！v-show 显示隐藏【true->显示 false->隐藏】
+
+            JS:
+                new Vue({
+                    data:{ show: false },
+                    methods:{
+                        // 每个函数都有一个参数：就是当前执行动画的元素
+                        beforeEnter(el){
+                            console.log('动画进入之前') },
+
+                        Enter(el){
+                            console.log('动画进入【正在进入】') },
+
+                        afterEnter(el){
+                            console.log('动画进入之后【动画加载完成后】')
+                            el.style.background = 'blue' },
+
+                        beforeLeave(el){
+                            console.log('动画离开之前') },
+
+                        Leave(el){
+                            console.log('动画离开【正在离开】') },
+
+                        afterLeave(el){
+                            console.log('动画离开完成')
+                            el.style.background = 'red'}
+                    }
+                }).$mount('#vm')
+
+
+        例子：结合animate.css动画库【不需要name】单个元素@@
+            html:
+              div#vm
+                input[button 点击我] @click="show=!show"
+                transition>                            ！省略了 name
+                    enter-active-class="zoomInLeft"    ！enter-active-class 是不是很熟悉
+                    leave-active-class="zoomOutRight"  ！leave-active-class 一样这样写
+                    p > class="animated" v-show="show" ！！！在变化的元素写class="animated"
+
+            style:
+                p{w100px;h100px;bgc:#f60} ！这里只需定义变化元素即可
+
+            JS:
+                new Vue({
+                    data:{ show: false }
+                }).$mount('#vm')
+
+            多个个元素@【下面只写改动的地方】
+                <transition-group>
+                    <p v-show="show" :key="0"></p>
+                    <p v-show="show" :key="1"></p>
+                </transition-group>
+
+        例子2：多个小方块根据文本框输入的值来显示相应的小方块【根据字母】
+                style:
+                     p{ w100px; h100px; bgc:#f30}
+
+                JS:
+                    data:{ show:'', list:['app', 'ab', 'ccc'] },
+                    computed:{
+                        lists(){
+                            let arr = [];
+                            let _that = this; // this 作用域问题
+                            this.list.forEach(function(val){
+                                if(val.indexOf(that.show) != -1){
+                                    arr.push(val);
+                                }
+                            }); // .bind(this)
+                            return arr;
+                        }
+                    }
+
+                html:
+                    input[text] v-model="show"
+                    transition-group> ！transition-group
+                      enter-active-class="zoomInLeft" leave-active-class="zoomOutRight"
+                        <p v-show="" v-for="(val, index) in list" :key="index"></p> ！:key
+
+----------------------------------------
+vue 路由

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>将全局parseIntFloat()移植Number对象上</title>
+</head>
+<body>
+<script>
+    // ES6 将 全局下的数值处理方法：parseInt/Float 移植到了 Number对象上，并保持了它的行为不变
+
+    // ES5的写法
+    parseInt('12.34') // 12
+    parseFloat('123.45#') // 123.45
+
+    // ES6的写法
+    Number.parseInt('12.34') // 12
+    Number.parseFloat('123.45#') // 123.45
+
+    Number.parseInt === parseInt // true
+    Number.parseFloat === parseFloat // true
+
+    /* 目的：是逐步减少全局性方法，使得语言逐步【模块化】 */
+</script>
+</body>
+</html>

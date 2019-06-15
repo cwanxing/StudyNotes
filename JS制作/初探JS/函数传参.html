@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+#div1{
+	width:100px;
+	height:100px;
+	background:#F00;}
+</style>
+<script>
+function setcolor(color)<!--括号的color相当于一个变量-->
+{
+	var rich=document.getElementById('div1')
+	rich.style.background=color    <!--color为不确定值时，使用函数传参-->
+}
+</script>
+
+<!--function toBlack()
+{
+	var black=document.getElementById('div1')
+    black.style.background="black"
+}
+function toRed()
+{
+	var black=document.getElementById('div1')
+    black.style.background="red"
+}
+function toYellow()
+{
+	var black=document.getElementById('div1')
+    black.style.background="Yellow"
+}-->
+
+
+</head>
+
+<body>
+<div id="div1"></div>
+<input type="button" value="变黑" onclick="setcolor('black')"/>
+<input type="button" value="变红" onclick="setcolor('red')"/>
+<input type="button" value="变黄" onclick="setcolor('yellow')"/><!--变量的值在这-->
+</body>
+</html>

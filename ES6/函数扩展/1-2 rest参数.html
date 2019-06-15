@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>rest参数</title>
+</head>
+<body>
+<script type='text/javascript'>
+    /* ES6 引入 rest 参数，格式：...变量名；作用：获取函数的多余参数，这样就不需要使用arguments对象了 */
+    // rest 参数搭配的变量是一个【数组】该变量将多余的参数放入数组中
+    function add(...values) {
+      let sum = 0;
+
+      for (var val of values) {
+        sum += val;
+      }
+
+      return sum;
+    }
+
+    add(2, 5, 3) // 10 利用rest 参数，可以向函数传入任意数目的数组
+
+    // 下面是ES6 提供的：rest 参数替换 arguments参数例子
+    // arguments变量的写法
+    function sortNumbers() {
+      return Array.prototype.slice.call(arguments).sort();
+    }
+
+    // rest参数的写法 自认为很好，很简洁【不是反话哦】
+    const sortNumbers = (...numbers) => numbers.sort();
+
+    /* arguments 它不是一个数组，而是一个类似数组的对象 */
+    // 所以在使用数组的方法时：需使用Array.prototype.slice.call 把它转为数组，【而rest则不需要，本身就是】
+
+    /* 利用 rest 参数改写数组push方法的例子 */
+    function push(array, ...items) {
+      items.forEach(function(item) {
+        array.push(item);
+        console.log(item);
+      });
+    }
+
+    var a = [];
+    push(a, 1, 2, 3)
+
+    /* 对于rest 参数需注意两点：*/
+    // 1. rest参数后不能再有其他参数了哦
+    // function a(a, ...b, c){}  报错
+
+    // 2. 函数的length中不包括 rest参数哦
+    /*
+        (function(a) {}).length  // 1
+        (function(...a) {}).length  // 0
+        (function(a, ...b) {}).length  // 1
+    */
+
+</script>
+</body>
+</html>

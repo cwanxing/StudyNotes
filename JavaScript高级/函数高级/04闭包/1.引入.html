@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>1引入</title>
+</head>
+<body>
+点击按钮，打印你点击了第几个按钮，<br>
+<button>测试1</button>
+<button>测试2</button>
+<button>测试3</button>
+
+<script type='text/javascript'>
+    var btns = document.getElementsByTagName('button')
+    //遍历加监听
+    /*
+    for (var i = 0,lentth = btns.length; i < lentth; i++) {//i < btns.length中的的btns.length并非是个固定的值，
+        var obj = btns[i];
+        obj.onclick = function () {//在此函数执行时，for已经执行完了。i=3
+            console.log('第' + (i+1) + '个');
+        }
+    }*/
+    //console.log(i);//i 是个全局变量，因为js(ES6之前)没有块作用域
+
+    /*可以实现
+    for (var i = 0,length = btns.length; i < length; i++) {
+        var btn = btns[i];
+        btn.index = i;
+        btn.onclick = function () {
+            console.log('第' + (this.index+1) + '个按钮');
+        }
+    }*/
+
+    //可以实现
+    for (var i = 0,length = btns.length; i < length; i++) {
+        //匿名函数自调用
+        (function (i) {//i 是形参，属于局部变量
+            var btn = btns[i];
+            btn.onclick = function () {
+                console.log('第' + (i+1) + '个');
+            }
+        })(i) //i 是实参，属于全局变量
+    }
+
+
+//    一个小小的问题，关于函数括号的区别
+    function get() {
+        console.log('123');
+    }
+    var gt = get;
+    gt(); //123
+    var gt1 = gt();
+
+    //闭包的出现：js中可以函数嵌套，所以才有了所谓的闭包
+    ///如何从外部读取局部变量？也就是show1函数怎么访问show2中的变量
+    function show1() {
+        var a = 1;
+        function show2() {
+            var test_b = 100;//测试用到的b变量
+            console.log(a);//1
+            // show2函数 用到了 show1作用域(非全局作用域)下的变量，则show2就是一个闭包
+        }
+    }
+    //对于show2来说，show1的变量是可见的；相反show2的变量show1是访问不到的
+    //链式作用域结构：子对象会一级一级地向上寻找所有父对象的变量。所以，父对象的所有变量，对子对象都是可见的，反之则不成立
+
+    //思考：那我们把show2作为返回值，我们不就可以在show1外部访问show2的变量
+    function show1() {
+        var a = 1;
+        function show2() {
+            var test_b = 199;
+            console.log(a);//1
+        }
+        return show2;
+    }
+    var result = show1();
+    result();//1
+
+    //一个函数执行完后，会自动释放里面的全部变量，闭包则利用这一特点，让函数执行完后变量仍然保存
+    ////闭包：能够读取 其他函数内部变量 的函数；闭包就是函数外部和内部沟通的桥梁
+    //用途：
+    // 1. 读取 其他函数内部变量
+    // 2.
+</script>
+</body>
+</html>

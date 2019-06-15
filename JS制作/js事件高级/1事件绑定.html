@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>事件绑定</title>
+    <!-- 一个事件上可以绑定很多函数 -->
+    <script>
+        //封装函数：事件绑定
+        function myAddEvent(obj, ev, fn){
+            if(obj.attachEvent){
+                obj.attachEvent('on' + ev, fn);
+            }else{
+                obj.addEventListener(ev, fn);
+            }
+        }
+        window.onload = function(){
+            var oBtn = document.getElementById('btn1');
+            
+            myAddEvent(oBtn, 'click', function(){
+                alert('a');
+            });
+            myAddEvent(oBtn, 'click', function(){
+                alert('b');
+            })
+            //有绑定就有解除事件绑定
+            //IE: detachEvent(事件名， 函数)
+            //FF: removeEventListener(事件名， 函数， false)
+            //兼容写法：
+            /*
+            if(oBtn.attachEvent){
+                oBtn.attachEvent('onclick', function(){
+                alert('a');
+                });
+                oBtn.attachEvent('onclick', function(){
+                    alert('b');
+                }) 
+            }else{
+                oBtn.addEventListener('click', function(){
+                alert('a');
+                }, false);
+                oBtn.addEventListener('click', function(){
+                    alert('b');
+                }, false);
+            }*/
+            
+            //attachEvent(事件名， 函数)
+            //IE
+           /* oBt.attachEvent('onclick', function(){
+                alert('a');
+            });
+            oBtn.attachEvent('onclick', function(){
+                alert('b');
+            })*/
+
+            //FF，chorm
+            //addEventListener(事件名， 函数， false)
+            /*
+            oBtn.addEventListener('click', function(){
+                alert('a');
+            }, false);
+            oBtn.addEventListener('click', function(){
+                alert('b');
+            }, false);*/
+            /*
+            oBtn.onclick = function(){
+                alert('a');
+            };
+
+            oBtn.onclick = function(){
+                alert('b');
+            }*/
+            /*
+            1，何时使用事件绑定
+            2，绑定事件和this
+            3，绑定匿名函数，会无法删除
+            */
+        }
+        
+    </script>
+</head>
+<body>
+    <input type="button" id="btn1" value="弹出">
+</body>
+</html>

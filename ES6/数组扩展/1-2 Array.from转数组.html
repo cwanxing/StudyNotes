@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>类数组/可遍历对象 转 数组</title>
+</head>
+<body>
+<script>
+    /**
+    * 方法：Array.from
+    * 功能：将一个 类数组对象 或者 可遍历对象 转换成一个 真正的数组
+    *        包括ES6 新增的Map和Set数据结构 对象
+    * 用法：Array.from(类数组对象/可遍历对象)
+    * 注意：
+    *      1. 该类数组对象必须具有length属性，用于指定数组的长度。如果没有length属性，那么转换后的数组是一个空数组。
+    *      2. 该类数组对象的属性名：必须为【数值型】或【字符型的数值】
+    * */
+    let arrayLike = {
+        '0': 'a',
+        '1': 'b',
+        '2': 'c',
+        length: 3
+    };
+
+    // ES5的写法
+    var arr1 = [].slice.call(arrayLike); // ['a', 'b', 'c']
+
+    // ES6的写法
+    let arr2 = Array.from(arrayLike); // ['a', 'b', 'c']
+
+    /* 常见的类数组对象：DOM返回的NodeList集合；函数的arguments对象*/
+    // 1. NodeList 集合：
+    var oNL = document.querySelectorAll('div');
+    Array.from(oNL).filter(function (n) {
+        return n.textContent.length > 100;
+    });
+    /**
+     * 方法：filter
+     * 作用：把数组的某些元素过滤，返回剩余元素
+     * 参数：一个函数
+     *      函数可以有三个参数：element, index, self
+     *                      element: Array 的某个元素(常用)
+     *                      index：元素位置
+     *                      self: Array数组本身
+     * 属性：textContent
+     * 作用：获得内容：忽略HTML代码；写入HTML代码不能解析。获取的内容与源码内容一样
+     * 类似：value; innerHTML; innerText
+     *      value：应用于表单输入框（texterea）
+     *      innerHTML：获取的是HTML，写入也是HTML，可解析
+     *      innerText：获取内容：忽略HTML代码，写入HTML代码不能解析，获取内容与源码一样
+     * */
+    // 2. arguments 对象：
+    function g() {
+      var args = Array.from(arguments);
+    }
+
+    // 以下都部署了 Interator接口：可以Array.from
+    Array.from('hello')
+    // ['h', 'e', 'l', 'l', 'o']
+
+    let namesSet = new Set(['a', 'b'])
+    Array.from(namesSet) // ['a', 'b']
+
+    Array.from([1, 2, 3])// [1, 2, 3] 参数是数组，返回原数组
+    /* 值得注意：三点运算符可以直接把某些数据结构转为数组 */
+    // arguments对象
+    function foo() {
+      const args = [...arguments];
+    }
+
+    // NodeList对象
+    [...document.querySelectorAll('div')]
+
+    /*
+        权威的ES6 说了：所谓类数组对象，就是必须有 length 属性的对象
+        可以说有 length属性的对象，都可以通过Array.from 转为 数组，
+        但我们强大的 三点运算符 对这种就无能为力了
+     */
+    Array.from({ length: 3 }); // 就是这种
+    // [ undefined, undefined, undefined ]
+
+    // 对于那些没有部署 Array.from 方法的浏览器可以使用：Array.prototype.slice方法
+    const toArray = (() =>
+        Array.from ? Array.from : obj => [].slice.call(obj)
+    )();
+    /*
+    * const toArray = (function(){
+    *   return Array.from ? Array.from : function(obj){
+    *      return [].slice.call(obj)
+    *   };
+    * })
+    * */
+    // Array.from 可以接受 第二参数的应用：用来对每个元素进行处理，将处理后的值放入【返回的数组】  类似map方法
+    // 1.
+    Array.from(arrayLike, x => x * x);
+    // 等同于
+    Array.from(arrayLike).map(x => x * x);
+
+    Array.from([1, 2, 3], (x) => x * x)
+    // arrayLike ==> [1, 4, 9]
+    /* ES5
+    * Array.from(arrayLike, function(x){
+    *   return x * x;
+    * })
+    * Array.from(arrayLike).map(function(x){
+    *   return x * x;
+    * })
+    * Array.from([1,2,3], function(x){
+    *   return x * x;
+    * })
+    */
+    // 2. 取出一组DOM 节点的文本内容
+    let spans = document.querySelectorAll('span.name');
+    // map()
+    let names1 = Array.prototype.map.call(spans, s => s.textContent);
+    // Array.from()
+    let names2 = Array.from(spans, s => s.textContent)
+    /*
+      Array.prototype.map.call(function(spans, s){
+        return s.textContent
+      })
+      Array.from(function(spans, s){
+        return s.textContent;
+      })
+    */
+    // 3. 将数组中布尔值为false的成员转为0
+    Array.from([1,,2,,3],(x) => x || 0);
+    /*
+    * Array.from([1,,2,,3], function(x){ x = 1, x = '', x = 2, x = '', x = 3
+    *                                    true   false   true   false   true
+    *   return x || 0; ==> true || false
+    * })
+    */
+    // 4. 测试各种传入的数据是什么类型
+    function typesOf () {
+      return Array.from(arguments, value => typeof value)
+    }
+    typesOf(null, [], NaN)
+    // ['object', 'object', 'number']
+    /*
+    *  return Arry.from(arguments, function(value){
+    *     return typeof value;
+    *  })
+    */ // 如果map函数里面用到了this关键字，还可以传入Array.from的第三个参数，用来绑定this
+
+    /**
+     * 诞生Array.from 的理由：
+         * Array.from()可以将各种值转为真正的数组，并且还提供map功能。
+         * 这实际上意味着，只要有一个原始的数据结构，你就可以先对它的值进行处理，
+         * 然后转成规范的数组结构，进而就可以使用数量众多的数组方法
+     * */
+    Array.from({ length: 2 }, () => 'jack')// 灵活，优秀
+    // ['jack', 'jack'] ==> Array.from 的第一个参数【指定length】决定第二参数【函数】的运行次数
+
+    // 将字串转为数组，返回字串长度【因为处理大于\uFFFF的Unicode码算成2个字符的BUG，所以很牛】
+    function countSymbols(string){
+      return Array.from(string).length;
+    }
+</script>
+</body>
+</html>

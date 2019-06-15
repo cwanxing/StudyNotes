@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ES6/ES5的数据结构【Set】</title>
+</head>
+<body>
+    <script>
+        /**
+         * 先看些简单的代码，对解构赋值有大致了解
+         *   ES5: 解构
+         *   let cat = 'ken'
+             let dog = 'lili'
+             let zoo = {cat: cat, dog: dog} ==> {变量名：索引cat，变量名：索引dog}
+             console.log(zoo)  //Object {cat: "ken", dog: "lili"}
+         *
+         *   ES6: 解构
+         *   let cat = 'ken'
+             let dog = 'lili'
+             let zoo = {cat, dog} ==> 只要写上索引，它默认会给你加上变量名
+             console.log(zoo)  //Object {cat: "ken", dog: "lili"}
+         *
+         *   注意：当时我也不太确定
+         * */
+
+
+
+        /*
+        【Array】数组：var arr = [1, 2, 3] // arr[0]=>1; arr[1]=>2; arr[2]=>3; arr.length=>3
+        【Object】类数组对象：var arr2 = {0: 1, 1: 2, 2: 3, length: 3} // // arr2[0]=>1; arr2[1]=>2; arr2[2]=>3; arr2.length=>3
+        */
+
+        /*【Set】数据结构【ES6】*/
+        // 特性：所有的元素都是唯一的【此特性可以用于数组去重复】
+        let arr = new Set([1,2,2,3,4,5,4,4]) // arr=>{1, 2, 3, 4, 5}【输出的是对象哦】
+
+        // 多数组去重复
+        let arr1 = [1,2,2,3]
+        let arr2 = [3,4,4,5]
+        let newarr = new Set([...arr1, ...arr2]) // newarr=>{1, 2, 3, 4, 5} 【三点操作符】
+
+        /*操作*/
+        // 添加
+        let set1 = new Set()
+        set1.add(1)
+        set1.add('2')
+        set1.add('帅') // =>{1, '2', '帅'}
+        //删除
+        set1.delete('2')
+        set1.delete('帅')
+        //判断某个元素是否存在
+        let a = set1.has('帅')// 上面以删 所以false
+        let b = set1.has(1);// true
+        //清除所有元素
+        set1.clear()
+
+        /*Set 和 Array 互相转换*/
+        //数组 => Set
+        let set2 = new Set(new Array(1,2,3))// set2 => {1,2,3}
+        let set3 = new Set([1,2,3])// set3 => {1,2,3}
+        //Set => 数组
+        let set4 = new Set([1,2,3])// 这样set4始终是对象{1,2,3}
+        let arr3 = Array.from(set4)// arr3 => [1,2,3]
+        let arr4 = [...set4] // arr4 => [1,2,3]
+
+        /* 遍历方法：【keys(); values(); entries()】*/
+        // 在Set中 键名 <==> 键值；即每个元素的keys()和values()返回值相等
+        // entries() ==> 返回键名和键值
+        let set5 = new Set([4, 5, 'hello'])
+        for(let item of set5.keys()) {
+            console.log(item)// 4, 5, 'hello'
+        }
+        for(let item of set5.values()) {
+            console.log(item)// 4, 5, 'hello'
+        }
+        for(let item of set5.entries()) {
+            console.log(item)// [4, 4]; [5, 5]; ['hello', 'hello']
+        }
+    </script>
+</body>
+</html>

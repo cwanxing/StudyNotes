@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Symbol数据类型概述</title>
+</head>
+<body>
+<script>
+    /* 引言：ES5 的对象属性名都是字符串，这容易造成【属性名】的冲突 */
+    // 例子描述：解决属性/方法名冲突，确保属性/方法名唯一
+    /*
+    * 你使用了一个他人提供的对象，但又想为这个对象添加新的方法（mixin 模式），
+    * 新方法名字 就有可能与 现有方法名 产生冲突
+    * */
+    // 随带回忆下前面六种数据类型：undefined null Boolean String Object Number
+    // 接下来ES6 推出的是第七种数据类型：Symbol
+    /**
+     * 类型：Symbol
+     * 属性/方法名有两种情况：1. 字串 2. Symbol【唯一】
+     * 格式：let s = Symbol(); typeof s //=> "symbol" 已经是Symbol的，高大尚谷
+     * 注意：Symbol不能使用 new 关键字【Symbol生成的是一个原始类型的值，不是对象】貌似有些糊涂
+     *      根据上条可知：Symbol【不能添加属性】
+     * 参数：一. 一个字串【表示对Symbol实例的描述】
+     *         作用：1. 在控制台显示 2. 方便与其他数据类型区分
+     *      二. 一个对象
+     *         执行过程：1. 调用object.toString()方法转为字串 2. 再生成一个Symbol值
+     * */
+    // 一、
+    let s1 = Symbol('foo');
+    let s2 = Symbol('bar');
+    s1 // Symbol(foo) 1.
+    s2 // Symbol(bar) 1. ==> 没有字串描述，控制台全部输出Symbol()，比较难以区分
+    s1.toString() // "Symbol(foo)" 2.
+    s2.toString() // "Symbol(bar)" 2. ==> 同上理，也是区分
+
+    // 二、
+    const obj = {
+      toString() {
+        return 'abc';
+      }
+    };
+    const sym = Symbol(obj);
+    sym // Symbol(abc)
+    /*
+    * Symbol函数的参数只是表示对当前 Symbol 值的描述【】
+    * 因此【相同】参数的 Symbol 函数的返回值是【不相等】的
+    *
+    *    // 没有参数的情况
+         let s1 = Symbol();
+         let s2 = Symbol();
+         s1 === s2 // false 相同还是不相等【相当于它是引用对象】
+
+         // 有参数的情况
+         let s1 = Symbol('foo');
+         let s2 = Symbol('foo');
+         s1 === s2 // false 相同还是不相等【相当于它是引用对象】
+    * */
+    // 注意点：
+    // 1. Symbol 不能与其他数据类型进行运算
+    let sym = Symbol('My symbol');
+    "your symbol is " + sym // TypeError: can't convert symbol to string
+      `your symbol is ${sym}` // TypeError: can't convert symbol to string
+
+    // 2. Symbol 值可以【显式】转为字符串
+    let sym = Symbol('My symbol');
+    String(sym) // 'Symbol(My symbol)'
+    sym.toString() // 'Symbol(My symbol)'
+
+    // 3. Symbol 值也【可以】转为布尔值，但是【不能】转为数值
+    let sym = Symbol();
+    Boolean(sym); // true
+    !sym  // false 反一反
+    if (sym) {
+      // ...
+    }
+    Number(sym);// TypeError 类型错误
+    sym + 2 // TypeError 类型错误
+</script>
+</body>
+</html>

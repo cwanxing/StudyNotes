@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script>
+        window.onload=function(){
+            var oTxt1=document.getElementById('txt1');
+            var oTxt2=document.getElementById('txt2');
+            // var oBtn=document.getElementById('btn1');
+
+            // oBtn.onclick=function (){
+            //     oTxt2.value+=oTxt1.value+'\n';
+            //     oTxt1.value='';
+            // }
+            oTxt1.onkeydown=function(ev){
+                var oEvent=ev||event;
+                
+                if(oEvent.keyCode==13 && oEvent.ctrlKey){//回车和ctrl回车提交留言
+                    oTxt2.value+=oTxt1.value+'\n';
+                    oTxt1.value='';
+                }
+                //shiftKey、altKey 同理，shift+回车,alt+回车
+            }
+        }
+    </script>
+</head>
+<body>
+    <input type="text" id="txt1">
+    <input type="button" id="btn1" value="留言"></input><br>
+    <textarea id="txt2" rows="10" cols="40"></textarea>
+</body>
+</html>

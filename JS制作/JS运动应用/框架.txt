@@ -1,0 +1,6 @@
+var alpha=20;
+function stratMove(){
+clearInterval(obj,iTarget)
+var timer=null;
+timer=
+}

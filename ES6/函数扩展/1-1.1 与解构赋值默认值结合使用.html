@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>函数参数与解构赋值</title>
+</head>
+<body>
+<script type='text/javascript'>
+    /* 函数参数可以和 解构赋值 结合使用*/
+    function foo({x, y = 5}) {
+      console.log(x, y);
+    }
+
+    foo({}) // undefined 5
+    foo({x: 1}) // 1 5
+    foo({x: 1, y: 2}) // 1 2 ==> 参数为一个对象时，才能解构赋值
+    foo() // TypeError: Cannot read property 'x' of undefined 没有参数
+
+    // 设了默认值：
+    function foo({x, y = 5} = {}) { // 默认值为一个空对象
+      console.log(x, y);
+    }
+
+    foo() // undefined 5
+
+    /* 解构赋值默认值例子：*/
+    function fetch(url, { body = '', method = 'GET', headers = {} }) { // 这种写法，调用时 不能省略第二参数
+      console.log(method);
+    }
+    fetch('http://example.com', {}) // "GET"
+    fetch('http://example.com') // 报错
+
+    // 结合函数参数的样子：【就可以省略第二参数了】
+    function fetch(url, { body = '', method = 'GET', headers = {} } = {}) { // 没有参数，默认是个空对象
+      console.log(method);
+    }
+
+    fetch('http://example.com')
+    // "GET"
+
+
+    // 我也不清楚以下代码想告诉我什么，先看吧
+    // 写法一
+    function m1({x = 0, y = 0} = {}) { // 为对象解构赋值的设了默认值
+      return [x, y];
+    }
+
+    // 写法二
+    function m2({x, y} = { x: 0, y: 0 }) { // 没有为对象解构赋值设默认值，只为函数参数设置了默认值
+      return [x, y];
+    }
+    /* 以下为分别调用它们得到的结果 */
+    // 函数没有参数的情况
+    m1() // [0, 0]
+    m2() // [0, 0] ==> ()号里没有{}号，说明是普通函数调用【我只能这么理解】
+
+    // x 和 y 都有值的情况
+    m1({x: 3, y: 8}) // [3, 8]
+    m2({x: 3, y: 8}) // [3, 8] ==> ()号里有{}号，说明，需要进行【解构赋值】
+
+    // x 有值，y 无值的情况
+    m1({x: 3}) // [3, 0]
+    m2({x: 3}) // [3, undefined] ==> 需要解构赋值，所以没有传数，那么默认就是 undefined 【这是解构赋值】
+
+    // x 和 y 都无值的情况
+    m1({}) // [0, 0];  ==> 因为这里一开始就给解构赋值设了值【已经不是 undefined 了】
+    m2({}) // [undefined, undefined] ==> 而这里却没有
+
+    m1({z: 3}) // [0, 0] ==> 同样道理，只不过，传了，不过在解构赋值的时候，找不到 z 属性【这里是为解构赋值设了默认值的哦】
+    m2({z: 3}) // [undefined, undefined] ==> 而这里没有为解构赋值设【所以是undefined】，只为函数参数设默认值
+</script>
+</body>
+</html>

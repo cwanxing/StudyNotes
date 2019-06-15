@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>keys values entries遍历对象属性</title>
+</head>
+<body>
+<script>
+    /**
+     * 方法：Object.keys()
+     * 功能：返回参数对象自身的（不含继承的）所有可遍历（enumerable）属性的【键名】
+     * 返回：数组
+     *      成员：参数对象自身的（不含继承的）所有可遍历（enumerable）属性的【键名】
+     *
+     * */
+    var obj = { foo: 'bar', baz: 42 };
+    Object.keys(obj); // ["foo", "baz"]
+    /* ES2017 引入跟Object.keys配套Object.values和Object.entries，为【遍历一个对象】的补充手段，供for...of循环使用 */
+
+    let {keys, values, entries} = Object;
+    let obj = { a: 1, b: 2, c: 3 };
+
+    for (let key of keys(obj)) {
+      console.log(key); // 'a', 'b', 'c'
+    }
+
+    for (let value of values(obj)) {
+      console.log(value); // 1, 2, 3
+    }
+
+    for (let [key, value] of entries(obj)) {
+      console.log([key, value]); // ['a', 1], ['b', 2], ['c', 3]
+    }
+    /**
+     * 方法：Object.values()
+     * 功能：返回参数对象自身的（不含继承的）所有可遍历（enumerable）属性的【键值】
+     * 返回：数组
+     *      成员：参数对象自身的（不含继承的）所有可遍历（enumerable）属性的【键值】
+     *
+     * */
+    const obj = { foo: 'bar', baz: 42 };
+    Object.values(obj); // ["bar", 42]
+
+    const obj = { 100: 'a', 2: 'b', 7: 'c' };
+    Object.values(obj); // ["b", "c", "a"] 返回数组的成员顺序【按照数值大小，从小到大遍历的】
+
+    // 1. 只返回：对象自身的可遍历属性
+    const obj = Object.create({}, {p: {value: 42}}); // 属性p 描述对象enumerable【即可遍历性】为false
+    Object.values(obj) // [] => 只要改变 enumerable 属性为true 就可以遍历了
+
+    const obj = Object.create({}, {p:
+      {
+        value: 42,
+        enumerable: true
+      }
+    });
+    Object.values(obj) // [42]
+    // 2. Object.values会过滤属性名为 Symbol 值的属性
+    Object.values({ [Symbol()]: 123, foo: 'abc' }); // ['abc'] 没有打印出symbol的，忽略了
+
+    // 3. 参数是一个字符串，会返回各个字符组成的一个数组
+    Object.values('foo'); // ['f', 'o', 'o']
+    /* 字符串会先转成一个类似数组的对象。字符串的每个字符，就是该对象的一个属性
+    *    Object.values返回每个属性的键值，就是各个字符组成的一个数组
+    * */
+    // 4. 参数不是对象，转换：
+    Object.values(42) // [] 不会为实例添加非继承的属性，所以为空
+    Object.values(true) // [] 不会为实例添加非继承的属性，所以为空
+
+    /**
+     * 方法：Object.entries()
+     * 功能：返回参数对象自身的（不含继承的）所有可遍历（enumerable）属性的【键值对】数组
+     * 返回：数组
+     *      参数对象自身的（不含继承的）所有可遍历（enumerable）属性的【键值对】数组
+     *
+     * */
+    const obj = { foo: 'bar', baz: 42 };
+    Object.entries(obj); // [ ["foo", "bar"], ["baz", 42] ] 除了返回值不一样，基本和values一样
+
+    // 1. 忽略symbol值
+    Object.entries({ [Symbol()]: 123, foo: 'abc' }); // [ [ 'foo', 'abc' ] ]
+    /* 将来可能会有 Reflect.ownEntries() 方法，返回对象自身的所有属性 */
+
+    // 应用：
+    // 1. 遍历对象的属性
+    let obj = { one: 1, two: 2 };
+    for (let [k, v] of Object.entries(obj)) {
+      console.log(
+        `${JSON.stringify(k)}: ${JSON.stringify(v)}`
+      );
+    }
+    // "one": 1
+    // "two": 2
+
+    // 2. 将对象转为真正的Map结构
+    const obj = { foo: 'bar', baz: 42 }; // 对象
+    const map = new Map(Object.entries(obj)); // 转为map 结构
+    map // Map { foo: "bar", baz: 42 } 输出
+
+    /* 自己部署 */
+    // Generator函数的版本 【请看后面章节】
+    function* entries(obj) {
+      for (let key of Object.keys(obj)) {
+        yield [key, obj[key]];
+      }
+    }
+
+    // 非Generator函数的版本
+    function entries(obj) {
+      let arr = [];
+      for (let key of Object.keys(obj)) {
+        arr.push([key, obj[key]]);  // [键名，[键值]]
+      }
+      return arr;
+    }
+</script>
+</body>
+</html>

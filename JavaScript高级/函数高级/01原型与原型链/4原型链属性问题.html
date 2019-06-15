@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>4原型链属性</title>
+</head>
+<body>
+1.查找对象属性时，需过原型链
+2.设置对象属性时，不过原型链，如果没有此属性，会直接添加到对象上去，不会加在原型上
+3.方法一般定义在原型内，属性一般通过构造函数定义在对象上
+以下结合原型链-属性.png和打印结果看
+<script type='text/javascript'>
+    function Fn() {}
+    Fn.prototype.a = '我是A1'//在Fn的原型上添加了一个属性(一般不建议这样添加属性)
+    var fn1 = new Fn()
+   // console.log(fn1.a, fn1);// a1  原型有个a属性
+
+    var fn2 = new Fn();
+    fn2.a = '我是A2'//a:'我是A1'，并未被覆盖，而是fn2中a是直接添加到对象本身上
+    //console.log(fn1.a);// 我是A1
+   // console.log(fn2.a);// 我是A2
+    //console.log(fn2); //原型上a属性还是存在，不过在fn2对象上多了个a属性，它不在原型上
+
+    function Person(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+    Person.prototype.setName = function (name) {
+        this.name = name;
+    }
+    var P1 = new Person('Tom', 12)
+    P1.setName('Bob')
+    console.log(P1);
+
+    var P2 = new  Person('Cwx', 18)
+    P2.setName('Cat')
+    console.log(P2);
+
+</script>
+</body>
+</html>

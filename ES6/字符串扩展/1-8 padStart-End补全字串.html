@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>padStart()，padEnd()</title>
+</head>
+<body>
+<script type='text/javascript'>
+    /* 我们强大的ES6 提出了补全字符串 */
+    // padStart(字符串补全生效的最大长度, '用来补全的字符串')
+    // padEnd(字符串补全生效的最大长度, '用来补全的字符串')
+    'x'.padStart(5, 'ab') // 'ababx'
+    'x'.padStart(4, 'ab') // 'abax'
+
+    'x'.padEnd(5, 'ab') // 'xabab'
+    'x'.padEnd(4, 'ab') // 'xaba'
+
+    /// 以下是参数的特殊情况
+    // 1. 原字串长 >= 最大长度 ，字串补全不生效，返回原字串
+    'xxx'.padStart(2, 'ab') // 'xxx'
+    'xxx'.padEnd(2, 'ab') // 'xxx'
+    // 2. 补全字串 + 原始字串 > 最大长度；则截取(部分)补全字串，使之等于最大长度
+    'xxoo'.padStart(8, 'aabba') // 'aabbxxoo'
+    'xxoo'.padEnd(8, 'aabba') // 'xxooaabb'
+    // 3. 如果省略第二个参数，即补全字串，则有空格代替
+    'xo'.padStart(3) // ' xo'
+    'xo'.padEnd(3) // 'xo '
+    // 作用（ 针对于padStart() ）
+    '1'.padStart(10, '0') // "0000000001"
+    '12'.padStart(10, '0') // "0000000012"
+    '123456'.padStart(10, '0') // "0000123456"
+    '12'.padStart(10, 'YYYY-MM-DD') // "YYYY-MM-12"
+    '09-12'.padStart(10, 'YYYY-MM-DD') // "YYYY-09-12"
+</script>
+</body>
+</html>

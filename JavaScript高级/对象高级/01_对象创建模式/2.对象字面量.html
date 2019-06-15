@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2.对象字面量</title>
+</head>
+<body>
+对象字面量
+    * 套路：使用{}创建对象，同时指定属性/方法
+    * 起始确定有哪些属性/方法
+    * 缺点：如果创建多个对象，可能会代码会重复
+
+<script type='text/javascript'>
+    var p = {
+        name: 'cwx',
+        age: '12',
+        getName: function () {
+            this.name = name
+        }
+    }
+    //测试
+    console.log(p.name, p.age);
+    p.getName('cwx123')
+
+    //此方法的缺点：重复
+    var p2 = {
+        name: 'Bob',//只个p对象名字不同而已
+        age: '12'
+        getAge: function () {
+            this.age = age
+        }
+    }
+</script>
+
+</body>
+</html>

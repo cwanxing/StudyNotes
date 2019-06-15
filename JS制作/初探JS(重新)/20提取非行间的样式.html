@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+#div1{width:200px;height:200px;background:red;}
+</style>
+<script>
+
+function getStyle(obj,name,value)
+{
+	if(obj.currentStyle)
+	{
+		return obj.currentStyle[name];
+	}
+	else
+	{
+		return getComputedStyle(obj,null)[name];
+	}
+}
+
+//获取行间的样式
+window.onload=function()
+{
+	var oDiv=document.getElementById('div1');
+	/*
+	//alert(oDiv.style.width);//样式在行间，执行成功
+	//只兼容IE
+	//alert(oDiv.currentStyle.width);//获取非行间样式
+	//Chrome,FF又不兼容IE
+	//alert(getComputedStyle(oDiv,false).width);
+	//alert(oDiv.currentStyle);//在IE下，是个东西，为真
+	//alert(oDiv.getComputedStyle);//结果为undefined 为假
+	//兼容两个浏览器写法，由上面得出
+	if(oDiv.currentStyle)
+	{
+		alert(oDiv.currentStyle.width);
+		//真
+	}
+	else
+	{
+		alert(getComputedStyle(oDiv,false).width);
+		//假
+	}
+	*/
+	alert(getStyle(oDiv,'backgroundColor'));
+	
+}
+</script>
+</head>
+
+<body>
+<div id="div1"></div><!-- style="width:800px" -->
+</body>
+</html>

@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<!-- 直接使用浏览器打开将出错
+	需放入服务器文件中才有效果
+	我这只是保存一个相对详细的ajax编写过程
+ -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>连接成功的第一个文件测试</title>
+    <script type="text/javascript">
+        window.onload = function () {
+            var oBtn = document.getElementById('btn');
+            //全局的变量是window下的一个属性
+            //用一个没有定义的变量---报错
+            //用没有定义的属性----undefinde(false)
+            oBtn.onclick = function () {
+                //1,创建ajax对象
+                //兼容写法
+                if (window.XMLHttpRequest) {
+                    var oAjax = new XMLHttpRequest();
+                } else {
+                    var oAjax = new ActiveXObject("Microsoft.XMLHTTP")
+                }
+                //alert(oAjax.readyState);---> 0
+
+                //非IE6的浏览器
+                //var oAjax = new XMLHttpRequest();
+                //alert(oAjax);
+                //兼容IE6
+                //var oAjax = new ActiveXObject("Micoroft.XMLHTTP")
+
+                //2,连接服务器
+                //open(方法， 文件名， 异步传输)【ajax 天生是异步传输】
+                //方法：post/get 
+                //文件名：需要获取什么文件
+                /*同步：多件事一起 (随着GDP的提高，人民生活水平同步提高)
+                  异步：一件一件来
+                注意：在程序中相反
+                */
+                oAjax.open('GET', 'ajax_note.txt?t=' + new Date().getTime(), true);
+
+                //3，发送请求
+                oAjax.send();
+
+                //4, 接收返回(不知道什么时候回来，受网速限制)
+                oAjax.onreadystatechange = function () {//当oAjax 和服务器有交互的时候发生事件
+                    /*有以下5个值
+                     0， (未初始化) 还没有调用open()方法
+                     1， (载入)已调用send()方法，正在发送请求
+                     2， (载入完成)send()方法完成， 已收到全部响应内容
+                     3,  (解析)正在解析响应内容
+                     4,  (完成) 响应内容解析完成， 可以在客户端调用
+                    */
+                    //oAjax.readyState 浏览器和服务器 进行到哪一步了
+                    if (oAjax.readyState == 4) { //读取完成(不代表成功，文件万一没了)
+                        if (oAjax.status == 200) //有你请求的文件
+                        {
+                            alert(oAjax.responseText);
+                        }
+                        else 
+                        {
+                            alert('失败，没有文件' + oAjax.status);
+                            //oAjax.status ---> 404 没有请求的文件
+                        }
+                    };
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <input id="btn" type="button" value="读取">
+</body>
+
+</html>

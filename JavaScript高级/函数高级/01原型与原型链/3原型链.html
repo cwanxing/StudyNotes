@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3原型链</title>
+</head>
+<body>
+1. 原型链(图解)
+    * 访问一个对象的属性时
+        * 先在自身属性中查找，找到返回
+        * 如果没有，再沿着__proto__这条链向上查找，找到返回
+        * 如果最终没有找到，返回undefined
+    * 别名：隐式原型链
+    * 作用：查找对象的属性(方法)
+    * 扩展：查找变量看作用域链
+2. 构造函数/原型/实体对象的关系(图解)
+3. 构造函数/原型/实体对象的关系2(图解)
+
+函数对象是一个Function的实例
+function Fn()
+var Fn = new Function();//任何函数都是这样产生的
+Function = new Function()
+所有函数的__proto__都是一样的，都是new Function()-->Function prototype
+//实例对象有一个隐式原型等于构造函数的显式原型属性
+注：
+<script type='text/javascript'>
+    console.log(Object.prototype.__proto__);//null
+    //console.log(Object);
+    //console.log(Object.prototype);
+    function Fn() {
+        this.test=function () {
+            console.log('test1');
+        }
+    }
+    console.log(Fn.prototype);
+    Fn.prototype.test2 = function () {
+        console.log('test2');
+    }
+
+    var fn = new Fn();
+    fn.test();//test1
+    fn.test2();//test2
+    console.log(fn.toString());//object
+    //console.log(fdgdf);//undefined
+    //fn.test3();//test3() is not function
+    
+    
+    //1. 函数的显式原型指向的对象默认是Object空实例对象(但Object不是, 系统为它添加了一些默认方法)
+    console.log(Fn.prototype instanceof Object);//true;  Fn是Object的实例
+    console.log(Function.prototype instanceof Object);//true Function也是Object的实例
+    console.log(Object.prototype instanceof Object);//false有默认的一些方法了，所以为false Object不是Object的实例
+
+    //2. 所有函数都是Function的实例(包括Function)
+    console.log(Function.prototype == Function.__proto__);//true
+
+    //3. Object的原型对象时原型链的尽头(仓库的最里面了，已经没有东西了，如果前面还找不到的话)
+    console.log(Object.prototype.__proto__);//null
+
+    //
+</script>
+</body>
+</html>

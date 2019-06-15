@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>prompt(多了个文本输入框)消息对话框</title>
+	<script type="text/javascript">
+		//prompt(str1,str2)
+		//str1:对话框提示文本，运行时已经不能修改
+		//str2:文本输入框,运行时让你输入文本的
+		/*运行过程：
+			点击确认按钮：文本框中的内容将作为函数返回值
+			点击取消按钮，将返回null;
+		*/
+		var myname=prompt('请输入你的姓名：');
+		if (myname!=null)
+		{
+			alert('你好'+myname);
+		}
+		else
+		{
+			alert('你好my friend')
+		}
+		//作业：
+		var myscore=prompt('请输入你的成绩：');
+		if(myscore>=90)
+		{
+			document.write('好棒哦！');
+		}
+		else if(myscore>=70)
+		{
+			document.write('你要死了哦！');
+		}
+		else if(myscore>60)
+		{
+			document.write('准备后事吧！');
+		}
+		else
+		{
+			document.write('回家耕田吧！');
+		}
+
+</script>
+</head>
+<body>
+	
+</body>
+</html>

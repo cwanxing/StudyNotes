@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>标签模板</title>
+</head>
+<body>
+    <script>
+      /* 标签模板不是模板，而是函数调用的一种【特殊形式】。“标签”指的就是函数，紧跟在后面的模板字符串就是参数 */
+      alert`123`; // `123` 这个模板字串紧跟alert函数后，就好像 alert(123);
+      // 那么我们称 ‘标签模板’功能【就是一种函数特效调用】
+
+      // 不过如果模板字串中有【变量】的话，则会：
+      // 第一、先解析成【多个】参数，第二、调用函数
+      let a = 5;
+      let b = 10;
+      tag`Hello ${ a + b } world ${ a * b }`;
+      // 等同于（不用想tag是函数了）
+      tag(['Hello ', ' world ', ''], 15, 50); // 为啥会被解析成这样，这得看函数咯
+
+      // 解析：
+      function tag(stringArr, value1, value2){
+        // ...
+      }
+      // 等同于
+      function tag(stringArr, ...values){
+        // ...
+      }
+      /*
+      * 参数解析：
+      *     参1：数组, 该数组的成员是模板字符串中那些没有变量替换的部分，
+      *         也就是说，变量替换只在数组的第一个与第二个之间、第二个与第三个之间，类推【真的不理解】
+      *     参2: 也就是其他变量，都是模板字符串各个变量被替换后的值【也就是一开始就是变量】
+      * 参数列表：
+      *    stringArr ：['Hello ', ' world ', '']
+      *    value1 : 15     value2 : 20
+      */
+
+      // 整合以上得出以下例子：
+      let a = 5;
+      let b = 10;
+      function tag(s, v1, v2) {
+        console.log(s[0]); // "Hello "
+        console.log(s[1]); // " world "
+        console.log(s[2]); // ""
+        console.log(v1); // 15
+        console.log(v2); // 50
+        return "OK"; // "OK"
+      }
+      tag`Hello ${ a + b } world ${ a * b}`;
+      //模板字串别解析出的样子 [ ["Hello ", " world ", "", raw: Array(3)] 15, 50 ]
+      // raw 里边【保存的是转义[后]的原字符串】 也就是["Hello ", " world ", ""]
+
+      // 以下真他么看不懂了：如何将各个参数按照原来的位置拼合回去
+      let total = 30;
+      let msg = passthru`The total is ${total} (${total*1.05} with tax)`;
+      function passthru(literals) {
+        // literals: ["The total is ", " (", " with tax)", raw: Array(3)] length：3
+        // 【模板处理函数】的第一个参数（模板字符串数组），都有一个 raw 属性【保存的是转义[后]的原字符串】
+        let result = '';    // 接收结果
+        let i = 0;          // 步长
+        while (i < literals.length) {
+          result += literals[i++];
+          if (i < arguments.length) {
+            // arguments: ["The total is ", " (", " with tax)", raw: Array(3)], 30, 31.5 length: 3
+            result += arguments[i];
+          }
+        }
+        return result;
+      }
+      msg;// "The total is 30 (31.5 with tax)"
+      // 以上函数使用 rest参数形式编写的话：
+      function passthru1(literals, ...values) {
+        let output = "";
+        let index;
+        for (index = 0; index < values.length; index++) {
+          output += literals[index] + values[index];
+        }
+
+        output += literals[index]
+        return output;
+      }
+      //重点来了，重点来了，重点来了：就是过滤 HTML 字符串，防止用户【输入恶意内容】, 把代码转义掉
+      let message =
+        SaferHTML`<p>${sender} has sent you a message.</p>`;// sender 是用户输入的数据
+      // sender = "<script>alert("abc")<'/script>" 这是用户的恶习代码【我加了个转义，不用注释不了】
+      function SaferHTML(templateData) {
+        // templateData => ["<p>", " has sent you a message.</p>", raw: Array(2)] length: 2
+        let s = templateData[0];
+        for (let i = 1; i < arguments.length; i++) {
+          let arg = String(arguments[i]);
+          // arguments => [ ["<p>", " has sent you a message.</p>", raw:Array(2)], "<script>alert("abc")<'/script>" ]
+          // arguments.length ==> 2
+
+          // 转义替换中的特殊字符
+          s += arg.replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            // replace("正则/替换目标字串的字串", "目标字串")
+          // 不要转义模板中的特殊字符
+          s += templateData[i];
+        }
+        return s;
+      }
+      // <p>&lt;script&gt;alert("abc")&lt;/script&gt; has sent you a message.</p>
+
+      // 还有一个应用：多国语言转换
+      i18n`Welcome to ${siteName}, you are visitor number ${visitorNumber}!`
+      // "欢迎访问xxx，您是第xxxx位访问者！"
+    </script>
+</body>
+</html>

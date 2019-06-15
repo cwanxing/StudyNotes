@@ -1,0 +1,26 @@
+BOM基础：
+    打开、关闭窗口
+        open()
+        close
+            在IE下会有提示，
+            在火狐下关不掉：
+                关不掉用户自己打开的窗口
+                只能关掉用open的方式打开的窗口
+    常用属性：
+        window.navigator.userAgent:
+            判断浏览器版本，甚至可以判断系统类型
+        window.location:
+            取很多东西
+尺寸和坐标：去看图
+
+window对象常用事件：
+onload: 窗体运行时发生
+onscroll: 页面滚动时发生
+onresize: 当窗口改变大小时发生
+滚动距离：
+    IE
+      document.documentElement.scrollTop
+    chrome
+      document.body.scrollTop
+    兼容：
+var scroll = document.documentElement.scrollTop || document.body.scrollTop 

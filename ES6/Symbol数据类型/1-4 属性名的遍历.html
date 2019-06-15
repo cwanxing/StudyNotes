@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>属性名的遍历</title>
+</head>
+<body>
+<script>
+    /**
+     * 对于symbol 数据类型的属性：
+        * 1. 不会出现在 for-in、for-of循环中
+        * 2. 不会被Object.keys、Object.getOwnPropertyNames、JSON.stringify 返回
+     * 不过，因为它不是私有属性，所以有一个getOwnPropertySymbols 方法
+     * 功能：获取指定对象的【symbol 属性名】
+     * 参数：目标对象
+     *
+     * */
+    const obj = {};
+    let a = Symbol('a');
+    let b = Symbol('b');
+
+    obj[a] = 'Hello';
+    obj[b] = 'World';
+
+    const objectSymbols = Object.getOwnPropertySymbols(obj);
+    objectSymbols // [Symbol(a), Symbol(b)]
+</script>
+</body>
+</html>

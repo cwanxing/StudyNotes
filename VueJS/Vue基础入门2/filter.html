@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>智能社——http://www.zhinengshe.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <style>
+
+    </style>
+    <script src="../vue.js"></script>
+    <script>
+
+    </script>
+</head>
+<body>
+    <div id="box">
+        vue对象中的data[msg] <!-- <div style="color:red">welcome</div> -->
+        <br>
+        没有过滤条html标签的
+        <input type="text" name="txt" v-model="msg" :style="{width:'100%',height:'30px',border:'2px solid #ccc',padding:'4px'}">
+        <br>
+        <br>
+        过滤了html标签了的
+        <input type="text" v-model="msg | fiterHtml" :style="{width:'100%',height:'30px',border:'2px solid #ccc',padding:'4px'}">
+        <br>
+        <br>
+        实时显示
+        <div v-html="msg">
+
+        </div>
+        <div>
+            {{msg}}
+        </div>
+    </div>
+    <script>
+        //<h2>welcome</h2>
+        Vue.filter('fiterHtml',{// model => view
+            read:function(input){
+                return input.replace(/<[^<]+>/g,'');
+                // return input.replace(/<[^>]*>/g, '');
+            },
+            write:function(val){// view => model
+                console.log(val)
+                return val;
+            }
+        });
+        var vm=new Vue({
+            data:{
+                msg:'<div style="color:red"><b>welcome</b></div>'
+            },
+            methods:{
+
+            }
+        }).$mount('#box');
+
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

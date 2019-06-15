@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查询第一个满足的成员</title>
+</head>
+<body>
+<script>
+    /**
+     * 方法：Array.find();
+     * 功能：找出第一个符合条件的数组成员
+     * 参数：一个回调函数，所以数组成员依次执行该 回调函数
+     * 返回值：找到，返回该成员；没有符合，返回undefined
+     * */
+    [1, 4, -5, 10].find((n) => n < 0)// -5
+    /*
+    *  [1, 4, -5, 10].find(function(n){
+    *     return n < 0;
+    *  })
+    */
+
+    [1, 5, 10, 15].find(function(value, index, arr) {
+      return value > 9;
+    }) // 10
+    /*
+    *   功能：找出第一个大于 9 的数
+    *   参数：1. value: 当前的值
+    *         2. index: 当前位置
+    *         3. arr: 原数组
+    */
+
+    /**
+     * 方法：Array.findIndex()
+     * 功能：找出第一个符合条件的数组成员
+     * 参数：
+     *      1. 一个回调函数，所有数组成员依次执行该 回调函数
+     *      2. 用来绑定回调函数的 this 对象
+     * 返回值：找到，返回第一个符合条件的数组成员的【位置】；没有，返回 -1
+     * */
+    // 1. 一个参数
+    [1, 5, 10, 15].findIndex(function(value, index, arr) {
+      return value > 9;
+    }) // 2
+    /*
+    *  功能：和上述一致
+    *  参数：1. value：当前的值
+    *       2. index：当前位置
+    *       3. arr：原数组
+    */
+    // 2. 两个参数
+    function f(v){
+      return v > this.age;
+    }
+    let person = {name: 'John', age: 20};
+    [10, 12, 26, 15].find(f, person);    // 26 回调函数中的this对象指向person对象
+
+    // 好处：弥补了数的 indexOf 方法的不足，不能识别NaN【两个方法都可以】
+    /**
+     * 方法：indexOf();
+     * 功能：返回某个指定的字符串值在字符串中首次出现的位置
+     * 返回：位置信息【数字】，没有，则返回 -1
+     * */
+    [NaN].indexOf(NaN)// -1
+
+    [NaN].findIndex(y => Object.is(NaN, y))// 0
+    // indexOf方法无法识别数组的NaN成员，但是findIndex方法可以借助Object.is方法做到
+    /*
+    *   [NaN].findIndex(function(y){
+    *       return Object.is(NaN, y);
+    *   })
+    */
+</script>
+</body>
+</html>

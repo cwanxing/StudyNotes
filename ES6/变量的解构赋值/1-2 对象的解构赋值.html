@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>对象的解构赋值</title>
+</head>
+<body>
+    <script>
+        /* 变量必须与属性【一致】，才能取到正确的值 */
+        let { bar, foo } = { foo: "aaa", bar: "bbb" };  //foo ==> "aaa";  bar ==> "bbb"
+        //变量bar和变量foo  
+        let { baz } = { foo: "aaa", bar: "bbb" }; // baz ==> undefined; 没有属性，只有变量
+
+        /* 如果变量名与属性名【不一致】，必须写成下面这样 */
+        let { foo: baz } = { foo: 'aaa', bar: 'bbb' }; //baz ==> "aaa"
+        let obj = { first: 'hello', last: 'world' };
+        let { first: f, last: l } = obj;// f ==> 'hello'; l ==> 'world'
+        // 对于以上需注意：【真正被赋值的是后者，而不是前者】即 foo 只负责位置信息，然后'aaa' 就被赋值给了 baz
+        // foo是匹配的模式，baz才是变量
+        // 实在不清楚，可以看下面代码
+        let { foo: baz } = { foo: "aaa", bar: "bbb" };// baz【变量】 ==> "aaa"；foo【模式】 ==> error: foo is not defined
+
+        /* 和数组一样，对象也可以嵌套 */
+        let obj1 = {
+            p: [
+                'Hello',
+                {y: 'World'}
+            ]
+        }// obj1 = {p: ['Hello', { y : 'World'} ] }
+        let { p: [x, { y }] } = obj1; // x ==> Hello; y ==> World；p【模式】 ==> error
+        let { p1, p: [x, { y }] } = obj1; // p1 ==> ['Hello', { y : 'World'} ]
+
+        ////以下我他妈是看不懂，去他亮
+        /*
+        const node = {
+        loc: {
+            start: {
+            line: 1,
+            column: 5
+            }
+        }
+        };
+
+        let { loc, loc: { start }, loc: { start: { line }} } = node;
+        line // 1
+        loc  // Object {start: Object}
+        start // Object {line: 1, column: 5}
+        傻逼官方解释：
+        分别是对loc、start、line三个属性的解构赋值。注意，最后一次对line属性的解构赋值之中，只有line是变量，loc和start都是模式，不是变量。
+        */
+        
+        /* 例子时间到 */
+        let obj = {};
+        let arr = [];
+        ({ foo: obj.prop, bar: arr[0] } = { foo: 123, bar: true });
+        obj // {prop:123}
+        arr // [true]
+
+        // 以下是默认赋值
+        var {x = 3} = {};
+        x // 3
+        var {x, y = 5} = {x: 1};
+        x // 1
+        y // 5
+        var {x: y = 3} = {};
+        y // 3
+        var {x: y = 3} = {x: 5};
+        y // 5
+        var { message: msg = 'Something went wrong' } = {};
+        msg // "Something went wrong"  
+        
+        // 默认值生效的条件是，对象的属性值严格等于undefined
+        var {x = 3} = {x: undefined}; // 就是说，如果右边写了东西，除非是 undefined， 否则默认值将会被替换【也就是设置默认值成功】
+        x // 3
+        var {x = 3} = {x: null}; // 你看，这他马就被替换了(疑问：null == undefined吗)，但是，在ES6中是使用严格相等符哦 就是 === 三等号
+        x // null
+
+
+        /* 下面将介绍几种错误示范 */
+        // 1. 解构失败，找不到
+        let {foo} = {bar: 'baz'}; //foo  undefined 找不到
+        // 2. 解构【模式是嵌套】的对象，【而且】子对象所在的父属性不存
+        let {foo: {bar}} = {baz: 'baz'}; // 右边没有 foo 属性
+        let _tmp = {baz: 'baz'};
+        _tmp.foo.bar // 报错 很明显
+        // 3. 【已声明的变量】用于解构赋值，必须非常小心
+        /*
+        let x1; 
+        {x} = {x : 1}; 左边 会被js引擎解释为代码块而报错
+        */
+        let x;
+        ({x} = {x: 1}) // 解决：包在圆括号内就行 
+        /// *** 关于() 与对象解构赋值的关系 看1-2.1 ***////
+    </script>
+</body>
+</html>

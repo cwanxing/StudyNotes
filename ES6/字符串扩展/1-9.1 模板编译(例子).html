@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模板编译</title>
+</head>
+<body>
+    <script type='text/javascript'>
+        /* 这个例子全称为：通过模板字符串，生成正式模板的实例 */// 不懂
+        /***
+        let template = `
+        <ul>
+          <% for(let i=0; i < data.supplies.length; i++) { %> js 代码 使用<% 包住 %>
+            <li><%= data.supplies[i] %></li>    // js 表达式 使用<%= 包住 =%>
+          <% } %>
+        </ul>
+        `;
+         */
+        /// 如何编译
+        // 1. 将其转为js表达式字串
+        echo('<ul>');
+        for(let i = 0; i < data.supplies.length; i++){
+            echo('<li>');
+            echo(data.supplies[i]);
+            echo('</li>');
+        }
+        echo('</ul>');
+        // 2. 使用正则转换
+        let evalExpr = /<%=(.+?)%>/g;
+        let expr = /<%([\s\S]+?)%>/g;
+        template = template
+            .replace(evalExpr, '`); \n  echo( $1 ); \n  echo(`')
+            .replace(expr, '`); \n $1 \n  echo(`');
+        template = 'echo(`' + template + '`);';
+
+        // 将template 封装到一个函数内
+        let script =
+        `(function parse(data){
+          let output = "";
+
+          function echo(html){
+            output += html;
+          }
+
+          ${ template }
+
+          return output;
+        })`;
+        // return script; 本来不用注释的，但会报错，所以。
+
+        function compile(template){
+            const evalExpr = /<%=(.+?)%>/g;
+            const expr = /<%([\s\S]+?)%>/g;
+
+            template = template
+                .replace(evalExpr, '`); \n  echo( $1 ); \n  echo(`')
+                .replace(expr, '`); \n $1 \n  echo(`');
+
+            template = 'echo(`' + template + '`);';
+
+            let script =
+                `(function parse(data){
+                let output = "";
+
+                function echo(html){
+                    output += html;
+                }
+
+                ${ template }
+                    return output;
+                })`;
+
+            return script;
+        }
+
+        // 使用方法：
+        let parse = eval(compile(template));
+        div.innerHTML = parse({ supplies: [ "broom", "mop", "cleaner" ] });
+        //   <ul>
+        //     <li>broom</li>
+        //     <li>mop</li>
+        //     <li>cleaner</li>
+        //   </ul>
+    </script>
+</body>
+</html>

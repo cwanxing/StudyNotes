@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>尾调用那些事</title>
+</head>
+<body>
+<script>
+    /** 什么是尾调用：
+     *  简单说就是 某个函数的最后一步是调用另一个函数
+     * */
+    function f(x){
+      return g(x); // 函数f 的最后一步就是调用 g 函数
+    }
+    /* 有以下几种情况不是尾调用 */
+    // 情况一
+    function f(x){
+      let y = g(x); // 调用后还有赋值操作【即使意义一样】
+      return y;
+    }
+
+    // 情况二
+    function f(x){
+      return g(x) + 1; // 调用后还有赋值操作
+    }
+
+    // 情况三
+    function f(x){
+      g(x);
+    }// 就像下面代码一样
+    /*
+     function f(x){
+        g(x);
+        return undefined; 属于最一步不是尾调用
+     }
+    */
+    // 还有尾调用不一定是在最后一行哦灵活点嘛，只要是最后一步操作就行：
+    function f(x) {
+      if(x > 0){
+        return m(x);
+      }
+      return n(x);
+    }// 函数m、n都属于尾调用，是函数的最后一步操作【只剩一个return，也是】
+
+    /** 尾调用优化：尾调用不同其他调用的地方就是 位置
+
+     * 调用内部运行：调用会在内存形成一个“调用记录”，又称“调用帧”（call frame）
+     *             它调用帧保存着【调用位置】和【内部变量】等信息
+     *             A内部 》 B：在 A 的调用帧上会形成 B 的调用帧【当B 运行结束并返回结果给 A，B的调用帧才会消失】类推
+     *             所有的调用帧 形成 一个 调用栈（call stack）
+     * 尾调用定义：尾调用是最后一步嘛，所有不需要保存 外层函数的调用帧【调用信息，内部变量已经用不到了】
+     *           只需使用内层函数的调用帧，取代外层函数的调用帧就可以了
+     * */
+    function f() {
+      let m = 1;
+      let n = 2;
+      return g(m + n);
+    }
+    f();
+
+    // 等同于
+    function f() {
+      return g(3);
+    }
+    f();
+
+    // 等同于
+    g(3);
+    /* 代码解析：
+    *        如果函数 g 不是尾调用：
+    *        函数f 就得保存内部变量 n, m【这时不知道变量有没有用到，因为这不是最后一步】、g的调用位置等信息
+    *        哈哈，函数 g 是尾调用:
+    *        只要调用完 g 后，函数f 就结束了【知道函数什么时候结束】就可以删除f(x) 的调用帧，只要g(x)的
+    * */// 尾调用优化：只保存内层函数的调用帧
+
+    /* 只有不再用到【外部函数】的【内部变量】，【内层函数】的调用帧才会取代【外层函数】的调用帧；否则无法尾调用优化 */
+    function addOne(a){
+      var one = 1;  // 1
+      function inner(b){ //2
+        return b + one;
+      }
+      return inner(a); // 内层函数 inner [2] 用到了外层函数addOne的内部变量 one [1]
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  function factorial(n, total) {
+    if (n === 1) return total;
+    return factorial(n - 1, n * total);
+    /*
+       n: 5; n-1: 4; n*total: 5
+       n: 4; n-1: 3; n*total: 5*4 (很明显，total每一次都保存了下来)
+       n: 3; n-1: 2; n*total: 5*4*2
+       n: 2; n-1: 1; n*total: 5*4*3*2*1 (其实是没有 *1 的，它是自己返回结果的)
+    */
+  }
+  factorial(5, 1) // 120
+
+  function factorial1(n) {
+    if (n === 1) return 1;
+    return n * factorial(n - 1);
+  }
+
+  factorial1(5) // 120
+</script>
+</body>
+</html>

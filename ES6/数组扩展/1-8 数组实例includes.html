@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>检测数组是否包含某个值</title>
+</head>
+<body>
+<script>
+    /**
+     * 方法：Array.includes();
+     * 功能：知道某个数组是否包含给定的值
+     * 返回：布尔值，有true；无false
+     * 参数：
+     *      1. 查询的值
+     *      2. 开始查询的位置【默认 0】负值倒数，如果-4 大于数组长度，则重置为 0
+     * */
+    [1, 2, 3].includes(2)     // true
+    [1, 2, 3].includes(4)     // false
+    [1, 2, NaN].includes(NaN) // true
+
+    [1, 2, 3].includes(3, 3);  // false
+    [1, 2, 3].includes(3, -1); // true
+
+    // 没有此方法时，需使用 indexOf() 判断
+    if (arr.indexOf(el) !== -1) {
+      // ...
+    }
+    /*
+        缺点：
+    *  1. 不够语义化，它的含义是找到参数值的第一个出现位置，所以要去比较是否不等于-1，表达起来不够直观
+    *  2. 它内部使用严格相等运算符（===）进行判断，这会导致对NaN的误判
+    */
+    [NaN].indexOf(NaN)// -1
+
+    // 而includes 则没有这方面的问题：
+      [NaN].includes(NaN)// true
+
+
+    /* 用来检查当前环境是否支持该方法，如果不支持，部署一个简易的替代版本 */
+    const contains = (() =>
+        Array.prototype.includes
+          ? (arr, value) => arr.includes(value)
+          : (arr, value) => arr.some(el => el === value)
+    )();
+    contains(['foo', 'bar'], 'baz'); // => false
+    /*
+    * const contains = function(){
+    *   return Array.prototype.includes
+    *   ? function(arr, value){
+    *       return arr.includes(values)
+    *   }
+    *   : function(arr, value){
+    *       return arr.some(function(el){
+    *           return el === value
+    *       })
+    *   }
+    * }();
+    *
+    * */
+
+    /*
+    *
+    * 另外，Map 和 Set 数据结构有一个has方法，注意与includes区分：
+    *
+      Map 结构的has方法，是用来查找键名的,比如：
+        Map.prototype.has(key)、WeakMap.prototype.has(key)、Reflect.has(target, propertyKey)。
+      Set 结构的has方法，是用来查找值的，比如：
+        Set.prototype.has(value)、WeakSet.prototype.has(value)。
+    *
+    * */
+</script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+#div1{
+	width:200px;
+	height:200px;
+	background-color:red;
+	position:absolute;
+	left:0px;
+	right:0px;
+}
+#div2{
+	width:1px;
+	height:300px;
+	background-color:black;
+	position:absolute;
+	left:300px;
+}
+</style>
+
+<script>/*
+window.onload=function()
+{}
+	
+	var aBtn=document.getElementById('btn');
+	
+	function startMove()
+	{
+		oDiv.style.left=oDiv.offsetLeft+2+'px';
+	};
+	setInterval(
+		startMove,20
+	);
+	*/
+	/*
+	var speed=6;
+	timer=setInterval(function(){
+		
+		if(oDiv.offsetLeft>=100)
+		{
+			clearInterval(timer)
+		}
+		else
+		oDiv.style.left=oDiv.offsetLeft+speed+'px'
+	},30);
+	//alert(oDiv.offsetLeft);
+	*/
+	var timer=null;
+	function startMove()
+	{
+		//问题1：var speed=1;变量写在这的话，那么这个变量就是定时器的父级变量，就是全局变量
+		//都可以写
+		var speed=6;
+		var oDiv=document.getElementById('div1');
+		//解决问题4：
+		
+		//clearInterval(timer);1.关闭以前的定时器
+		clearInterval(timer);//这个是保证只有下面这个定时器工作
+		timer=setInterval(function(){
+			//var speed=1;//都可以写
+			if(oDiv.offsetLeft>=300)//问题2：if(oDiv.offsetLeft==300)当变量为奇数时，居然停不下了啦！因为300除不断奇数(要不完全是奇数)
+			{
+				clearInterval(timer);
+			}
+			else//解决问题3：
+			{ 
+			oDiv.style.left=oDiv.offsetLeft+speed+'px';
+			}
+		},30);//定时器时间一般不改动，改就改speed
+		//这里还有个问题3：就是当到达300是，你再点鼠标，居然还在动，因为即使你设置了大于等于300，可是当你再点击鼠标的话，它还是会在执行定时器。所以加了if else
+		//问题4：点击开始的时候，多点击几次鼠标的话(在还没有大于300时)，移动的速度加快了 因为每当你点击一下，定时器就执行一次(点一次开一个)，所以速度变快了。
+		document.title=speed;
+	}
+
+</script>
+
+<body>
+<input type="button" value="运动" id="btn" onClick="startMove()"/>
+<div id="div1">
+	就是帅，没办法！
+</div>
+<div id="div2">
+</div>
+</body>

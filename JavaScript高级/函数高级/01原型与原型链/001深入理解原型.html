@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>深入理解原型</title>
+</head>
+<body>
+<script type='text/javascript'>
+    function DOG(name){
+        this.name = name;
+        this.species = '犬科';
+    }
+
+    //生成两个实例对象
+    var dogA = new DOG('大毛');
+    var dogB = new DOG('二毛');
+
+    dogA.species = '猫科';
+    //这两个对象的species属性是独立的，修改其中一个，不会影响到另一个。
+    console.log(dogB.species); // 显示"犬科"，不受dogA的影响
+    //缺点：
+    //每一个实例对象，都有自己的属性和方法的副本。这不仅无法做到数据共享，也是极大的资源浪费。
+
+    /* 于是为DOG构造函数设置了个prototype属性，此属性下包含一个对象
+     所有实例对象需要共享的属性和方法，都放在这个对象里面；
+     那些不需要共享的属性和方法，就放在构造函数里面。
+     所以当实例创建时，将自动引用prototype对象的属性和方法；
+     就是说：实例对象的属性和方法分为本地(构造函数里的不可共享)和引用(添加到prototype对象上去的，可共享)
+    */
+
+    function DOG(name){
+
+        this.name = name;
+
+    }
+
+    DOG.prototype = { species : '犬科' };//species属性就是DOG构造函数的prototype对象上的可共享属性
+
+
+    var dogA = new DOG('大毛');
+
+    var dogB = new DOG('二毛');
+
+
+    alert(dogA.species); // 犬科
+
+    alert(dogB.species); // 犬科
+    //总结：
+    //prototype对象就好像是实例对象的原型，而实例对象则好像"继承"了prototype对象一样。
+</script>
+</body>
+</html>

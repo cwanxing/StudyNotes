@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>字符串的遍历器接口</title>
+</head>
+<body>
+<script type='text/javascript'>
+    /* 关于遍历器：任意对象只要部署 Iterator 接口，就能通过 for of 遍历*/
+    for(let s of 'foo'){
+        console.log(s);// 'f' 'o' 'o'
+    }
+    // 强大的ES6 还可以对 码点大于 0xFFFF的进行遍历  ES6 牛逼
+    let text = String.fromCodePoint(0x20BB7);
+
+    for (let i = 0; i < text.length; i++) {
+        console.log(text[i]);
+    }
+    // " "
+    // " "
+
+    for (let i of text) {
+        console.log(i);
+    }
+    // "𠮷"
+</script>
+</body>
+</html>

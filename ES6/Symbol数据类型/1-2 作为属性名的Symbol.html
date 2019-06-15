@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用symbol作为属性名</title>
+</head>
+<body>
+<script>
+    /* 引言：symbol的唯一性，意味着symbol可以作为标识符【用作对象的属性名，确保不出现重名】 */
+    // 优点：对于一个对象由【多个模块构成】的情况非常有用，能防止某一个键被不小心改写或覆盖
+    let mySymbol = Symbol();
+
+    // 第一种写法
+    let a = {};
+    a[mySymbol] = 'Hello!'; // 方括号结构
+    // 第二种写法
+    let a1 = {
+      [mySymbol]: 'Hello!' //方括号结构
+    };
+    // 第三种写法
+    let a2 = {};
+    Object.defineProperty(a, mySymbol, { value: 'Hello!' }); // Object.defineProperty
+
+    // 以上写法都得到同样结果
+    a[mySymbol] // "Hello!" ==> 通过方括号结构和Object.defineProperty，将对象的属性名指定为一个symbol值
+
+    // 注意点：
+    const mySymbol = Symbol();
+    const a = {};
+
+    a.mySymbol = 'Hello!'; // 不能使用点运算符
+    /* . 运算符后总是字串，所以不会读取mySymbol作为标识名所指代的那个值 */
+    a[mySymbol] // undefined
+    a['mySymbol'] // "Hello!" 导致a 的属性名是个 字串
+    // 同理：在对象的内部，使用 Symbol 值定义属性时，Symbol 值必须放在方括号之中
+    let s = Symbol();
+
+    let obj = { // 对象
+      [s]: function (arg) { // 对象内部的属性【使用symbol值】
+        // code..
+      }
+    };
+    obj[s](123); // 读取也一样
+    /* 牛逼写法：增强对象写法
+     * let obj = {
+            [s](arg) { ... }
+        };
+     * */
+
+    // 应用：Symbol 类型还可以用于定义【一组常量】，保证这组常量的值都是【不相等】的
+    // 例子一、
+    const log = {};
+
+    log.levels = {
+      DEBUG: Symbol('debug'),
+      INFO: Symbol('info'),
+      WARN: Symbol('warn')
+    };
+    console.log(log.levels.DEBUG, 'debug message');
+    console.log(log.levels.INFO, 'info message');
+
+    // 例子二、
+    const COLOR_RED    = Symbol();
+    const COLOR_GREEN  = Symbol();
+
+    function getComplement(color) {
+      switch (color) {
+        case COLOR_RED: //
+          return COLOR_GREEN; ///
+        case COLOR_GREEN: ///
+          return COLOR_RED; // => 即使看似相同，其实是不同的【因为是symbol值】其实我也看不懂啥意思
+        default:
+          throw new Error('Undefined color');
+      }
+    }
+
+    /**
+     * 总结：就是其他任何值都不可能有相同的值了，因此可以保证上面的switch语句会按设计的方式工作
+     *
+     * 还需注意：Symbol 值作为属性名时，该属性还是公开属性，不是私有属性
+     * */
+</script>
+</body>
+</html>

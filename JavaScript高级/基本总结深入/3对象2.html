@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3对象2</title>
+</head>
+<body>
+什么时候必须使用['属性名']？
+1. 属性名包含特殊字符: - 空格
+2. 属性名(是个变量)不确定
+<script>
+    var p = {};
+    //1. 给对象添加一个属性：content-type: text/json;
+    //p.content-type = "text/json";//包含特殊字符
+    p['content-type'] = "test/json";
+    console.log(p['content-type']);// test/json
+
+    //2. 属性名不确定
+    var propName = 'Bob';
+    var value = 'cwx';
+    p.propName = value;//不能用
+    //p[propName] = value;
+    console.log(p[propName]);
+</script>
+</body>
+</html>

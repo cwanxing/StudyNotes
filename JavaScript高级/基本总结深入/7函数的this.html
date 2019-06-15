@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>7函数中的this</title>
+</head>
+<body>
+1. this是什么
+    * 任何函数本质上都是通过某个对象来调用的(函数必须通过对象来调用)，没有明确指定谁来调用，那么this就是window
+    * 所有函数内部都有一个变量this
+    * 调用函数的当前对象
+2. 如何确定this的值
+    test();         window
+    p.test();       p
+    new test();     新创建的对象
+    p.call/apply(obj);  obj
+<script>
+    function Person(color) {
+        console.log(this);
+        console.log('1')
+        this.color = color;
+        this.getColor=function () {
+            console.log(this);
+            console.log('2')
+            return this.color;
+        }
+        this.setColor=function (color) {
+            console.log('3')
+            console.log(this);
+            return this.color = color;
+        }
+    }
+    Person('red');//this是window 只执行到1
+
+    var p = new Person('red');//this是p() 只执行到1
+
+    p.getColor();//this 还是p 执行到2
+
+    var obj = {};
+    p.setColor.call(obj, 'red'); //obj  执行到3
+    //call/apply 为某个对象添加它本没有的方法(临时给它用会儿)
+    var test = p.setColor;
+    test();// this是window
+
+    function fn1() {
+        function fn2() {
+            console.log(this);
+        }
+        fn2();//this是window
+    }
+    fn1();//this是window
+
+    //还得去好好理解
+</script>
+</body>
+</html>

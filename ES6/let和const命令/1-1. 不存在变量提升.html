@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 使用 var 声明的变量，可以在变量之前访问到【a => undefined(之前); var a = 3; a => 3(之后)】
+        // let 改变了这一语法，在变量之前访问它--报错
+        // var 的情况
+        console.log(foo); // 输出undefined
+        var foo = 2;
+        // let 的情况
+        console.log(bar); // 报错ReferenceError
+        let bar = 2;
+
+
+    </script>
+</body>
+</html>

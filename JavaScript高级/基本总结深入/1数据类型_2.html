@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据类型2</title>
+</head>
+<body>
+1. undefined与null区别
+    * undefined定义没赋值
+    * null定义并赋值了，不过值为null
+2. 什么时候需要给变量赋值null
+    * 初始赋值  表示为将要赋值为对象
+    * 结束前  让b指向的对象成为垃圾对象(被垃圾回收器回收)
+3. 严格区别变量类型和数据类型
+    * 数据的类型
+        * 基本类型
+        * 对象类型
+    * 变量的类型(变量内存值的类型)
+        * 基本类型：保存就是基本类型的数据
+        * 引用类型：保存的是地址值
+<script>
+    function Person(name, age) { //构造函数  类型(函数)
+        this.name = name;
+        this.age = age;
+    }
+    var P = new Person('张三', 13); //根据类型实例对象
+    //以上你若想让Person变为构造函数，则需实例后，它才称得上是构造函数，就是这么用的
+    //如果再这样： Person('李四', 15); 妈妈的，反正建议不要做，知道就好
+    //console.log(P.name + ';'+P.age);
+
+    //1. undefined与null区别
+    var a;
+    console.log(a);//undefined
+    a = null;
+    console.log(a);// null;
+
+    //2.什么时候需要给变量赋值null
+    var b = null; //初始赋值为null，表示为将要赋值为对象
+    //确定对象就赋值
+    b = ['sad', 12];
+    //最后
+    b = null;//让b指向的对象成为垃圾对象(被垃圾回收器回收)释放内存
+
+    //3. 严格区别变量类型和数据类型
+    var c = function () {
+
+    };
+    //将函数对象的地址值保存到c中，
+
+    console.log(typeof c);//function
+    //要有内存地址的概念
+</script>
+</body>
+</html>

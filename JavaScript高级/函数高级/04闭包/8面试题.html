@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>8面试题</title>
+</head>
+<body>
+
+<script type='text/javascript'>
+    //1
+    var name = "cwx"
+    var object = {
+        name: "cwx123",
+        getNameFunc: function () {
+            return function () {
+                return this.name
+            }
+        }
+    }
+    alert(object.getNameFunc()());//1个括号输出一个函数体function(){return this.name} 2个括号输出 cwx
+
+    //2
+    var name2 = 'cwx2'
+    var object2 = {
+        name2: 'cwx456',
+        getNameFunc2: function () {
+            var that = this;
+            return function () {
+                return that.name2;
+            }
+        }
+    }
+    alert(object2.getNameFunc2()())// 1个括号输出一个函数体function(){return this.name} 2个括号输出 cwx456
+</script>
+</body>
+</html>

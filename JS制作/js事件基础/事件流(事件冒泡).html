@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" onclick="alert('html')">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        div{
+            padding: 100px;
+        }
+    </style>
+</head>
+<!--
+    事件会顺着它的层级一直往它的父级上传，一直传到document
+-->
+<body onclick="alert('body')">
+    <div style="background: #ccc;" onclick="alert(this.style.background)">
+        <div style="background:red;" onclick="alert(this.style.background)">
+            <div style="background:green;" onclick="alert(this.style.background)">
+                <i style="font-size: 18">事件冒泡</i>
+            </div>
+        </div>
+    </div>    
+</body>
+</html>

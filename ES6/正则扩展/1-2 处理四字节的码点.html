@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>处理四个字节的码点——即汉字</title>
+</head>
+<body>
+<script>
+    /* ES6 提供了 u修饰符 即能正确处理四字节的UTF-16的编码 如： \uD83D 大于 \uFFFF
+        /^\uD83D/u.test('\uD83D\uDC2A') // false ES6 在\uD83D后加了个 /u 那么\uD83D 就能正确识别了
+        /^\uD83D/.test('\uD83D\uDC2A') // true  ES5 会把 \uD83D 识别为两个字符
+    */
+    // 由于 ES6中 u修饰符 导致正则的写法发生的改变
+
+    // 1. 点字符：除了【换行符以外】的任意单个字符
+    /*  由于编辑器原因报错，只能注释了
+        var s = '𠮷'; // 用了 4 个字节存储
+        /^.$/.test(s) // false  ES5 识别为两个字符
+        /^.$/u.test(s) // true  ES6 识别为一个字符
+    */
+    // 2. Unicode 字符表示法
+    /*  一样，只能注释
+        /\u{61}/.test('a') // false // ES5 识别了{}；但被解析为匹配 61 个连续的 u；原因需要加上
+        /\u{61}/u.test('a') // true // ES6  成功识别
+        /\u{20BB7}/u.test('𠮷') // true // ES6 成功识别
+     */
+    // 3. 量词：加了u修饰符。量词都会正确识别码点大于0xFFFF的 Unicode 字符
+    /*
+        /a{2}/.test('aa') // true
+        /a{2}/u.test('aa') // true
+        /𠮷{2}/.test('𠮷𠮷') // false
+        /𠮷{2}/u.test('𠮷𠮷') // true
+    */
+    // 4. 预定义模式: \S是预定义模式 也是加了u 修饰符才能识别
+    /*
+       /^\S$/.test('𠮷') // false
+       /^\S$/u.test('𠮷') // true
+       注：/^\S$/ => 匹配所有非空白字符
+       扩展：正确返回字串长度函数
+         function codePointLength(text) {
+         var result = text.match(/[\s\S]/gu);
+         return result ? result.length : 0;
+         }
+
+         var s = '𠮷𠮷';
+
+         s.length // 4
+         codePointLength(s) // 2
+    */
+    // 5. 关于i 修饰符【看代码应该就懂了】： /乱七八糟/gis 后面的修饰符：全局、忽略大小写、单行
+    /*
+       /[a-z]/i.test('\u212A') // false \u212A表示大写 K
+       /[a-z]/iu.test('\u212A') // true \u212A表示大写 K 不加 u修饰符的，就无法识别了
+    */
+
+    // RegExp.prototype.unicode 属性 正则对象上的：是否设置了u修饰符
+    const r1 = /hello/;
+    const r2 = /hello/u;
+    r1.unicode // false
+    r2.unicode // true
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>回调函数的理解</title>
+</head>
+<body>
+    定义：
+        1. 把一个函数当做一个参数，传入另一个函数内
+        2. 当另一个函数执行完成后，再执行传入的函数
+    通俗：
+        1. 先让主体的函数执行完成后，回过头去再执行传入的函数
+
+</body>
+<script>
+    // main function
+    function main(callback) {
+        callback();
+        // your code
+        console.log('我是主体函数的内容，我先执行')
+    }
+
+    // callback function 我是回调函数，被当做一个参数传入一个主体函数内【main】，
+    function callback() {
+        // your code
+        setTimeout(function(){
+            console.log('我不会影响主体函数的执行，主体函数不用等待我执行完后再执行')
+        }, 1000)
+    }
+
+    // call function
+    main(callback)
+
+    // use place
+    // 所以回调函数都用在耗时操作上面。比如ajax请求，比如处理文件
+
+    // 例子：
+    //     生成一个0-2之间的随机数，如果小于1，则等待一段时间后返回成功，否则返回失败
+    var a = Math.random() * 3;
+    console.log('之前：'+a);
+    if(a < 1){
+        console.log('成功之前');
+        setTimeout(function(){
+            console.log('成功')
+        }, 500);
+        console.log('成功之后')
+    }else{
+        console.log('失败之前');
+        setTimeout(function(){
+            console.log('失败')
+        },500);
+        console.log('失败之后')
+    }
+    console.log('之后：'+a)
+</script>
+</html>

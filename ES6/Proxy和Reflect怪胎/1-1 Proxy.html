@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>操作对象的中间“商”</title>
+</head>
+<body>
+<script>
+    /**
+     * Proxy: 英文解析为 代理
+     *      代理：取得或操作某个对象的中间媒介【要操作它必须经过它】类似淘宝，支付宝
+     * 格式：let p = new Proxy(target, handler)
+     *
+     * 参数：1. target ==> 用 Proxy 包装的目标对象（数组对象/函数/另一个代理）
+     *      2. handler ===> 一个对象，拦截【过滤代理操作】的函数
+     *
+     * */
+    // 使用方法：
+    let obj = {
+        name: "猿跑跑",
+        age:28
+      };
+
+    let p = new Proxy(obj, {
+      get: function (target, key) {
+        if (key in target) {
+          return target[key]
+        } else {
+          console.log("对象没有此属性");
+        }
+      },
+      set: function (target, key, value) {
+        if (key == "age" & value < 1) {
+          console.log("参数有误");
+        } else {
+          target[key] = value;
+        }
+      }
+    });
+    p.age = -1;
+    p.age = 22;
+    console.log(p.age);
+    console.log(p.name);
+    // 参数有误
+    // 22
+    // 猿跑跑
+
+    /**
+     * Reflect: 英文解析为 代理
+     *      代理：取得或操作某个对象的中间媒介【要操作它必须经过它】类似淘宝，支付宝
+     * 格式：let p = new Proxy(target, handler)
+     *
+     * 参数：1. target ==> 用 Proxy 包装的目标对象（数组对象/函数/另一个代理）
+     *      2. handler ===> 一个对象，拦截【过滤代理操作】的函数
+     *
+     * */
+</script>
+</body>
+</html>

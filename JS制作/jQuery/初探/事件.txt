@@ -1,0 +1,5 @@
+$(document).ready(function)	将函数绑定到文档的就绪事件（当文档完成加载时）
+$(selector).click(function)	触发或将函数绑定到被选元素的     点击事件
+$(selector).dblclick(function)	触发或将函数绑定到被选元素的     双击事件
+$(selector).focus(function)	触发或将函数绑定到被选元素的     获得焦点事件
+$(selector).mouseover(function)	触发或将函数绑定到被选元素的     鼠标悬停事件

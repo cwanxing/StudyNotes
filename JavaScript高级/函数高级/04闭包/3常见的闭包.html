@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3常见的闭包</title>
+</head>
+<body>
+* 将函数作用另一个函数的返回值
+* 将函数作为实参传递给另一个函数调用
+<script type='text/javascript'>
+    //将函数作为另一个函数的返回值
+    function fn1() {
+        var a = 2;
+        function fn2() {
+            a++;
+            console.log(a);
+        }
+        return fn2;//window fn2 = fn2; 也可以，只要让外面能访问到fn2函数就行
+    }
+    var f = fn1()//已经不是调用fn1了
+    f();// 3
+    f();// 4
+
+    //将函数作为实参传递给另一个函数调
+    function showDelay(msg, time) {
+        setTimeout(function () {
+            alert(msg);
+        }, time)
+    }
+    showDelay('闭包理解', 1000)
+
+    //注：闭包产生的三个条件
+        /*
+        * 1. 有嵌套函数(为了产生局部变量)
+        * 2. 子函数引用父函数的数据
+        * 3. 调用外部函数
+        */
+</script>
+</body>
+</html>

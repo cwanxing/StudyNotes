@@ -1,0 +1,49 @@
+<html>
+<!doctype html>
+<meta charset="utf-8" />
+<head>
+<title>
+</title>
+
+<style>
+#ul1{background:green;}
+#ul2{background:red;}
+</style>
+
+<script>
+window.onload=function(){
+	var Ul1=document.getElementById('ul1');
+	var Ul2=document.getElementById('ul2');
+	var oBtn=document.getElementById('btn1');
+	
+	oBtn.onclick=function()
+	{
+		var oLi=Ul1.children[0];//获取ul1中的第一个子节点，就是文本为 1 的li
+		//alert(oLi.innerHTML);
+		//Ul1.removeChild(oLi);//先从ul1中删去
+		//如果去掉了上面那句，就是没有把它从父级中删去；
+		//即使这样，也是可以的
+		//Ul2.appendChild(oLi);//再添加到ul2中
+		//以上的运行：1.先从父级删去 2.再加到ul2中去
+		
+		//如果把ul2去掉会怎样  代码改为
+		Ul1.appendChild(oLi);//li本就是UL1中的元素
+		//自身给自身appendChild时，
+	};
+}
+</script>
+
+</head>
+
+<body>
+<input id="btn1" type="button" value="移动" />
+<ul id="ul1">
+	<li>1</li>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+</ul>
+<ul id="ul2">
+</ul>
+</body>
+</html>

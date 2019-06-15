@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>codePointAt()</title>
+</head>
+<body>
+<script>
+    /* JavaScript 内部，字符以 UTF-16 的格式储存，每个字符固定为2个字节 */
+    // 对于那些需要 4 个字节储存的字符【即汉字】（Unicode 码点【大于】0xFFFF的字符），JavaScript 会认为它们是【两个】字符，如：
+    var s = "𠮷"; // 码点是0x20BB7(十 134071)  UTF-16 编码为0xD842 0xDFB7（十进制为55362 57271）
+    // 所以需要 4 个字节  字符1(0xD842 == 55362) 字符2(0xDFB7 == 57271) 一个字符需两个字节
+
+    s.length; // 2
+    s.charAt(0); // ''
+    s.charAt(1); // '' ==> charAt 无法取得
+    s.charCodeAt(0); // 55362
+    s.charCodeAt(1) // 57271 ==> charCodeAt方法 则会分别返回 前两个字节 和 后两个字节
+    /* 强大的ES6则提供了能够正确处理4个字节的字符(即汉字) */
+    let s = '𠮷a'; // 这里有三个字符 吉两个 a一个
+
+    s.codePointAt(0) // 134071(十) 直接解析了 吉字(两个字符) ) 0x20BB7
+    s.codePointAt(1) // 57271(十)  吉的第二个字符
+
+    s.codePointAt(2) // 97(十) 就是 a
+    // 解决 十 ==> 十六
+    s.codePointAt(2).toString(16) // 61 这就是十六进制了。其他一样
+    /* 好玩的官方还想到了一个问题：字符串s 中，明明 a 的下标应该是 1 啊 */
+    // 于是解决方法来了。 强大的for of语句 它也能正确识别 32 位的 UTF-16 字符
+    for(let ch of s){
+        console.log(ch.codePointAt(0).toString(16)); // 20bb7  61  // codePoinAt(不填也可以哦)
+    }
+    /* 以下是官方提供的方法：可以判断一个字符是由2还是4个字节组成 */
+    function is32Bit(c){
+        return c.codePointAt(0) > 0xFFFF; // 参数可填可不填【反正我觉得是这样的】
+    } // is32Bit("𠮷")  true  is32Bit("a") // false
+</script>
+</body>
+</html>

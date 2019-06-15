@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<script>
+window.onload=function()
+{
+	var oBtn1=document.getElementById('btn1');
+	var oBtn2=document.getElementById('btn2');
+	var oBtn3=document.getElementById('btn3');
+	var oDiv=document.getElementById('div1');
+	var aCh=oDiv.getElementsByTagName('input');
+	alert(aCh.length);
+	oBtn1.onclick=function()
+	{
+		//aCh[0].checked=true;选一个
+		for(var i=0;i < aCh.length;i++)
+		{
+			aCh[i].checked=true;//全选
+		}
+		
+	};
+	oBtn2.onclick=function()
+	{
+		//aCh[0].checked=false;选一个
+		for(var i=0;i<aCh.length;i++)
+		{
+			aCh[i].checked=false;//不选
+		}
+		
+	};
+	oBtn3.onclick=function()
+	{
+		
+		for(var i=0;i<aCh.length;i++)
+		{
+			//aCh[i].checked=true;//全选
+			if(aCh[i].checked==false)
+			{
+				aCh[i].checked=true;
+			}
+			else
+			{
+				aCh[i].checked=false;
+			}//反选
+		}
+		
+	};
+};
+</script>
+</head>
+
+<body>
+<input id="btn1" type="button" value="全选" /><br />
+<input id="btn2" type="button" value="不选" /><br />
+<input id="btn3" type="button" value="反选" /><br />
+<div id="div1">
+    <input type="checkbox" />
+    <input type="checkbox" />
+    <input type="checkbox" />
+    <input type="checkbox" />
+    <input type="checkbox" />
+    <input type="checkbox" />
+    <input type="checkbox" />
+    <input type="checkbox" />
+    <input type="checkbox" />
+    <input type="checkbox" />
+    <input type="checkbox" />
+    <input type="checkbox" />
+    <input type="checkbox" />
+</div>
+</body>
+</html>

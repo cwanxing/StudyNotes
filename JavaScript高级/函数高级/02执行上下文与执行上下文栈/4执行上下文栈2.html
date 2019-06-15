@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>4执行上下文栈</title>
+</head>
+<body>
+<script type='text/javascript'>
+    console.log('gb: ' + p);//undefined
+    var p = 1;
+    foo(1);
+    function foo(i) {
+        if(i == 4){
+            return;
+        }
+        console.log('fb: ' + i);
+        foo(i + 1);//递归调用，函数内部调用自己
+        console.log('fe: ' + i);
+    }
+    console.log('ge: ' + p);
+    /* 执行过程结果
+    * undefined
+    *
+    * fb: 1
+    * fb: 2
+    * fb: 3
+    * fe: 3
+    * fe: 2
+    * fe: 1
+    *
+    * ge: 1
+    * */
+    //整个过程，产生了几个上下文  5
+</script>
+</body>
+</html>

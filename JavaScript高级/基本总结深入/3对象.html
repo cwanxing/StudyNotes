@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3对象</title>
+</head>
+<body>
+对象相对于变量来说有哪些存储数据的优势：
+1. 什么是对象？
+    * 多个数据的封装体
+    * 用来存放多个数据的容器
+    * 一个对象代表现实世界的一个事物
+2. 为啥要用对象
+    * 统一管理多个数据(数据多了，变量就比较吃力了)
+3. 组成
+    * 属性：属性名(字符串) + 属性值(任意类型)
+    * 方法：一种特殊的属性(属性值为函数的属性称为方法)
+4. 访问操作对象内部的数据
+    * 对象名.属性名: 编码简单，有时不能
+    * ['属性名']：编码复杂，通用
+    注：看2
+
+<script>
+    // 一个对象代表现实世界的一个事物
+    var obj = {//形如一个人，有名字，年龄等属性
+        name: 'cwx',
+        age: 12
+    };
+    var p = {
+        name: 'cwx',
+        age: 100,
+        setName: function (name) {
+            this.name = name;
+        },
+        setAge: function (age) {
+            this.age = age;
+        }
+    };
+
+    p.setAge(50);
+    p['setAge'](60);//p['setAge']得到一个函数，加上括号
+    p['setName']('张三');
+    console.log(p.age, p.name, p.setName, p['name']);//张三  此方法的定义  张三
+
+</script>
+</body>
+</html>

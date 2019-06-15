@@ -1,0 +1,28 @@
+<html>
+<head>
+<script type="text/javascript">
+function show_confirm()//函数
+{
+var r=confirm("Press a button!");//变量r 重点是confirm吧！
+//confirm(这里是指定的消息) 显示带有  指定消息 / 确定(OK) / 取消 按钮的对话框。
+//按钮文本不可变
+
+
+
+if (r==true)			//如果r为真，即点了确认
+  {
+  alert("You pressed OK!");	//真了就执行这个
+  }
+else				//为假，即点了取消
+  {
+  alert("You pressed Cancel!");//假了就执行这个
+  }
+}
+</script>
+</head>
+<body>
+
+<input type="button" onclick="show_confirm()" value="Show a confirm box" />
+
+</body>
+</html>

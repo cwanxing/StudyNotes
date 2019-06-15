@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据类型</title>
+</head>
+<body>
+<!--
+  1.* 基本(值)类型
+        * String: 任意字符串
+        * Number: 任意的数字
+        * boolean: true/false
+        * undefined: undefined
+        * null: null
+    * 对象(引用)类型
+        Object: 任意对象
+        function: 一种特别的对象(可执行)
+        Array: 一种特别的对象(数值下标，内部数据是有序的)
+   2. 判断
+      * typeof
+        * 可以判断undefined/ 数值/ 字符串/ 布尔值/ function
+        * 不能判断null与object object与array
+      * instanceof：专门判断对象的具体类型
+      * ===
+        * 可以判断undefined/ null
+
+-->
+<script>
+    var obj = {
+        name: 'cwx',
+        age : '12'
+    };
+    function test() {
+        console.log('测试function对象')
+    }
+
+    //1， 基本
+    // typeof 返回数据类型的 字符串表达
+    var a;
+    console.log(a, typeof a, typeof a==='undefined', a===undefined);//undefined  'undefined' true true
+    console.log(undefined==='undefined');//false 引号内的被认为是string
+
+    a = 3;
+    console.log(typeof a==='number'); // true
+    a = 'dada';
+    console.log(typeof a === 'string'); // true
+    a = true;
+    console.log(typeof a === 'boolean'); // true
+    a = null;
+    console.log(typeof a === 'null', typeof a, a===null); //false 'object' true
+    //typeof 它也区别不了null和object
+    console.log('--------------------------------');
+
+    //2. 对象
+    //instanceof 返回值是一个布尔值
+    var b1 = {
+        b2: [12, '32', console.log],//console.log(typeof b1.b2)=>object typeof它区别不了object和array;
+        b3: function () {
+            console.log('b3函数中的第一条语句');
+            return function () {
+                return 'b3函数的第二条语句'
+            }
+        }
+    };
+    //b1是对象， b2是数组， b3是个函数
+    console.log(b1 instanceof Object, b1 instanceof Array);//true false
+    //通俗解释：b1是不是对象   官方：b1是不是Object的实例对象
+    console.log(b1.b2 instanceof Array, b1.b2 instanceof Object);//true true
+    console.log(b1.b3 instanceof Function, b1.b3 instanceof Object);//true true
+    //所有的类型都是对象，不过有时候还得知道具体的类型，它们的操作有时候是不一样的
+
+    console.log(typeof b1.b3, typeof b1.b3 ==='function');//'function' true
+
+    console.log(typeof b1.b2[2] === 'function');
+    b1.b2[2]('我他妈的写法好骚啊！！');//b1.b2[2]=>console.log;数组第三项是个函数，函数加上括号就是调用了
+    b1.b3();//console.log('b3函数中的第一条语句');
+    console.log(b1.b3()());//输出了b3中的所有内容
+</script>
+</body>
+</html>

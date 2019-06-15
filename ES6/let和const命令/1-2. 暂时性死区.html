@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>暂时性死区</title>
+</head>
+<body>
+    <script>
+        // 只要块级作用域内存在let命令，它所声明的变量就“绑定”（binding）这个区域，不再受外部的影响
+        var tmp = 123; //声明一个全局变量
+        if (true) {
+            tmp = 'abc'; // ReferenceError报错
+            let tmp; // 块级作用域内let又声明了一个局部变量tmp，所以它绑定了这块区域
+        }
+        //*ES6语法：凡是区块里用 let、const 声明的变量，这块区域就封闭了。在声明之前引用它们报错
+
+        //暂时性死区(TDZ)
+        if (true) {
+            // TDZ开始
+            tmp = 'abc'; // ReferenceError
+            console.log(tmp); // ReferenceError
+
+            let tmp; // TDZ结束
+            console.log(tmp); // undefined
+
+            tmp = 123;
+            console.log(tmp); // 123
+        }
+        //有了TDZ，使用typeof就得小心了。如：
+        typeof z;// 报错
+        let z;
+        //反而测试没有声明的变量不会报错
+        typeof abcdefef;// undefined
+
+        ///////比较的暂时性死区//////////
+        function bar(x = y, y = 2){//改为x = 2, y = x
+            return [x, y]
+        }
+        bar()// 报错
+        //因为：让 x = y时，y还没声明呢
+        /*一个变量完整的声明：var a;*/
+
+        //////不允许重复声明///////
+        /*let不允许在相同作用域内，重复声明同一个变量*/
+        // 报错
+        function func() {
+        let a = 10;
+        var a = 1;
+        }
+        // 报错
+        function func() {
+        let a = 10;
+        let a = 1;
+        }
+        function func(arg) {
+            let arg;
+        }
+        func() // 报错
+        function func(arg) {
+            {
+                let arg;
+            }
+        }
+        func() // 不报错
+
+        
+    </script>
+</body>
+</html>

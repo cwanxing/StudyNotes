@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>super和this关键字</title>
+</head>
+<body>
+<script>
+    // 在 ES5 中，this关键字能让我们知道当前所在的对象
+    // ES6 新增了一个关键字：super【指向当前对象的原型对象】
+    const proto = {
+      foo: 'hello'
+    };
+
+    const obj = {
+      foo: 'world',
+      find() {
+        return super.foo;
+      }
+    };
+
+    Object.setPrototypeOf(obj, proto);
+    // setPrototypeOf：将一个指定对象的原型设置为另一个对象或null
+    obj.find() // "hello" 它在 proto对象 中，因为上一局我把obj的原型改了
+
+    // 使用注意：super 关键字表示原型对象时，只能用在【对象的方法】之中，用在其他地方都会报错
+    // 报错
+    const obj = {
+      foo: super.foo //super 用在属性里面
+    };
+
+    // 报错
+    const obj = {
+      foo: () => super.foo // super用在一个函数里面
+    };
+
+    // 报错
+    const obj = {
+      foo: function () {
+        return super.foo //super用在一个函数里面
+      }
+    }
+
+    // 下面试super 内部实现：
+    /*
+    * JavaScript 引擎内部:
+    *   super.foo <==> Object.getPrototypeOf(this).foo（属性）/ Object.getPrototypeOf(this).foo.call(this)（方法）
+    * */
+    const proto = {
+      x: 'hello',
+      foo() {
+        console.log(this.x); // 1  输出的是：this.x 很重要
+      },
+    };
+
+    const obj = {
+      x: 'world',
+      foo() {
+        super.foo();
+      }
+    }
+    Object.setPrototypeOf(obj, proto); // 2
+
+    obj.foo() // "world" 为啥？？
+    /* 解析：
+    *     super.foo 指向(2)原型对象 proto的foo方法 ，但是绑定的this(2)却还是当前对象obj，因此输出的就是world
+    *
+    * */
+</script>
+</body>
+</html>

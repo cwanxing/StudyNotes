@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="move_perfect.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            background: rgb(63, 63, 63);
+            color:white;
+            
+        }
+        #ul1{
+            width: 400px;
+            height: 400px;
+            border: 1px solid rgb(255, 255, 255);
+            margin: 40px auto;
+            overflow: hidden;/*更好的过渡*/
+        }
+        #ul1 li{
+            border-bottom: 1px dashed rgb(255, 255, 255);
+            list-style: none;
+            padding: 4px 0;
+            /*overflow: hidden;更好的过渡*/
+            opacity: 0;
+        }
+    </style>
+    <script>
+        window.onload=function(){
+            var oBtn=document.getElementById('btn');
+            var oUl=document.getElementById('ul1');
+            var oTxt=document.getElementById('txt1');
+
+            oBtn.onclick=function(){
+                var oLi=document.createElement('li');
+                
+
+                oLi.innerHTML=oTxt.value;
+                oTxt.value='';
+
+                //oUl.appendChild(oLi);从下往上插，不满足
+                if(oUl.children.length>0){
+                    oUl.insertBefore(oLi, oUl.children[0]);
+                }
+                else{
+                    oUl.appendChild(oLi);
+                }
+                
+                //运动
+                //startMove(oLi,{height:100});//高度不确定，所以这个值就变了
+                var iHeight=oLi.offsetHeight;
+                oLi.style.height='0';
+
+                move_perfect(oLi, {height: iHeight, opacity: 100});
+            };
+        };
+    </script>
+</head>
+<body>
+    <textarea id="txt1" rows="4" cols="40"></textarea>
+    <input id="btn" type="button" value="发布">
+    <ul id="ul1">
+        
+    </ul>
+</body>
+</html>

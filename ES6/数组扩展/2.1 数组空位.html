@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>关于数组空位</title>
+</head>
+<body>
+<script>
+    /* 数组空位：就是没有任何值 */
+    Array(3) // [, , ,]
+    // 注意：空位不是undefined，一个位置的值等于undefined，依然是有值的
+
+    /* 证明：*/
+    0 in [undefined, undefined, undefined] // true 第一个数组的 0 号位置是有值的
+    0 in [, , ,] // false 第二个数组的 0 号位置没有值
+
+    /**
+     * ES5 对于数组空位处理，很不一致，多数直接忽略
+     *      1. forEach(), filter(), reduce(), every() 和some()都会跳过空位
+     *      2. map()会跳过空位，但会保留这个值
+     *      3. join()和toString()会将空位视为undefined，而undefined和null会被处理成【空字符串】
+     * */
+    /*
+        // forEach方法：跳过空位
+        [,'a'].forEach((x,i) => console.log(i)); // 1 索引
+  ES5:  [, 'a'].forEach(function(x, i){ return console.log(i) })
+
+        // filter方法：跳过空位
+        ['a',,'b'].filter(x => true) // ['a','b']
+  ES5:  ['a',,'b'].filter(function(x){ return true })
+
+        // every方法：跳过空位
+        [,'a'].every(x => x ==='a') // true
+  ES5:  [,'a'].every(function(x){ return x === 'a' })
+
+        // reduce方法：跳过空位
+        [1,,2].reduce((x,y) => x+y) // 3
+  ES5:  [1,,2].reduce(function(x, y){ return x+y })
+
+        // some方法：跳过空位
+        [,'a'].some(x => x !== 'a') // false
+  ES5:  [,'a'].some(function(x){ return x !== 'a' })
+
+        // map方法：跳过空位，但会保留这个值
+        [,'a'].map(x => 1) // [,1]
+  ES5:  [,'a'].map(function(x){ return 1 })
+
+        // join方法
+        [,'a',undefined,null].join('#') // "#a##"
+
+        // toString方法
+        [,'a',undefined,null].toString() // ",a,,"
+      */
+
+    /**
+     *  1. ES6 则是明确将 【空位】 转为undefined
+     *  2. Array.from方法会将数组的空位，转为undefined，也就是说，这个方法不会忽略空位
+     *       Array.from(['a',,'b'])// [ "a", undefined, "b" ]
+     *  3. 扩展运算符（...）也会将空位转为undefined
+     *      [...['a',,'b']]// [ "a", undefined, "b" ]
+     *  4. copyWithin()会连空位一起拷贝
+     *      [,'a','b',,].copyWithin(2,0) // [,"a",,"a"]
+     *  5. fill()会将空位视为正常的数组位置
+     *      new Array(3).fill('a') // ["a","a","a"] new Array(3) ==> [ , , ]
+     *  6. for...of循环也会遍历空位
+            let arr = [, ,];
+            for (let i of arr) {
+                console.log(1);
+            }
+            // 1
+            // 1 ==> 数组arr有两个空位，【for...of】并没有忽略它们。如果改成【map方法】遍历，空位是会跳过的
+     */
+
+    // entries()、keys()、values()、find()和findIndex()会将空位处理成undefined
+      /*
+        // entries()
+        [...[,'a'].entries()] // [[0,undefined], [1,"a"]]
+
+        // keys()
+        [...[,'a'].keys()] // [0,1]
+
+        // values()
+        [...[,'a'].values()] // [undefined,"a"]
+
+        // find()
+        [,'a'].find(x => true) // undefined
+
+        // findIndex()
+        [,'a'].findIndex(x => true) // 0
+    */
+
+    // 重点总结：尽量不要出现空位
+</script>
+</body>
+</html>

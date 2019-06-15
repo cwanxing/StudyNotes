@@ -1,0 +1,36 @@
+自定义一个组件
+	文件：
+		1. |- <主要文件>.js  * 重要文件 导出组件
+		2. |- <普通html编写的效果>.vue
+
+	编写：
+		<!!!主要文件>.js
+			import <文件2的名> from '/2文件.vue 路径'
+
+			const 需要导出对象名 = {
+				install: function(Vue){
+					Vue.component('!!组件名', <文件2的名>)
+				}
+			}
+
+			export default 需要导出对象名
+			
+		<普通html编写的效果>.vue
+			template>
+				div>
+					我是组件内容
+			script>
+				该html的js
+
+			style>
+				该html的样式
+
+	使用：
+		1. 在main.js【这个文件一般在vue init webpack是生成的】
+			  import <!命名> from '/<!!!主要文件>.js'【路径】
+
+			  Vue.use(<!命名>)
+
+		2. <!!组件名></!!组件名>
+			如<app></app>
+				此时效果已经到了

@@ -1,0 +1,25 @@
+***以下命令都是在cmd中执行的***
+----------------------------------------------
+一、查看你正在使用的 Node 环境对 ES6 的支持程度：
+    npm install -g es-checker --> 安装检测模块
+    es-checker --> 执行检测
+
+命令行输出结果：支持率90%
+Passes 24 feature Detections
+Your runtime supports 90% of ECMAScript 6 
+----------------------------------------------
+----------------------------------------------
+二、转码器（ES6语句==>ES5）
+    1. 看得懂 2.可以在不支持ES6下运行
+    步骤：
+        1. cmd进入项目根目录运行： npm install --save-dev @babel/core
+        2. 在项目根目录找到.babelrc文件，配置它
+            {
+                "presets": [
+                "@babel/env", --- 新增
+                "@babel/preset-react" --- 新增
+                ],
+                "plugins": []
+            }
+        * 在presets和plugins 可能还有其他代码。不用管，只添加就好
+        3. 

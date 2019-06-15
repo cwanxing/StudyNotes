@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		*{
+			list-style: none;
+			margin:0;
+			padding: 0;
+		}
+		#div1{
+			width: 270px;
+			height: 350px;
+			background:#ccc;
+			padding: 1px;
+			margin:50px auto;
+		}
+		div{
+			width:270px;
+			height:120px;
+			background:#ccc;
+			margin:-45px auto;
+			text-align:center;
+		}
+		.active{
+			background:#fff;
+			color: #F69;
+		}
+		ul{
+			width: 240px;
+			height: 310px;
+			margin:20px 20px 20px 20px;
+			
+		}
+		li{
+			width: 70px;
+			height: 70px;
+			background: black;
+			float: left;
+			margin-right:10px;
+			margin-bottom: 10px;
+			line-height: 33px;
+			text-align: center;
+			color: #fff;
+		}		
+	</style>
+	<script type="text/javascript">
+		window.onload=function(){
+			var oDiv=document.getElementById('div1');
+			var oUl=oDiv.getElementsByTagName('li');
+			var oTxt=document.getElementById('txt');
+			//alert(oTxt.innerHTML);
+			//定义一个数组：
+			var arr=[
+				'大，一日之日，在于晨；一年之际，在于春',
+				'平，的撒覅打算的的撒覅京东卡的撒覅',
+				'大，倒萨发工厂的撒覅弄先从恭喜西欧',
+				'小，多送哦天哪dosage我',
+				'大，哦该农田却偏偏是安顺在',
+				'小，恭喜哦你过年后立刻在',
+				'大，发送以弄清欧文',
+				'大，哦工农去哦额为',
+				'小，哦该弄下农夫辛苦了现场',
+				'大，的施工农业发生的功夫',
+				'小，份平顶山分公司该反思过舒服',
+				'大，该平台期望而排除',
+			];
+			//alert(arr.length);数组的个数
+			for(var i=0;i<oUl.length;i++)
+			{
+				oUl[i].index=i;
+				oUl[i].onmouseover=function(){
+					for(var i=0;i<oUl.length;i++)
+					{
+						oUl[i].className='';
+					}
+					this.className='active';
+					oTxt.innerHTML='<h2>'+(this.index+1)+'月</h2><p>'+arr[this.index]+'</p>'
+				}
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="div1">
+		<ul>
+			<li class="active">
+				<h2>1</h2>
+				<p>Jan</p>
+			</li>
+			<li>
+				<h2>2</h2>
+				<p>Feb</p>
+			</li>
+			<li>
+				<h2>3</h2>
+				<p>Mar</p>
+			</li>
+			<li>
+				<h2>4</h2>
+				<p>Apr</p>
+			</li>
+			<li>
+				<h2>5</h2>
+				<p>May</p>
+			</li>
+			<li>
+				<h2>6</h2>
+				<p>Jun</p>
+			</li>
+			<li>
+				<h2>7</h2>
+				<p>July</p>
+			</li>
+			<li>
+				<h2>8</h2>
+				<p>Aug</p>
+			</li>
+			<li>
+				<h2>9</h2>
+				<p>Sep</p>
+			</li>
+			<li>
+				<h2>10</h2>
+				<p>Oct</p>
+			</li>
+			<li>
+				<h2>11</h2>
+				<p>Nov</p>
+			</li>
+			<li>
+				<h2>12</h2>
+				<p>Dec</p>
+			</li>
+		</ul>
+	</div>
+	<div id="txt">
+		<h2>1月</h2>
+		<p>大，一日之日，在于晨；一年之际，在于春</p>
+	</div>
+</body>
+</html>

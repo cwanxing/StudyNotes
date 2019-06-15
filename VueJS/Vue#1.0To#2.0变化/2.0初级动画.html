@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script src="vue.js"></script>
+	<style type="text/css">
+		p{
+			width: 300px;
+			height: 300px;
+			background-color: #f20;
+		}
+		.fade-enter-active, .fade-leave-active{
+			transition: 1s all ease
+		}
+		.fade-enter-active{
+			opacity: 1;
+			height: 300px;
+			width: 300px
+		}
+		.fade-leave-active{
+			opacity: 0;
+			width: 100px;
+			height: 100px;
+		}
+
+		.fade-enter, .fade-leave{
+			opacity: 0;
+			height: 100px;
+			width: 100px;
+		}
+	</style>
+</head>
+<body>
+	<div id="vm">
+		{{msg}}
+		<input type="button" name="btn" value="点击显示隐藏" @click="show=!show">
+		<transition name="fade" @before-enter="beforeEnter" @enter="Enter" @after-enter="afterEnter" @before-leave="beforeLeave" @leave="Leave" @after-leave="afterLeave">
+			<p v-show="show"></p>
+		</transition>
+		
+	</div>
+	<script>
+		new Vue({
+			data:{
+				msg:'welcome',
+				show:false
+			},
+			methods:{
+				beforeEnter(el){
+					console.log('动画进入之前')
+
+				},
+				Enter(el){
+					console.log('动画进入【正在进入】')
+				},
+				afterEnter(el){
+					console.log('动画进入之后【动画加载完成后】')
+					el.style.background = 'blue'
+				},
+				beforeLeave(el){
+					console.log('动画离开之前')
+				},
+				
+				Leave(el){
+					console.log('动画离开【正在离开】')
+				},
+				afterLeave(el){
+					console.log('动画离开完成')
+					el.style.background = 'red'
+				}
+			}
+		}).$mount('#vm')
+	</script>
+</body>
+</html>

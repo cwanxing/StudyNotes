@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>数值和布尔值的解构赋值</title>
+</head>
+<body>
+    <script>
+        // 如果等号右边是数值和布尔值，则会先转为对象。
+        let {toString: s} = 123;
+        s = Number.prototype.toString // true
+
+        let{toString: s1} = true;
+        s1 = Boolean.prototype.toString // true
+        // 上面的解释：数值和布尔值的包装对象都有toString属性，因此变量s都能取到值
+        // 我的理解：两句都能理解，连起来就不理解，我*他么的
+
+        // 只要等号右边的值【不是】对象或数组，就先将其【转为对象】。由于undefined和null无法转为对象，所以对它们进行解构赋值
+        let { prop: x } = undefined; // TypeError
+        let { prop: y } = null; // TypeError
+    </script>
+</body>
+</html>

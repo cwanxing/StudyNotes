@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style>
+#div1{width:200px;height:200px;border:1px solid black;<!-- 也是配合取样式background:red;取不了 -->}
+</style>
+<title>无标题文档</title>
+<script>
+//1.用style加样式时    是加在行间的
+//2.用style取样式时    也是在行间取样式
+function toColor(){
+	var oDiv=document.getElementById('div1');
+	
+	oDiv.style.background='red';
+	//取样式
+	//alert(oDiv.style.background);
+	//效果：red
+	}
+</script>
+</head>
+
+<body>
+<input type="button" value="变色" onclick="toColor()" />
+<div id="div1"> <!--//配合取样式style="background:red" 可以取-->
+</div>
+</body>
+</html>

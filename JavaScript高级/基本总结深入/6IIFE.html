@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>6IIFE</title>
+</head>
+<body>
+
+1. 理解IIFE：立即执行函数表达式
+    * Immediately-invoked function expression：立即调用函数表达式
+2. 作用
+    * 隐藏实现
+    * 不会污染全局命名空间
+    * 用它编写js模块
+<script>
+    (function () {// 匿名函数自调用
+        var a = 3;
+        console.log(a);
+    })();
+
+    var a = 4;
+    console.log(a);
+    (function () {//隐藏实现
+        var a = 1;
+        function test() {
+            console.log(a++);
+        }
+        window.$ = function () {//向外暴露一个全局函数
+            return {//对象
+                test: test
+            }
+        }
+    })()
+
+    $().test()// 1. $是一个函数(只不过取的名字比较骚而已) 2. $执行后返回的是一个对象
+    //注：函数名：可以是$_字母开头的命名
+</script>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #div1{
+            width: 200px;
+            height: 200px;
+            background: #ccc;
+            display: none;
+        }
+    </style>
+    <script>
+        window.onload=function(){
+            var oBtn=document.getElementById('btn');
+            var oDiv=document.getElementById('div1');
+
+            oBtn.onclick=function(ev){
+                var oEvent=ev||event;
+
+                oDiv.style.display='block';
+                //alert('按钮被点击了')
+
+                oEvent.cancelBubble=true;//停止事件冒泡
+                //阻止事件不想父级上传
+            }
+            oBtn.click=function(ev){
+                var oEvent = ev || event;
+            }
+            //效果：点击按钮显示div，点击其他区域则消失
+            //问：给谁加点击
+            //答：当没有cancelBubble(不要出现事件冒泡)
+            //div会一闪而过，因为事件冒泡，
+            //当我点击按钮时，div显示，但事件还没结束
+            //因为document还有个click，所以事件被传到了
+            //document上，所以div才会一闪而过
+            document.onclick=function(){
+                //alert('document被点击了')
+                oDiv.style.display='none';
+            }
+        }
+    </script>
+</head>
+<body>
+    <input type="button" name="" id="btn" value="显示">
+    <div id="div1">
+
+    </div>
+</body>
+</html>

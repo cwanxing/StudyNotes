@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+#div1{
+	background-color:#ccc;
+	width:150px;
+	height:200px;
+	position:absolute;
+	left:-150px;
+}
+span{
+	width:20px;
+	height:60px;
+	position:absolute;
+	right:-20px;
+	top:70px;
+	background-color:blue;
+	line-height:20px;
+}
+</style>
+<script>
+
+//全局变量
+
+//对于两个函数来说，前提是功能一样，那么参数越少越好
+var timer=null;
+window.onload=function()
+{
+	//原理
+	var oDiv=document.getElementById('div1');
+	//var oSp=oDiv.getElementById('sp1');
+	//oSp.onmouseover=function(){
+	oDiv.onmouseover=function(){
+		//setMove(10,0);
+		setMove(0);
+	};
+	oDiv.onmouseout=function(){
+		//setMove(-10,-150);
+		setMove(-150);
+	};
+	//传一个参的原理
+	//left的位置在30时   想去(iTarget)300的位置       speed就为正
+	//left的位置在600时  想去(iTarget)50的位置        speed就为负
+	//结论：left当前位置和iTarget目标点的关系，得出了变量speed的正负
+}
+function setMove(iTarget)//简化：用参数speed,iTarget  可以更简化就传一个参数
+{
+	var oDiv=document.getElementById('div1');
+	
+	clearInterval(timer);//关闭原来的定时器
+	timer=setInterval(
+		function(){
+			if(oDiv.offsetLeft>iTarget)
+			{
+				speed=-10;
+			}
+			else
+			{
+				speed=10;
+			};
+			//if(oDiv.style.left==0)
+			if(oDiv.offsetLeft==iTarget)
+			{
+				clearInterval(timer);
+			}
+			else
+			{
+				oDiv.style.left=oDiv.offsetLeft+speed+'px';
+			}
+		},30);
+}
+/*
+function setMove1()
+{
+	var oDiv=document.getElementById('div1');
+	
+	clearInterval(timer);//关闭原来的定时器
+	timer=setInterval(
+		function(){
+			//if(oDiv.style.left==0)
+			if(oDiv.offsetLeft==-150)
+			{
+				clearInterval(timer);
+			}
+			else
+			{
+				oDiv.style.left=oDiv.offsetLeft-10+'px';
+			}
+		},30);
+}
+*/
+</script>
+</head>
+
+<body>
+<div id="div1">
+	<span id="sp1">分享到</span>
+</div>
+</body>
+</html>

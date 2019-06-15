@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>includes(), startsWith(), endsWith()</title>
+</head>
+<body>
+<script type='text/javascript'>
+    /* 我们强大的ES6 提供 三种更好的查询字符的方法 */
+    // 1. includex：返回true/false 是否找到 参数 字符串
+
+    // 2. startsWith：返回true/false 参数字符串 是否在原来 字符串 开头
+
+    // 3. endsWith：返回true/false 参数字符串 是否在原来 字符串 结尾
+
+    let s = 'Hello World？'
+    s.includes('o'); // true
+    s.startsWith('H'); // true
+    s.endsWith('？'); // true
+
+    s.startsWith('world', 6) // true 查询 位置 6 【之后】所有
+    s.endsWith('Hello', 5) // true 值得注意：是查询位置 5 【之前】所有
+    s.includes('Hello', 6) // false 查询 位置6 【之后】所有
+</script>
+</body>
+</html>

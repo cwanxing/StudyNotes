@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+#div1{margin:200px auto;width:230px;height:50px;background:#000;}
+</style>
+<script>
+function toDou(n)
+{
+	if(n<10)
+	{
+		return '0'+n;//是一位数
+	}
+	else
+	{
+		return ''+n;//是两位数，n前面有个''，这样可以保证返出去的一定是字符
+	}
+}
+window.onload=function()
+{
+	var aImg=document.getElementsByTagName('img');
+	//alert(aImg.length);
+	//var str='033745';//这里的str是写死的
+	
+	
+	
+	//var str=oDate.getHours()+oDate.getMinutes()+oDate.getSeconds();
+	//str现在得出来的是数值型
+	
+	var timer=null;
+	//alert(str);
+	function time(){
+		
+		var oDate=new Date();
+		var str=toDou(oDate.getHours())+toDou(oDate.getMinutes())+toDou(oDate.getSeconds());
+			for(var i=0;i<aImg.length;i++)
+			{
+				//aImg[i].src='img/'+str[i]+'.png';不兼容IE（str[i]）
+				//aImg[i].src='img/?.png';
+				aImg[i].src='img/'+str.charAt(i)+'.png';
+			}
+		}
+	timer=setInterval(time,1000);
+	time();
+};
+</script>
+</head>
+
+<body style="background:black;color:white;font-size:35px;">
+<div id="div1">
+    <img src="img/0.png" />
+    <img src="img/0.png" />
+    :
+    <img src="img/0.png" />
+    <img src="img/0.png" />
+    :
+    <img src="img/0.png" />
+    <img src="img/0.png" />
+</div>
+</body>
+</html>

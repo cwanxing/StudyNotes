@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>1作用域</title>
+</head>
+<body>
+1. 作用域：
+    * 就是一块“地盘”
+    * 静态的，在编写的时候就确定了
+2. 分类：
+    * 全局作用域
+    * 函数作用域
+    * 没有块作用域(ES6有了)
+3. 作用：
+    * 隔离变量，不同作用域的同名变量不会冲突
+<script type='text/javascript'>
+    ////作用域深刻理解：
+    //函数可以访问全局变量，全局却不能访问函数的局部变量
+    var y = 10;
+    function a() {
+        var x = 9;
+        // x = 100;
+        console.log(y);// 10
+    }
+    a();
+    console.log(x);//x is not defined
+    //注：若 x 没有使用var 命令，则声明的是一个全局的 x 变量
+
+    ///如何从外部读取局部变量？--->请看04闭包文件，详细解释了闭包
+    function show1() {
+        var a = 1;
+        function show2() {
+            console.log(a);//1
+        }
+    }
+    //对于show2来说，show1的变量是可见的；相反show2的变量show1是访问不到的
+    //链式作用域结构：子对象会一级一级地向上寻找所有父对象的变量。所以，父对象的所有变量，对子对象都是可见的，反之则不成立
+
+    //思考：那我们把show2作为返回值，我们不就可以在show1外部访问show2的变量
+    function show1() {
+        var a = 1;
+        function show2() {
+            console.log(a);//1
+        }
+        return show2;
+    }
+    var result = show1();
+    result();//1
+
+    ////闭包：能够读取 其他函数内部变量 的函数
+    //用途：
+    // 1. 读取 其他函数内部变量
+    // 2.
+
+
+    if(true){
+        var o = 9
+    }
+    console.log(o);// 9 没有块作用域
+    var a = 10,
+        b = 20 //全局作用域
+    function fn(x) {//fn作用域
+        var a = 100,
+            c = 299
+        console.log('fn()', a, b ,c, x);//100 20 299 10
+        function bar(x) {//bar作用域
+            var a = 1000,
+                b = 287
+            console.log('bar()', a, b, c, x);//1000 287 299 200
+        }
+        bar(100)
+        bar(200)
+    }
+    fn(19)
+</script>
+</body>
+</html>

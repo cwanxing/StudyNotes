@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="startMove.js"></script>
+	<style type="text/css">
+		body{
+			background: rgb(48, 48, 48);
+			position: relative;
+		}
+		.btn{
+			position: absolute;
+			left: 200px;
+			top: 300px;
+			width: 30px;
+			height: 50px;
+			background: #ccc;
+			z-index: 1000;
+		}
+		.city{
+			position: absolute;
+			left: 200px;
+			top: 300px;
+			background: red;
+			width: 130px;
+			height: 50px;
+		}
+		.sky{
+			position: absolute;
+			left: 70px;
+			top: 300px;
+			width: 130px;
+			height: 150px;
+			background:pink;
+			display: none;
+		}
+	</style>
+	<script>
+		window.onload=function(){
+			var oBtn=document.getElementById('btnShow');
+			var oCity=document.getElementById('city_bottom');
+			var oSky=document.getElementById('sky_box');
+
+			oBtn.onclick=function(){
+				startMove(oCity, 'left', 70, function (){
+					oSky.style.display='block';
+					startMove(oSky, 'top', 151);
+				});	
+			};
+		}
+	</script>
+</head>
+<body>
+	<button class="btn" id="btnShow">
+		按钮
+	</button>
+	<div class="city" id="city_bottom">
+		城市
+	</div>
+	<div class="sky" id="sky_box">
+		天气
+	</div>
+</body>
+</html>

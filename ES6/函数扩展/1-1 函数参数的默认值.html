@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>函数参数的默认值</title>
+</head>
+<body>
+<script>
+    /* 不能直接为函数的参数【指定默认值】，只能采用变通的方法 */
+    function log(x, y) {
+      y = y || 'World';
+      console.log(x, y);
+    }
+
+    log('Hello') // Hello World
+    log('Hello', 'China') // Hello China
+    log('Hello', '') // Hello World ==> 实现了默认值
+    /* ES6 那说，这缺点是 给y赋值了，但对应的布尔值为false，那赋值将不起作用；也就是使用默认值
+        我想说一句，不就是想要这种效果吗。
+    */
+    // 解决：先判断参数是否合法
+    if(typeof y === 'undefined'){
+      y = 'World';
+    }
+
+    // 于是骚骚的ES6 提出：可以设置默认值了，就问你高不高兴
+    // 1.
+    function log1(x, y = 'World') {
+        console.log(x, y);
+    }
+    log('Hello') // Hello World
+    log('Hello', 'China') // Hello China
+    log('Hello', '') // Hello
+    /* 同一效果：ES6 代码简洁了许多 */
+    // 2.
+    function Point(x = 0, y = 0) {
+      this.x = x;
+      this.y = y;
+    }
+    const p = new Point();
+    p // {x: 0, y: 0}
+        // 写法注意：
+        // 1. 关于函数参数声明问题
+            function foo(x = 5) { // 变量x 默认声明
+              let x = 1; // error
+              const x = 2; // error ==> 不需要再为他额外声明
+            }
+        // 2. 参数重名问题
+            // 不报错
+            function foo(x, x, y) {
+              // ...
+            }
+            // 报错
+            function foo(x, x, y = 1) {
+              // ...
+            }
+            // SyntaxError: Duplicate parameter name not allowed in this context
+    /*
+     总结：
+        好处1：看代码的人，立刻意识到那些参数是可以省略的
+        好处2：在未来的某一刻，把默认值拿，也不会影响函数运行【前提是你传了参】
+    */
+    // 想法冲突：
+    let x = 99;
+    function foo1(p = x + 1) {
+      // 参数p 是个表达式【惰性求值】就是说每次调用，都会重新计算 x + 1；不是定死 就是100 了
+      console.log(p);
+    }
+
+    foo1() // 100
+
+    x = 100;
+    foo1() // 101
+
+    /* 函数参数默认值的应用：可以手动设置如果某个参数米有传值，则报错！ */
+    function throwIfMissing() {
+      throw new Error('Missing parameter');
+    }
+    function fn1(mustBeProvided = throwIfMissing()) { // 这个fn1 函数的默认值 是个函数
+      return mustBeProvided;
+    }
+    fn1(); // Error: Missing parameter
+    /* 【解析：】
+    *       如果在调用fn1函数时，没有传递参数的话，它就等于默认值
+    *       而默认值刚好是个函数：提示你没有参数
+    * */
+</script>
+</body>
+</html>

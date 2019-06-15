@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>尾递归</title>
+</head>
+<body>
+<script>
+    /* 定义：函数调用自身，称为递归。如果尾调用自身，就称为尾递归 */
+    // 作用：
+    /*
+    * 递归：  非常耗费内存，因为需要同时保存成千上百个调用帧，很容易发生“栈溢出”错误（stack overflow）
+    * 尾递归：由于只存在一个调用帧，所以永远不会发生“栈溢出”错误
+    * */
+    /// 递归：最多需要保存n个 调用记录
+    function factorial(n) {
+      if (n === 1) return 1;
+      return n * factorial(n - 1);
+    }
+
+    factorial(5); // 120
+
+    /// 尾递归：只保存一条 调用记录
+    function factorial1(n, total) {
+      if (n === 1) return total;
+      return factorial1(n - 1, n * total);
+    }
+
+    factorial1(5, 1) // 120
+    /**
+     * 递归这东西，想想这么回事，做起来就不要了。现在也只能尽力理解吧！
+     * 下面例子：尾递归和优化尾递归
+     * */
+    //尾递归
+    function Fibonacci (n) {
+      if ( n <= 1 ) {return 1};
+
+      return Fibonacci(n - 1) + Fibonacci(n - 2);
+    }
+
+    Fibonacci(10) // 89
+    Fibonacci(100) // 堆栈溢出
+    Fibonacci(500) // 堆栈溢出
+
+    //尾递归优化
+    function Fibonacci2 (n , ac1 = 1 , ac2 = 1) {
+      if( n <= 1 ) {return ac2};
+
+      return Fibonacci2 (n - 1, ac2, ac1 + ac2);
+    }
+
+    Fibonacci2(100) // 573147844013817200000
+    Fibonacci2(1000) // 7.0330367711422765e+208
+    Fibonacci2(10000) // Infinity
+
+</script>
+</body>
+</html>

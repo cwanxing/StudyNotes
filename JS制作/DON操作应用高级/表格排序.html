@@ -1,0 +1,81 @@
+<!doctype html>
+<meta charset="utf-8">
+<script>
+	window.onload=function(){
+		
+		var oTab=document.getElementById('tab1');
+		
+		var oBtn=document.getElementById('btn');
+		
+		oBtn.onclick=function(){
+			
+			var arr=[];
+			for(var i=0;i<oTab.tBodies[0].rows.length;i++)
+			{
+				arr[i]=oTab.tBodies[0].rows[i];//存了所有的tr
+			}
+			arr.sort(function(tr1, tr2){
+				var n1=parseInt(tr1.cells[0].innerHTML);//之前没加parseInt
+				//cells[0]就是ID所在单元格
+				var n2=parseInt(tr2.cells[0].innerHTML);//之前没加parseInt
+				return n1-n2;
+			});
+			//alert(arr[2].innerHTML);没用
+			//for(var i=0;i<oTab.tBodies[0].rows.length;i++)
+			
+			for(var i=0;i<arr.length;i++)
+			{
+				alert("把"+arr[i]+"插到前面")
+				//oTab.tBodies[0].row[i].appendChild(arr[i]);
+				oTab.tBodies[0].appendChild(arr[i]);
+			}
+		};
+};
+</script>
+<input type="button" id="btn" value="排序">
+<table id="tab1" border="1" width="500">
+	<thead>
+		<td>ID</td>
+		<td>姓名</td>
+		<td>年龄</td>
+        <td>操作</td>
+	</thead>
+	<tbody>
+		<tr> 
+			<td>3</td>
+			<td>Blue</td>
+			<td>78</td>
+            <td></td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td>Black</td>
+			<td>56</td>
+            <td></td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>张三</td>
+			<td>12</td>
+            <td></td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>李四</td>
+			<td>45</td>
+            <td></td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>王五</td>
+			<td>23</td>
+            <td></td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td>老三</td>
+			<td>43</td>
+            <td></td>
+		</tr>
+	</tbody>
+</table>

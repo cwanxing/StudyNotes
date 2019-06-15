@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>作用域-面试题</title>
+</head>
+<body>
+<script type='text/javascript'>
+    ///1
+    var x = 10;
+    function fn() {
+        console.log(x);
+    }
+    function show(f) {
+        var x = 20
+        f();
+    }
+    show(fn)
+    //输出 10
+
+    //问：函数名可以当做参数传递吗
+    //可以
+
+    ///2
+    var fn2 = function () {
+        console.log(fn2);//fn2函数体
+    }
+    fn()
+
+    var obj = {
+        fn3: function () {
+            //console.log(fn3); //报错ES6之前没有块作用域
+            console.log(this.fn3);// fn3函数体
+        }
+    }
+    obj.fn3();
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>具名组匹配中的解构赋值和替换</title>
+</head>
+<body>
+    <script>
+
+        // 有了 具名组匹配，就可以使用【解构赋值】直接从【匹配结果】上为变量赋值
+        /*
+            let {groups: {one, two}} = /^(?<one>.*):(?<two>.*)$/u.exec('foo:bar');
+            one  // foo
+            two  // bar
+            {groups: {one, two}} ==> {groups: {one: 'foo', two: 'bar'}
+        */
+        // 字符串替换时，使用 【格式：$<组名>】引用具名组
+        /*
+         有三个具名组了：year  month  day
+           let re = /(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/u;
+         引用它们
+           '2015-01-02'.replace(re, '$<day>/$<month>/$<year>') // '02/01/2015'
+         注：replace 的第二参数是个字串哦，不要看成正则表达式了哦
+
+        */
+        // 以下是让replace 第二个参数是个函数
+        '2015-01-02'.replace(re, (
+          matched, // 整个匹配结果 2015-01-02
+          capture1, // 第一个组匹配 2015
+          capture2, // 第二个组匹配 01
+          capture3, // 第三个组匹配 02
+          position, // 匹配开始的位置 0
+          S, // 原字符串 2015-01-02
+          groups // 具名组构成的一个对象 {year, month, day}
+        ) => {
+          let {day, month, year} = groups;
+          return `${day}/${month}/${year}`;
+        });
+
+        // 具名组匹配在原来的基础上，新增了最后一个函数参数：具名组构成的一个对象。函数内部可以直接对这个对象进行解构赋值
+
+        // 还可以在正则表达式内引用‘具名组匹配’。格式：k<组名>，如：
+        /*
+            const RE_TWICE = /^(?<word>[a-z]+)!\k<word>$/; // 注意此句
+            (?<word>[a-z]+) 它【word这个组名表示】匹配的是 abc 完整的哦
+            RE_TWICE.test('abc!abc') // true
+            RE_TWICE.test('abc!ab') // false 所以 为 false 差不多是这个意思吧
+        */
+        // 数字引用（\1）依然有效。
+        /*
+            const RE_TWICE = /^(?<word>[a-z]+)!\1$/;
+            RE_TWICE.test('abc!abc') // true
+            RE_TWICE.test('abc!ab') // false
+        */
+        // 可以同时使用：
+        /*
+            const RE_TWICE = /^(?<word>[a-z]+)!\k<word>!\1$/;
+            RE_TWICE.test('abc!abc!abc') // true
+            RE_TWICE.test('abc!abc!ab') // false
+         */
+    </script>
+</body>
+</html>

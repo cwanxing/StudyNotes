@@ -1,0 +1,26 @@
+<html>
+<head>
+<script type="text/javascript">
+function disp_prompt()
+  {
+var afterName="";
+  var name=prompt("请输入您的名字","Bill Gates")
+  if (name!=null && name!="")
+    {
+    document.write("你好！" + name + " 今天过得怎么样？");
+    }
+else
+{
+alert("请输入您的名字","输入你的大名好吗！有好事！");
+afterName=prompt("请输入您的名字","");
+document.write("你好！" + afterName + " 今天过得怎么样？")
+}
+  }
+</script>
+</head>
+<body>
+
+<input type="button" onclick="disp_prompt()" value="显示提示框" />
+
+</body>
+</html>

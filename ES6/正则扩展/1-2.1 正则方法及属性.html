@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>正则常用方法</title>
+</head>
+<body>
+<script type='text/javascript'>
+    /* 方法： */
+    // 1. 匹配: matches
+    var str="123452782";
+    var arr= str.match(/2/g); // 匹配【所有/g】字符 2。于是它的返回值就是：[2,2,2]数组
+    // 2. 替换：replace
+    var str1="1 2 3 4 5 6 7 8 9";
+    var strs=str1.replace(/\d+/g,'*'); // 匹配规则：/\d+/g  替换成：*
+    // 3. 查找：test
+    var str2="123452782";
+    console.log(/2/.test(str2)); // true 因为有 2
+
+    /* 属性： source、global、ignoreCase、multiline、lastIndex*/
+
+    // 1. source: 只读的【字符串】，包含正则表达式的文本
+    var reg = /JavaScript/;
+    reg.source; // 返回 JavaScript
+    var reg = /JavaScript/g;
+    reg.source; // 返回 JavaScript
+
+    // 2. global: 只读的【布尔值】，看这个正则表达式是否带有修饰符 g
+    var reg1 = /JavaScript/g;
+    reg1.global; //返回 true
+
+    /* 关于 g 能干什么
+       var str = "JavaScript";
+       str.match(/JavaScript/); //只能匹配一个JavaScript
+       var str = "JavaScript JavaScript";
+       str.match(/JavaScript/g); //能匹配两个JavaScript
+    */
+
+    // 3. ignoreCase: 只读的【布尔值】，看这个正则表达式是否带有修饰符 i
+    var reg2 = /JavaScript/i;
+    reg2.ignoreCase; //返回 true
+
+    /* 关于 i 能干什么
+       var reg = /JavaScript/;
+       reg.test("javascript"); //返回 false
+       var reg = /JavaScript/i;
+       reg.test("javascript"); //返回 true
+    */
+
+    // 4. multiline: 只读的布尔值，看这个正则表达式是否带有修饰符 m
+    var reg=/JavaScript/;
+    reg.multiline; //返回false
+    var reg=/JavaScript/m;
+    reg.multiline; //返回true
+
+    /*
+       var str="java\nJavaScript";
+       str.match(/^JavaScript/); //返回null
+       var str="java\nJavaScript"; // 此处有个换行符 \n
+       str.match(/^JavaScript/m); //匹配到一个JavaScript
+    */
+
+    // lastIndex：可读/写的整数，如果匹配模式中带有 g 修饰符。这个属性值就存储着整个字符串中下一次检索的开始位置
+    /* 这个属性一般会被 正则对象的 exec()、test()方法用到 */
+    // 【关于exec方法】如果理解最后一句：例子如下
+    var s1 = 'JavaScript JavaScript';
+    var r = /JavaScript/g;
+    r.exec(s1); // ["JavaScript", index: 0, input: "JavaScript JavaScript"] // index: 它是从第几个找的
+    r.lastIndex // 10 这个位置在 第一个JavaScript的后面 就是空格的位置【这就是下一次查询开始的位置】
+    r.exec(s1); // ["JavaScript", index: 0, input: "JavaScript JavaScript"]
+    r.lastIndex; // 21 为啥变了，因为我再次调用了exec方法
+    r.exec(s1); // null 整个串找完了哦
+    r.lastIndex; // 0 当然它也变成 0 了
+
+    // 【关于test()方法】：某个字串满足正则规则，那么返回true
+    var str="java";
+    var reg=/JavaScript/;
+    reg.test(str); //返回false
+
+    var str="JavaScript";
+    var reg=/JavaScript/;
+    reg.test(str); //返回true
+    /* 其实吧！运用此方法时，它和ecec方法一样，也会设置lastIndex属性的值【当然是在有 /g 的时候】 */
+    var str = "JavaScript";
+    var reg = /JavaScript/g;
+    console.log(reg.test(str)); //打印 true
+    console.log(reg.test(str)); //打印 false 为啥呢，请看下面的解析：
+    /*
+      var str="JavaScript";
+      var reg=/JavaScript/g;
+      console.log(reg.test(str)); //打印 true
+      console.log(reg.lastIndex);
+      //打印10，因为匹配到了JavaScript，所以就把lastIndex设为 10了
+      【就是设置了下次开始查询的地方；这地方呢，就是把结果除去了】说也说不清，自己看吧，反正挺好理解的
+      console.log(reg.test(str));
+      //打印 false，因为从lastIndex位置检索字符串，已经没有匹配结果了
+      console.log(reg.lastIndex);
+      //打印0，因为没有匹配到结果，所以将lastIndex重置为0
+    */
+    // 以上操作注意：1. 有 /g 的话，得注意
+    //             2. 再对 同一字串 使用方法【exec/test】可以手动设置lastIndex 值
+</script>
+</body>
+</html>

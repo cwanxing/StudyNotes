@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>记住用户名</title>
+    <script type="text/javascript" src="../fn.js"></script>
+    <script>
+        //记住用户名
+        window.onload = function(){
+            var oFrom = document.getElementById('form1');
+            var oUser = document.getElementsByName('ipt')[0];
+
+            oFrom.onsubmit=function(){
+                setCookie('userName', oUser.value, 2);
+            }
+            oUser.value = setCookie('userName');
+        }
+    </script>
+</head>
+<body>
+<form id="form1" action="baidu.com" method="post">
+    用户：<input type="text" name="ipt">
+    密码：<input type="password" name="pwd">
+    <input type="submit" id="submit" value="提交">
+</form>
+</body>
+</html>

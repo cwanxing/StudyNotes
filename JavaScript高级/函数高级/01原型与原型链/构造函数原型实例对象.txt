@@ -1,0 +1,20 @@
+1. 所有的实例对象都有隐式原型属性为：__proto__。
+
+2. 每一个函数function都有一个prototype显示原型属性。
+
+3. 对象的隐式原型的值为其对应构造函数的显式原型的值。
+   (实例对象的隐式原型属性的值等于它的构造函数显式原型的值)
+    根据构造函数确立一个实例对象：var fn = new Fn();
+
+    原型链用于查找对象的属性
+    (作用域链用于查找变量)
+4. 函数的prototype属性: 在定义函数时自动添加的, 默认值是一个空Object实例对象。
+
+5. 对象的proto属性: 创建对象时自动添加的, 默认值为 构造函数 的prototype属性值。
+6. function Foo{}等于var Foo = new Function()所以有隐式原型属性，即所有函数都有隐式和显示原型属性。
+7. 所有函数的隐式原型都相等，都是new Function产生的。
+8. function Function()既有显示原型属性也具有隐式原型属性且相同，说明Function=new Function。
+9. function Object()的隐式原型等于function Function的显示原型，进一步说明每个函数都是Function的实例(包括他本身)。
+10.函数的显示原型指向的对象， 默认是空的Object实例对象，单Object不满足。
+注：Function的显示原型也是Object的实例
+11.Object原型对象是原型链的尽头，即null

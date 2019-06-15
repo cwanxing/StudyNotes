@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片轮换</title>
+	<link rel="stylesheet" type="text/css" href="Class_library/jquery-1.7.2.min.js">
+	<style>
+		.hilite{
+			background:green;
+		}
+	</style>
+	
+</head>
+<body>
+<button onclick="hide(this,true);debug('hide button 1')">hide1</button>
+<button onclick="hide(this);debug('hide button 2')">hide2</button>
+	<script>
+	//debug函数：查找和修改基本文档的内容
+	/*
+	function debug(msg){
+		var log=document.getElementById('div1');
+		//alert(log);
+		
+		if(!log){//log.length==0;jQuery写法
+			log=document.createElement('div');
+			log.id='div1';
+			
+			log.innerHTML="<h1>!log很神奇，没有!号的话，返回null；有，返回true;这是个判断元素存在不存在</h1>";
+			
+			document.body.appendChild(log);//添加到文档末尾
+		}
+		var pre=document.createElement('pre');//添加了一个pre标签，
+		var text=document.createTextNode(msg);
+		pre.appendChild(text);//pre标签一般用来在网页中显示计算机代码用的，好看，用其他标签也可以，不过不好看。
+		//就好像论坛里那些代码，是用pre标签来显示的
+		log.appendChild(text);
+	}*/
+	function debug(msg){
+		var log=$(#debuglog);
+		alert(!log);
+	}
+	//hide函数：
+	function hide(e,reflow){
+		if(reflow){
+			e.style.display='none';
+		}
+		else{
+			e.style.visibility='hidden';//这里没有用到display，因为想要我们了解这个属性：也是隐藏，但保留其所占的空间
+			
+		}
+	}
+	//通过设置css类来显示e元素
+	function highlight(e)
+	{
+		if(!e.className)
+		{
+			e.className='hilite';
+		}
+		else{
+			e.className+='hilite';
+		}
+	}
+	
+	</script>
+</body>
+</html>

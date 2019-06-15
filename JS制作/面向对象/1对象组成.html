@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>对象组成</title>
+    <script>
+        /**/
+        var a = 12;     //变量：自由的，不属于任何人
+        alert(a);
+        
+        var arr = [1,2,3,4,5];
+        arr.a = 12;     //属性：属于一个对象
+        alert(arr.a); 
+
+        function aaa(){     //函数：自由
+            alert('abc');
+        }
+        var arr = [1,2,3,4];
+        arr.aaa=function(){     //方法：属于一个对象
+            alert('abc');
+        }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

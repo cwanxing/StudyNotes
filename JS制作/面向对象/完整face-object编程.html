@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>完整的面向对象编程</title>
+    <script type="text/javascript">
+    /*
+        以下就是流行的面向对象编程方式
+        原则：
+            构造函数：加属性
+            原型：  加方法
+        方法命名规范：首字母大写
+    */
+    //可以看看什么是类，对象
+    //构造函数负责 属性(加属性)
+    function CreatePerson(name, age){
+        this.name =  name;
+        this.age = age;
+    }
+    //prototype原型负责 方法(加方法)
+    //可以对系统的类加方法
+    //同样也可以对自定义的类加方法
+    CreatePerson.prototype.showName=function(){
+        alert('我叫' + this.name);
+    }
+    CreatePerson.prototype.showAge=function(){
+        alert('今年' + this.age + '岁了');
+    }
+    //创建对象，并调用方法
+    //  对象             类
+    var objName = new CreatePerson('张三');
+    var objAge = new CreatePerson('12');
+    
+    //alert(objName == objName); ---->true
+    objName.showName();
+    objAge.showAge();
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

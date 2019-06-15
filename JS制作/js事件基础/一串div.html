@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        img{
+            width: 20px;
+            height: 20px;
+
+            position: absolute;
+        }
+    </style>
+    <script>
+        function getPos(ev){
+        var scrollTop=document.documentElement.scrollTop||document.body.scrollTop;
+        var scrollLeft=document.documentElement.scrollLeft||document.body.scrollLeft;
+
+        return{x: ev.clientX+scrollLeft, y: ev.clientY+scrollTop};
+        }
+        /*第一张图片跟着鼠标走
+        第二张图片跟着第一张图片走
+        */
+        document.onmousemove=function(ev){
+            var oDiv=document.getElementsByTagName('img');
+
+            var oEvent=ev||event;//获取事件对象
+            var pos=getPos(oEvent);//获取鼠标坐标
+
+            //第二张图片跟着第一张图片走
+            for(var i=oDiv.length-1;i>0;i--){
+                //i = 最后一张图片；i > 0; i 每次 - 1 
+                oDiv[i].style.left=oDiv[i-1].offsetLeft+'px';
+                oDiv[i].style.top=oDiv[i-1].offsetTop+'px';
+            }
+            
+            //第一张图片跟着鼠标走
+            oDiv[0].style.left=pos.x+'px';
+            oDiv[0].style.top=pos.y+'px';
+        }
+    </script>
+</head>
+<body style="background: black;">
+    <!-- <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div> -->
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+    <img src="1.png">
+</body>
+</html>

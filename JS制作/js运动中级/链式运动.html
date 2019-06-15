@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<script src="startMove.js"></script>
+	<script>
+	window.onload=function(){
+		var oDiv=document.getElementById('div1');
+
+		oDiv.onmouseover=function(){
+			startMove(oDiv,'width',200,function(){
+				startMove(oDiv,'height',200,function(){
+					startMove(oDiv,'opacity',30);
+				});
+			});
+		}
+		oDiv.onmouseout=function(){
+			startMove(oDiv,'opacity',100,function(){
+				startMove(oDiv,'height',100,function(){
+					startMove(oDiv,'width',100);
+				});
+			});
+		}
+	}
+	</script>
+	<style>
+	#div1{
+		background: red;
+		width: 100px;
+		height: 100px;
+	}
+	</style>
+</head>
+<body>
+	<div id="div1">
+
+	</div>
+</body>
+</html>

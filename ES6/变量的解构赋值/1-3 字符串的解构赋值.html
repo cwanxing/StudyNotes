@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>字符串的解构赋值</title>
+</head>
+<body>
+    <script>
+        // 字符串被转换成了一个类似数组的对象
+        const [a, b, c, d, e] = 'hello';
+        a // "h"
+        b // "e"
+        c // "l"
+        d // "l"
+        e // "o"
+
+        // 【类似数组的对象】都有一个length属性，因此还可以对这个属性解构赋值
+        let {length : len} = 'hello';
+        len // 5
+    </script>
+</body>
+</html>

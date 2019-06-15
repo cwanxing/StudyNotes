@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="startMove.js">
+    </script>
+    <script>
+        function getByClass(oParent,sClass){
+            var aEle=oParent.getElementsByTagName('*');
+            var aResult=[];
+
+            for(var i=0;i<aEle.length;i++){
+                if(aEle[i].className==sClass){
+                    aResult.push(aEle[i]);
+                }
+            }
+
+            return aResult;
+        }
+        window.onload=function(){
+            var oDiv=document.getElementById('playimages');
+            var oBtnPrev=getByClass(oDiv,'prev')[0];
+            var oBtnNext=getByClass(oDiv,'next')[0];
+            var oMarkLeft=getByClass(oDiv,'mark_left')[0];
+            var oMarkRight=getByClass(oDiv,'mark_right')[0];
+            
+            var oDivSmall=getByClass(oDiv,'small_pic')[0];
+            var oUlSmall=oDivSmall.getElementsByTagName('ul')[0];
+            var aLiSmall=oDivSmall.getElementsByTagName('li');
+
+            var oUlBig=getByClass(oDiv,'big_pic')[0];
+            var aLiBig=oUlBig.getElementsByTagName('li');
+
+            var nowZindex=2;//用来提升大图层级
+            var now=0;
+
+            oUlSmall.style.width=aLiSmall.length*aLiSmall[0].offsetWidth+'px';
+            //左右按钮
+            oMarkLeft.onmouseover=oBtnNext.onmouseover=function(){
+                startMove(oBtnNext,'opacity',100);
+            }
+            oMarkLeft.onmouseout=oBtnNext.onmouseout=function(){
+                startMove(oBtnNext,'opacity',0);
+            }
+            oMarkRight.onmouseover=oBtnPrev.onmouseover=function(){
+                startMove(oBtnPrev,'opacity',100);
+            }
+            oMarkRight.onmouseout=oBtnPrev.onmouseout=function(){
+                startMove(oBtnPrev,'opacity',0);
+            }
+            
+            //大图：改变大图的层级(z-index)实现
+            for(var i=0;i<aLiSmall.length;i++){
+                aLiSmall[i].index=i;//知道点的是第几张小图
+                aLiSmall[i].onclick=function(){
+
+                    if(this.index==now)//解决重复点击同一张小图，出现重复下拉。
+                    {
+                        return true;
+                    }
+                    else{
+                        now=this.index;
+                    }
+                    tab();
+                }
+                aLiSmall[i].onmouseover=function(){
+                    startMove(this,'opacity',100);
+                }
+                aLiSmall[i].onmouseout=function(){
+                    if(this.index!=now){//aLiSmall
+                        startMove(this,'opacity',60);
+                    }
+                }
+            }
+            function tab(){
+                aLiBig[now].style.zIndex=nowZindex++;//this.index
+
+                for(var i=0;i<aLiSmall.length;i++){
+                    startMove(aLiSmall[i],'opacity',60);
+                }//所有小图li变透明度
+                startMove(aLiSmall[now],'opacity',100);//当前不透明
+
+                aLiBig[now].style.height=0;//this.index
+                startMove(aLiBig[now],'height',320);//this.index
+                
+                //实现ul不跳空
+                if(now==0){//到了第一张
+                    startMove(oUlSmall,'left',0);
+                }
+                else if(now==aLiSmall.length-1){//到了最后一张
+                    startMove(oUlSmall,'left',-(now-2)*aLiSmall[0].offsetWidth);
+                }
+                else{
+                    startMove(oUlSmall,'left',-(now-1)*aLiSmall[0].offsetWidth);
+                    //把包含所有小图的ul移动；是当前的图在ul的中间
+                }
+                
+            }
+            //上、下页切换
+            oBtnPrev.onclick=function(){
+                now--;
+                if(now==-1){
+                    now=aLiSmall.length-1;//为啥要减1(想想)
+                }
+                tab();
+            }
+            oBtnNext.onclick=function(){
+                now++;
+                if(now==aLiSmall.length)
+                {
+                    now=0;
+                }
+                tab();
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="playimages" class="play">
+        <ul class="big_pic">
+            
+            <div class="prev"></div>
+            <div class="next"></div>
+
+            <div class="text">图片加载。。</div>
+            <div class="length">计算图片数量</div>
+
+            <a class="mark_left" href="javascript:;"></a>
+            <a class="mark_right" href="javascript:;"></a>
+            <div class="bg"></div>
+
+            <li style="z-index: 1"><img src="img/1.jpg"></li>
+            <li><img src="img/2.jpg" alt=""></li>
+            <li><img src="img/3.jpg" alt=""></li>
+            <li><img src="img/1.jpg" alt=""></li>
+            <li><img src="img/3.jpg" alt=""></li>
+        </ul>
+   
+        <div class="small_pic">
+            <ul style="width:390px;">
+                <li style="opacity: 1;"><img src="img/1.jpg"></li>
+                <li><img src="img/2.jpg"></li>
+                <li><img src="img/3.jpg"></li>
+                <li><img src="img/1.jpg"></li>
+                <li><img src="img/3.jpg"></li>
+            </ul>
+        <div>
+    </div>     
+</body>
+</html>

@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>敏感词过滤器</title>
+</head>
+<body>
+	<input type="text" id="str" value="123" onblur="sen();">
+</body>
+<script type="text/javascript">
+
+	function sen(){
+		var oStr = document.getElementById('str').value;
+
+		//var re2 = new RegExp('3')
+		var senStr = '*';
+
+		//var re = /3|4|5/g;
+		var re =/^([1-9][0-9]*)+(.[0-9]{1,2})?$/;
+
+		console.log(re.test(oStr))
+	}
+	var str1 = '12dfadsf334444df44455555d5555666d66ds663'
+		var re = /3|4|5/g;
+
+		console.log(str1.replace(re, '*'))
+
+</script>
+</html>

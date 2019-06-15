@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Unicode码转字符</title>
+</head>
+<body>
+<script type='text/javascript'>
+    /* ES5 中的 String.fromCharCode(码点) 方法：根据码点返回字符 */
+    // 缺点：不能识别 32 的 UTF-16 字符(即大于0xFFFF)
+    String.fromCharCode(0x20bb7) // 不是想要的字符 最高位 2 被舍去变成了(0x0bb7)
+
+    /* 强大的ES6 又来了：String.fromCodePoint 解决不能识别问题 */
+    String.fromCodePoint(0x20BB7)
+    // "𠮷"
+    String.fromCodePoint(0x78, 0x1f680, 0x79) === 'x\uD83D\uDE80y'
+    // true 多个参数的话，会被合并为一个字符串返回
+</script>
+</body>
+</html>

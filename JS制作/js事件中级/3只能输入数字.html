@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script>
+        ///只能输入数字的文本框///
+        document.onkeydown = function (ev) {//当键盘的按键 按下时，放生事件
+            //只有return false;下面的没有，则什么都输入不了。
+            //onkeydown 也是默认行为
+            var oEvent = ev || event;
+            //如果用户按的不是 退格 并且也不是数字
+            if (oEvent.keyCode != 8 && (oEvent.keyCode < 48 || oEvent.keyCode > 57))
+            { 
+                return false;
+            }
+            //0 --- 48
+            //9 --- 57
+            //不是小键盘上的数字
+            //alert(oEvent.keyCode);
+        }
+    </script>
+</head>
+
+<body>
+    <input type="text" name="" id="txt" placeholder="只能输入数字">
+</body>
+
+</html>

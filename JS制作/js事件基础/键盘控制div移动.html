@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #div1{
+            width: 100px;
+            height: 100px;
+            background: red;
+            position: absolute;
+        }
+    </style>
+    <script>
+        window.onload = function (){
+            var oDiv = document.getElementById('div1');
+            var direction = {left:false, right:false, top:false, bottom:false};
+            var timer = null;
+            /*
+            这里是开一个计时器
+            当上下左右(键)按下时，加10个位置
+            */
+            setInterval(function(){
+                if(direction.left){
+                    oDiv.style.left = oDiv.offsetLeft-10+'px';
+                }
+                else if(direction.top)
+                {
+                    oDiv.style.top = oDiv.offsetTop-10+'px';
+                }
+                else if(direction.right)
+                {
+                    oDiv.style.left = oDiv.offsetLeft+10+'px';
+                }
+                else if(direction.bottom)
+                {
+                    oDiv.style.top = oDiv.offsetTop+10+'px';
+                }
+            },50);
+       
+        document.onkeydown=function(ev){
+            var oEvent=ev||event;
+            
+            switch(oEvent.keyCode){
+
+                case 37:
+                 direction.left=true;
+                break;
+
+                case 38:
+                 direction.top=true;
+                break;
+
+                case 39:
+                 direction.right=true;
+                break;
+
+                case 40:
+                 direction.bottom=true;
+                break;
+            }
+        }
+        document.onkeyup=function(){
+            //当键盘松开时，设置上下左右(键)为 false
+            direction = {left:false, right:false, top:false, bottom:false};
+        }
+    }
+    </script>
+</head>
+<body style="background:black;">
+    <div id="div1"></div>
+</body>
+</html>

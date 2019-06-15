@@ -1,0 +1,116 @@
+﻿1, Json方式的面向对象
+    var json = {
+        a: 12,
+        b = 'abc',
+        show = function(){
+            alert('a');
+        }
+    }
+    这种编程方式：适合整个程序就一个对象的情况，写起来简单，单体
+                (一夫多妻，只有一个老公对象)
+
+    命名空间：(项目是团队合作，写多了函数，有可能会和别人用了相同的函数名)
+        function getUser(){}
+        function getUser(){}
+        函数命名冲突
+        
+        解决：
+        var zns={}
+        zns.common={};
+        zns.fx = {};
+        zns.site={};
+        zns.common.getUser=function(){}
+        zns.fx.getUser=function(){}
+        zns.site.getUser=function(){}
+
+        zns.common.getUser();
+        zns.site.getUser();
+        现在即使getUser()一样也没事了
+
+2, 继承
+        对象： 属性 和 方法 组成
+        继承(谁呢): 父级的属性和方法
+        效果：希望 B() 可以继承 A() 的东西
+        function A() {this.a = 12};
+        a.prototype.show=function() {alert(this.a)}
+
+        function B(){
+            A.call(this);
+            this ---> new B();
+            我把A中的this改成了B()里的this
+            1.通过call就可继承父属性
+        }
+        var obj = new B();
+        alert(obj.B()) ---> 12
+            引申例：function shwo() {alert(this)}
+                    show()[简写] ===> show.call();
+                    call可以改变函数执行中的 this
+                show() ---> window
+                show.call(12) ---> this = 12 
+                有种情况：函数有参数时show(a)
+                show(12)  --> this是window a = 12
+                show.call('我修改了this,本来是window', 12)
+                    -->this是 我修改了this,本来是window' a = 12
+        
+
+        2.下面是继承父级的方法
+        B.prototype = A.prototype;
+        这就实现了 B就继承A的方法
+
+        继承父级方法时的问题：
+        我在继承父级的方法后 我在给B一个方法
+        B.prototype.fn=function(){alert(abc)};
+        var objB = new B()
+        var objA = new A()
+        alert(objB.fn)  --> abc 
+        alert(objA.fn)  -->我们希望报错，可objA却又fn方法
+                            弹出 abc
+
+        为啥会这样呢？
+        就出现了 引用 这个名词
+        那什么又是 引用 呢？
+        引用：当我创建一个数组对象arr时，
+            系统分配了一个空间给arr;
+            然后我又创建一个arr2并且arr2 = arr;
+            这是 你以为系统会把arr复制了一份给arr2
+            可并非这样：系统是让arr2也指向arr空间
+            中的内容，并非复制，这是为了节省资源
+
+            编程实现：var arr = [1,2];
+                    var arr2 = arr;
+                    arr2.push(3);
+                    arr2 == arr ==>[1,2,3]
+            解决：for(var i;i<arr.length;i++){
+                    arr2.push(arr[i]);
+                }把arr中每一个内容都循环添加到arr2
+        这时你再回去看看上面的那个继承父级方法出现的问题
+        或许就明白了
+
+        下面是解决出现引用的现象
+        我们勤快了一点，帮他复制
+        for(var i in A.prototype){
+            B.prototype[i] = A.prototype[i];
+        }
+        总结：继承父级属性用call，继承父级方法用循环
+
+            在原有类的基础上，略微修改，得到一个新类
+            不影响原有类的功能
+            作用：提高效率，代码重用率
+3, 继承用法
+        使用call()方法，通过原型(prototype)继承父类的属性和方法
+        优点：1，最大限度的重用代码，修改子类的功能，不会干扰父类
+            2，通过修改父类，达到批量子类功能
+4, 系统对象
+    非静态对象(需要new的对象，就是实例化)
+    Object, function, Array, String, Boolean, Number
+    Date, RegExp, Error
+
+    静态对象(不需要new的对象，就是实例化)
+    Math, global(概率东西，全局的函数，变量啊被包含在global中，但你不能用)
+    var m = new Math();   不存在的实例化
+    直接用：Math.PI; Math.ceil
+    var date = new Date(); 需要实例化
+    再使用：date.getHours
+    
+    宿舍对象(由浏览器提供的对象)：
+    DOM，BOM

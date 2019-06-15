@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>对象属性的简洁表示方法</title>
+</head>
+<body>
+<script>
+    /* 1. ES6 允许直接写入【变量和函数】，作为对象的属性和方法【对象的属性值可不写，前提是属性名已经声明】
+    *        可以先给变量赋值；对象在引用
+    *        这样的话，变量：属性名；变量值：属性值
+    * */
+    const foo = 'bar';
+    const baz = {foo};// => baz; {foo: "bar"}
+    // 等同于
+    const baz = {foo: foo};
+
+    // 【属性】简写： 例子
+        function f(x, y) {
+          return {x, y}; // 返回的是对象，它直接给你把属性名和属性值弄好了，再返回给你
+        }
+        // 等同于
+        function f(x, y) {
+          return {x: x, y: y};
+        }
+        f(1, 2) // Object {x: 1, y: 2}
+
+    // 【方法】简写：例子
+        const o = {
+          method() { // 类似于箭头函数的写法
+            return "Hello!";
+          }
+        };
+        // 等同于
+        const o = {
+          method: function() {
+            return "Hello!";
+          }
+        };
+
+    /* 综合运用：*/
+    let birth = '2000/01/01';
+    const Person = {
+      name: '张三',
+      birth, //等同于birth: birth
+
+      hello() { console.log('我的名字是', this.name); }// 等同于hello: function ()...
+    };
+
+    // 适用：用于函数返回值，非常方便
+    function getPoint() {
+      const x = 1;
+      const y = 10;
+      return {x, y};
+    }
+    getPoint() // {x:1, y:10}
+
+    /**
+     * 不用太在意，看不懂正常，只是用的少，以后有机会用的多了，就慢慢懂了
+     * CommonJS 模块输出一组变量，就非常合适使用简洁写法
+     * 什么是CommonJS：让 JS 不仅只在浏览器中执行，在任何地方都可以运行【有野心】
+     *
+     * */
+    let ms = {};
+
+    function getItem (key) {
+      return key in ms ? ms[key] : null;
+    }
+
+    function setItem (key, value) {
+      ms[key] = value;
+    }
+
+    function clear () {
+      ms = {};
+    }
+
+    module.exports = { getItem, setItem, clear }; // 属性的赋值器（setter）和取值器（getter）
+    // 等同于
+    module.exports = {
+      getItem: getItem,
+      setItem: setItem,
+      clear: clear
+    };
+
+    // 简洁写法的属性名总是字符串，这会导致一些看上去比较奇怪的结果
+    // 1.
+    const cart = {
+      _wheels: 4,
+
+      get wheels () {
+        return this._wheels;
+      },
+
+      set wheels (value) {
+        if (value < this._wheels) {
+          throw new Error('数值太小了！');
+        }
+        this._wheels = value;
+      }
+    }
+    // 2.
+    const obj = {
+      class () {} // 不会因为 class 是关键字，也不会导致语法解析错误
+    };
+    // 等同于
+    var obj = {
+      'class': function() {}
+    };
+
+    /* 注意：如果某个方法的值是个Gerenator 函数，则前面需加 * 号 */
+    const obj = {
+      * m() {
+        yield 'hello world';
+      }
+    };
+</script>
+</body>
+</html>

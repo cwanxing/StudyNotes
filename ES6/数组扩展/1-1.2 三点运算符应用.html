@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>三点运算符的应用</title>
+</head>
+<body>
+<script>
+    // 1. 复制数组
+    /* 需要知道直接复制一个数组，只是复制了指向这个数组的指向，而并非克隆整个数组 */
+        const a1 = [1, 2];
+        const a2 = a1;
+        a2[0] = 2; // 证明复制的只是指针，改变其中一个都会改变数组元素值
+        a1 // [2, 2]
+
+        // ES5 通过使用数组的 concat 方法 克隆数组
+        const a1 = [1, 2];
+        const a2 = a1.concat();
+        a2[0] = 2;
+        a1 // [1, 2]
+
+        // ES6 中的三点运算符 为复制提供了便利
+        const a1 = [1, 2];
+        const a2 = [...a1]; // 写法一
+        const [...a2] = a1; // 写法二 ==> a2 都是数组a1 的克隆
+
+    // 2. 合并数组
+        const arr1 = ['a', 'b'];
+        const arr2 = ['c'];
+        const arr3 = ['d', 'e'];
+        // ES5 的合并数组
+        arr1.concat(arr2, arr3); // [ 'a', 'b', 'c', 'd', 'e' ]
+        // ES6 的合并数组
+        [...arr1, ...arr2, ...arr3]; // [ 'a', 'b', 'c', 'd', 'e' ]
+        /* 注意：以下两种合并数组的方法都是浅拷贝【就是修改 原数组元素，会同步反应到 新数组】*/
+        const a1 = [{ foo: 1 }];
+        const a2 = [{ bar: 2 }];
+
+        const a3 = a1.concat(a2);
+        const a4 = [...a1, ...a2];
+        a3[0] === a1[0]; // true
+        a4[0] === a1[0]; // true
+
+    // 3. 结合解构赋值，用于生成数组
+        /*
+        * list = [1, 2, 3];
+        * a = list[0], rest = list.slice(1) // ES5
+        * [a, ...rest] = list1 // ES6
+        * */
+        const [first, ...rest] = [1, 2, 3, 4, 5];
+        first // 1
+        rest  // [2, 3, 4, 5]
+
+        const [first, ...rest] = [];
+        first // undefined
+        rest  // []
+
+        const [first, ...rest] = ["foo"];
+        first  // "foo"
+        rest   // []
+
+        // 三点运算符用于赋值，只能把它放在最后一位
+        const [...butLast, last] = [1, 2, 3, 4, 5];// 报错
+        const [first, ...middle, last] = [1, 2, 3, 4, 5];// 报错
+
+    // 4. 解析字符串【能正确识别】
+    /* 扩展运算符还可以将字符串转为 真正的数组
+    * [...'hello'] ==> [ "h", "e", "l", "l", "o" ]
+    *
+    * 它还可以识别四个字节的 Unicode 码【英文：一个字节一个；中文：两字节一个汉字(简繁)】
+    *                     UTF-8 编码【英文：一个字节一个；中文：三个字节一个汉字(简繁)】
+    *   'x\uD83D\uDE80y'.length // 4  ==> x, \uD83D, \uDE80y 1,1,2【看上面，是每个的length】
+        [...'x\uD83D\uDE80y'].length // 3 ==> x, \uD83D, \uDE80y 1,1,2【看上面，是每个的lentth】
+    * */// JavaScript 会将四个字节的 Unicode 字符，识别为 2 个字符，采用扩展运算符就没有这个问题
+    function length(str) {
+      return [...str].length;
+    }
+
+    length('x\uD83D\uDE80y') // 3 ==> 正确返回字串长度
+    /**
+     * 凡是涉及到操作四个字节的 Unicode 字符的函数 最好三点运算符
+     *   let str = 'x\uD83D\uDE80y';
+
+         str.split('').reverse().join('')
+         // 'y\uDE80\uD83Dx' 没有用 结果不正确
+
+         [...str].reverse().join('')
+         // 'y\uD83D\uDE80x'
+        方法解析：reverse 用于颠倒数组的顺序
+                join('分隔符') 把数组每一个元素放入一个字串，以分隔符分离（由参数指定）
+     * */
+    // 5. 实现Iterator接口对象：任何有Iterator 接口的对象，都可以用 扩展运算符 转为 真正的数组
+    let nodeList = document.querySelectorAll('div'); // 原先是个 类数组对象 【部署了Iterator接口】
+    let array = [...nodeList]; // 转为了数组了哦
+    // 没有接口也就不能搞了，比如：
+    let arrayLike = { // 类数组对象，没有部署Iterator接口
+      '0': 'a',
+      '1': 'b',
+      '2': 'c',
+      length: 3
+    };
+    // TypeError: Cannot spread non-iterable object
+    let arr = [...arrayLike]; // 解决方法：可以改为使用 Array.from 方法将 arrayLike 转为真正的数组
+    /**
+     * 方法：Array.from
+     * 功能：将一个 类数组对象 或者 可遍历对象 转换成一个 真正的数组
+     * 用法：Array.from(类数组对象/可遍历对象)
+     * 注意：
+     *      1. 该类数组对象必须具有length属性，用于指定数组的长度。如果没有length属性，那么转换后的数组是一个空数组。
+     *      2. 该类数组对象的属性名：必须为【数值型】或【字符型的数值】
+     * */// 具体看下一节
+
+    /**
+     * 先定义了Number对象的遍历器接口，扩展运算符将 5 自动转成 Number 实例以后，
+     * 就会调用这个接口，就会返回自定义的结果
+     * */
+    Number.prototype[Symbol.iterator] = function*() {
+      let i = 0;
+      let num = this.valueOf();
+      while (i < num) {
+        yield i++; // 关于这个 参见Genertor函数那章
+      }
+    }
+    console.log([...5]) // [0, 1, 2, 3, 4]
+
+    // 6. 结合Map/Set数据结构、generator函数
+    // Map数据结构：
+    let map = new Map([
+      [1, 'one'],
+      [2, 'two'],
+      [3, 'three'],
+    ]);
+
+    let arr = [...map.keys()]; // [1, 2, 3]
+    // Generator函数：运行后返回一个遍历对象，所以也可以
+    const go = function*(){ // 变量go是一个 Generator 函数
+      yield 1;
+      yield 2;
+      yield 3;
+    };
+
+    [...go()] // [1, 2, 3]
+
+    //注意：没有Iterator接口的对象 将报错
+    const obj = {a: 1, b: 2};
+    let arr = [...obj]; // TypeError: Cannot spread non-iterable object
+
+</script>
+</body>
+</html>

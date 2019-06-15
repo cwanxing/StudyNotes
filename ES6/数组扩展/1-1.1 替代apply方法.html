@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>三点运算符替换apply方法</title>
+</head>
+<body>
+<script>
+    /**
+     * 正由于三点运算符可以展开数组，可以不再使用 apply 方法把【数组】转为 函数的参数了
+     * */
+    // ES5 的写法
+    function f(x, y, z) {
+      // ...
+    }
+    var args = [0, 1, 2];
+    f.apply(null, args);
+
+    // ES6的写法
+    function f(x, y, z) {
+      // ...
+    }
+    let args = [0, 1, 2];
+    f(...args);
+
+    // 1. 例子时间到：应用 Math.max 方法，简化求出一个数组最大元素的写法
+    Math.max.apply(null, [14, 3, 77]); // ES5 的写法
+    Math.max(...[14, 3, 77]);// ES6 的写法
+    // 等同于
+    Math.max(14, 3, 77);
+    /* 由于 JS 不提供求数组最大元素的函数，只能套用Math.max函数，将数组转为一个【参数序列】 */
+
+    // 2. 通过push 函数，将一个数组arr 添加到另一个数组arr2 的尾部
+    var arr = [1, 2, 3];
+    var arr2 = [4, 5, 6];
+    arr.push(...arr2);
+    /* Array.prototype.push.apply(arr, arr2) ES5 写法中: push方法参数不能是数组，只能通过apply转*/
+
+    // 3. 关于日期的
+    new (Date.bind.apply(Date, [null, 2015, 1, 1])); // ES5
+    new Date(...[2015, 1, 1]); // ES6
+
+</script>
+</body>
+</html>

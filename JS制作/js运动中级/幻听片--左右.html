@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="move_perfect.js"></script>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}	
+		body{
+			background: rgb(63, 63, 63);
+		}
+		ul,ol{
+			list-style: none;
+		}
+		.nav{
+			width: 400px;
+			height: 300px;
+			position: relative;
+			border: 1px white solid;
+			overflow: hidden;
+			margin: 0 auto;
+			
+		}
+		.nav ol{
+			position: absolute;
+			top: 240px;
+			left: 250px;
+			z-index: 1000;
+		}
+		.nav ul{
+			position: absolute;
+			width: 1600px;
+			height: 300px;
+			left: 0;
+			top: 0;
+		}
+		.nav ul li{
+			float: left;
+		}
+		.nav ol li{ float:left; width:20px; height:20px; text-align:center;
+			 border:1px solid #f47400;
+			 margin:2px; cursor:pointer; color:#f47400; background:#fbf2d1; margin-top:2px;
+		}
+		.nav ol li.active{ background:#ffb542; font-weight:bold; color:#FFF;width:22px;
+			 height:22px; margin-top:0;
+		}
+	</style>
+<script>
+window.onload=function(){
+	var oPlay=document.getElementById('play');
+	var aBtn=oPlay.getElementsByTagName('ol')[0].getElementsByTagName('li');
+	var oUl=oPlay.getElementsByTagName('ul')[0];
+	//var aLi=oUl.getElementsByTagName('li')[0];
+	var now=0;
+
+	//oUl.innerHTML=oUl.innerHTML+oUl.innerHTML;
+	//oUl.style.width=3200+'px';aLi.offsetWidth*aLi.length
+	//alert(aLi[0].innerHTML);
+	for(var i=0;i<aBtn.length;i++){
+		aBtn[i].index=i;
+		aBtn[i].onclick=function(){
+			now=this.index;
+			tab();
+			
+		}
+	}
+	function tab(){
+		for(var i=0; i<aBtn.length; i++){
+				aBtn[i].className='';
+			}
+			aBtn[now].className='active';
+			//move_perfect(oUl, {left:-400*now});
+			oUl.style.left=-400*now+'px';
+	}
+
+	
+	function next(){
+		now++;
+		if(now==aBtn.length){
+			now=0;
+		}
+		tab();
+	}
+	var timer=setInterval(next, 2000);
+	// if(now==aBtn.length){
+	// 	now=0;
+	// 	tab();
+	// }
+	// else
+	// {
+	// 	now++;
+	// }
+
+}
+</script>
+</head>
+<body>
+	<div class="nav" id="play">
+		<ol>
+			<li class="active">1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+		</ol>
+		<ul>
+			<li><img src="img/1.jpg" alt=""></li>
+			<li><img src="img/2.jpg" alt=""></li>
+			<li><img src="img/3.jpg" alt=""></li>
+			<li><img src="img/4.jpg" alt=""></li>
+		</ul>
+	</div>
+</body>
+</html>

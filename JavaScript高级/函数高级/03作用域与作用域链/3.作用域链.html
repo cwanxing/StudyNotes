@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3作用域链</title>
+</head>
+<body>
+1. 理解
+    * 多个上下级关系的作用域形成的链，它的方向是从下向上(内到外)
+    * 查找变量时就是沿着作用域链来查找的
+2. 查找一个变量的查找规则
+    * 在当前作用域下的执行上下文中查找，有直接返回，没有则进入外一层作用域
+    * 依次向外层顺序查找，直至到全局作用域，没有则报错
+<script type='text/javascript'>
+    var a = 1
+    function fn1() {
+        var b = 2
+        function fn2() {
+            var c = 3
+            console.log(a);
+            console.log(b);
+            console.log(c);
+            console.log(d);//报错
+        }
+        fn2()
+    }
+    fn1()
+</script>
+</body>
+</html>

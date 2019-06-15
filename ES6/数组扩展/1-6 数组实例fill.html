@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>填充数组</title>
+</head>
+<body>
+<script>
+    /**
+     * 方法：Array.fill();
+     * 功能：把参数填充到指定数组
+     * 参数：
+     *      1. 全部填充该参数
+     *      2. 开始填充位置
+     *      3. 结束填充位置
+     * 实用性：fill方法用于空数组的 初始化 非常方便
+     * */
+    ['a', 'b', 'c'].fill(7); // 原数组有值，则全部抹去
+    // [7, 7, 7]
+    new Array(3).fill(7)
+    // [7, 7, 7]
+
+    // 多个参数：fill方法从 1 号位开始，向原数组填充 7，到 2 号位之前结束
+    ['a', 'b', 'c'].fill(7, 1, 2)
+    // ['a', 7, 'c']
+
+
+    /* 填充的类型是对象的话： */
+    // 那么被赋值的是同一个【内存地址】的对象，而不是【深】拷贝对象
+    let arr = new Array(3).fill({name: "Mike"});
+    arr[0].name = "Ben";
+    arr
+    // [{name: "Ben"}, {name: "Ben"}, {name: "Ben"}]
+
+    let arr = new Array(3).fill([]);
+    arr[0].push(5);
+    arr
+    // [[5], [5], [5]]
+</script>
+</body>
+</html>

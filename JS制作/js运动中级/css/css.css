@@ -1,0 +1,9 @@
+*{ margin:0; padding:0;}
+li{ list-style:none;}
+#div1{ width:750px; height:360px; overflow:hidden; margin:50px auto; position:relative;}
+#div1 ol{ position:absolute; right:5px; bottom:5px; height:25px; z-index:999;}
+#div1 ol li{ float:left; width:20px; height:20px; text-align:center; border:1px solid #f47400; margin:2px; cursor:pointer; color:#f47400; background:#fbf2d1; margin-top:2px;}
+#div1 ol li.actived{ background:#ffb542; font-weight:bold; color:#FFF;width:22px; height:22px; margin-top:0;}
+#div1 ul{ position:absolute;left:0; top:0;}
+#div1 ul li{width:750px; height:360px;  float:left;}
+#div1 ul li img{width:750px; height:360px; float:left;}

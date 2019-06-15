@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>对象的扩展运算符</title>
+</head>
+<body>
+<script>
+    /***
+    *   重提解构赋值：属于浅拷贝【键的值是复合类型的值，值拷贝引用】
+     *  对象中的应用：对象的解构赋值用于从一个【对象取值】：
+     *  怎么用：将目标对象自身的所有【可遍历的（enumerable）】、但尚【未被读取】的属性：分配到指定的对象上面【键名和值】
+     *
+    */
+    let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
+    x // 1
+    y // 2
+    z // { a: 3, b: 4 } => 变量z是解构赋值所在的对象。它获取等号右边的所有尚未读取的键（a和b），将它们连同值一起拷贝过来
+
+    // 1. 解构赋值要求等号右边是一个对象，
+    let { x, y, ...z } = null; // 运行时错误 为null 无法转
+    let { x, y, ...z } = undefined; // 运行时错误 为undefined 无法转
+
+    // 2. 解构赋值必须是最后一个参数
+    let { ...x, y, z } = someObject; // 句法错误
+    let { x, ...y, ...z } = someObject; // 句法错误
+
+    // 3. 浅拷贝【键的值是复合类型的值，值拷贝引用】修改一处，全部改
+    let obj = { a: { b: 1 } };
+    let { ...x } = obj;
+    obj.a.b = 2;
+    x.a.b // 2
+
+    // 4. 扩展运算符【...】的解构赋值，不能复制继承自【原型对象】的属性
+    let o1 = { a: 1 };
+    let o2 = { b: 2 };
+    o2.__proto__ = o1;
+    let { ...o3 } = o2;
+    o3 // { b: 2 }  只复制了o2 自身的属性
+    o3.a // undefined => 对象o3复制了o2，但是只复制了o2 自身的属性；没有复制它的原型对象o1的属性
+
+    // 例子：
+    const o = Object.create({ x: 1, y: 2 });
+    o.z = 3;
+    let { x, ...newObj } = o;
+    let { y, z } = newObj;
+    x // 1  变量x是单纯的解构赋值，所以可以读取对象o继承的属
+    y // undefined
+    z // 3 变量y和z是扩展运算符的解构赋值，只能读取对象o自身的属性，y 取不到值
+
+    /* ES6 变量声明语句之中【let】，如果使用解构赋值，扩展运算符后面必须是一个变量名，而不能是一个解构赋值表达式 */
+    // let { x, ...{ y, z } } = o; => SyntaxError: ... must be followed by an identifier in declaration contexts
+    /* 应用： */
+    function baseFunction({ a, b }) {
+      // ...
+    }
+    function wrapperFunction({ x, y, ...restConfig }) {
+      // 使用 x 和 y 参数进行操作
+      // 其余参数传给原始函数
+      return baseFunction(restConfig);
+    } // => 让多余的参数去干别的
+
+
+    /**
+     *  对象的扩展运算符（...）
+     *  作用：取出参数对象的所有【可遍历】属性，拷贝到当前对象之中
+     *
+     * */
+    let z = { a: 3, b: 4 };
+    let n = { ...z };
+    n // { a: 3, b: 4 }
+
+    // 1. 数组是特殊的对象，所以对象的 扩展运算符也可以用于数组
+    let foo = { ...['a', 'b', 'c'] };
+    foo // {0: "a", 1: "b", 2: "c"}
+
+    // 2. 扩展运算符后面是一个空对象，则没有任何效果
+    //{...{}, a: 1} => { a: 1 }
+
+    // 3. 扩展运算符后面不是对象，则会自动将其转为对象
+    //{...1} => {} <==> 等同于 {...Object(1)}
+    /* 自动转为数值的包装对象 Number{1} 由于该对象没有自身属性，所以返回一个空对象 */
+
+    // 都一样
+     /*
+    {...true} => {} <==> {...Object(true)}
+
+    {...undefined} => {} <==> {...Object(undefined)}
+
+    {...null} => {} <==> {...Object(null)}
+    */
+
+    // 运算符后面是 字串：会被转为类数组对象
+    // {...'hello'} => {0: "h", 1: "e", 2: "l", 3: "l", 4: "o"}
+
+    /* 对象的扩展运算符等同于使用Object.assign()方法  */
+    let aClone = { ...a };
+    // 等同于
+    let aClone = Object.assign({}, a);
+
+    /*
+    * 以上都只是拷贝了对象实例的属性，如果想【完整】克隆一个对象，还拷贝对象原型的属性，如下：
+    * */
+    // 写法一：__proto__属性在非浏览器的环境不一定部署，不用为好
+    const clone1 = {
+      __proto__: Object.getPrototypeOf(obj),
+      ...obj
+    };
+
+    // 写法二
+    const clone2 = Object.assign(
+      Object.create(Object.getPrototypeOf(obj)),
+      obj
+    );
+
+    // 写法三
+    const clone3 = Object.create(
+      Object.getPrototypeOf(obj),
+      Object.getOwnPropertyDescriptors(obj)
+    )
+
+    // 合并对象
+    let ab = { ...a, ...b };
+    // 等同于
+    let ab = Object.assign({}, a, b);
+
+    /* 用户自定义的属性，放在扩展运算符后面，则扩展运算符内部的同名属性会【被覆盖】掉 */
+    let aWithOverrides = { ...a, x: 1, y: 2 };
+    // 等同于
+    let aWithOverrides = { ...a, ...{ x: 1, y: 2 } };
+    // 等同于
+    let x = 1, y = 2, aWithOverrides = { ...a, x, y };
+    // 等同于
+    let aWithOverrides = Object.assign({}, a, { x: 1, y: 2 });
+    //a对象的x属性和y属性，拷贝到新对象后会被覆盖掉
+
+    // 某个作用：用来修改现有对象部分的属性就很方便了
+    let newVersion = {
+      ...previousVersion, // 这里可以有外部一次性拿入，至于怎么拿，我真他妈不知道
+      name: 'New Name' // Override the name property
+    };
+
+    /* 把自定义属性放在扩展运算符前面，就变成了设置新对象的【默认属性值】 */
+    let aWithDefaults = { x: 1, y: 2, ...a };
+    // 等同于
+    let aWithDefaults = Object.assign({}, { x: 1, y: 2 }, a);
+    // 等同于
+    let aWithDefaults = Object.assign({ x: 1, y: 2 }, a);
+
+    // 一点和数组中的...运算符一样：它后面可以跟表达式
+    const obj = {
+      ...(x > 1 ? {a: 1} : {}),
+      b: 2,
+    };
+
+    // 扩展运算符的参数对象之中，如果有取值函数get，这个函数是会执行【真不知道干啥的】
+    // 并不会抛出错误，因为 x 属性只是被定义，但没执行
+    let aWithXGetter = {
+      ...a,
+      get x() {
+        throw new Error('not throw yet');
+      }
+    };
+
+    // 会抛出错误，因为 x 属性被执行了
+    let runtimeError = {
+      ...a,
+      ...{ // 大致意思：放在方法 get前，就会执行【执行不是很正常嘛】，反正就是错的
+        get x() {
+          throw new Error('throw now');
+        }
+      }
+    };
+</script>
+</body>
+</html>

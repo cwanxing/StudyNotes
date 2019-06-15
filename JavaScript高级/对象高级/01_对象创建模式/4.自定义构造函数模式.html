@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>4.自定义构造函数模式</title>
+</head>
+<body>
+自定义构造函数模式
+    * 套路：自定义构造函数，通过new创建对象
+    * 适用场景：需要创建多个类型确定的对象(类型确定)
+    * 缺点：每个对象都有相同的数据，浪费内存
+<script type='text/javascript'>
+    //定义了人的类型(对象)
+    function Person(name, age) {
+        this.name = name
+        this.age = age
+        this.getName = function(name) {
+            this.name = name
+        }
+    }
+    var p1 = new Person('Tom', 12)
+    p1.getName('Jack')
+    console.log(p1.name, p1.age);
+    console.log(p1 instanceof Person);//true p2为Person类型(自定义的)
+
+    function Student(name, price) {
+        this.name
+        this.price
+    }
+    var s = new Student('Bob', 12333)
+    console.log(s instanceof Student);//true p2为Student类型(自定义的)
+
+    var p2 = new Person('TOM', 19)
+    //p1 和 p2同时是使用了Person对象，它们有一个一样的方法getName()方法，浪费内存
+    console.log(p1, p2);
+</script>
+</body>
+</html>

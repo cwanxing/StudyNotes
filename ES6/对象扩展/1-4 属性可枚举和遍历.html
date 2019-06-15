@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>属性的可枚举和遍历</title>
+</head>
+<body>
+<script>
+    /**
+     * 属性可枚举性
+     *  对象的每个属性都有一个描述对象（Descriptor），用来控制该属性的行为
+     * 方法：Object.getOwnPropertyDescriptor()
+     * 功能：获取该属性的描述 【对象】
+     * 参数：1. 有 属性2 的对象
+     *       2. 属性
+     * */
+    let obj = { foo: 123 };
+    Object.getOwnPropertyDescriptor(obj, 'foo')
+    //  {
+    //    value: 123,
+    //    writable: true,
+    //    enumerable: true,  => 可枚举性 false：表示某些操作会忽略当前属性
+    //    configurable: true
+    //  }
+    /* 针对 上述四个属性，有四个操作会忽略 enumerable属性为false的情况*/
+    /*
+    * 1. for...in循环：只遍历对象自身的和继承的可枚举的属性
+    * 2. Object.keys()：返回【对象自身】的所有可枚举的属性的【键名】
+    * 3. JSON.stringify()：只 串行化 对象自身的可枚举的属性
+    *           串行化 也叫序列化：就是把存在于内存的【对象数据】转化成可以【保存成硬盘文件】的形式去存储
+    *           相对有反串化(序列化)，同反理
+    * 4. (ES6)Object.assign()： 忽略enumerable为false的属性，只拷贝对象自身的可枚举的属性
+    *
+    * 解析：
+    *   只有for...in会返回继承的属性，其他三个方法都会忽略继承的属性，只处理对象【自身】的属性
+    *   引入“可枚举”（enumerable）这个概念的最初目的：就是让某些属性可以规避掉for...in操作【length、对象原型上toString】
+    * */
+    Object.getOwnPropertyDescriptor(Object.prototype, 'toString').enumerable// false => toString
+    Object.getOwnPropertyDescriptor([], 'length').enumerable// false => length
+
+    // 貌似是题外话：
+    //ES6 规定，所有 Class 的原型的方法都是不可枚举的
+    Object.getOwnPropertyDescriptor(class {foo() {}}.prototype, 'foo').enumerable// false
+    /* 注意：尽量不用for..in 用Object.keys()替代   */
+
+
+    /**
+     * 属性的遍历
+     *  可以遍历对象属性的五个方法：
+     *     1. for...in循环遍历对象自身的和继承的可枚举属性（不含 Symbol 属性）
+     *     2. Object.keys(obj)返回一个数组，包括对象自身的（不含继承的）所有可枚举属性（不含 Symbol 属性）的【键名】
+     *     3. Object.getOwnPropertyNames返回一个数组，包含对象自身的所有属性（不含 Symbol 属性，但是包括不可枚举属性）的键名
+     *     4. Object.getOwnPropertySymbols返回一个数组，包含对象自身的所有 Symbol 属性的键名
+     *     5. Reflect.ownKeys返回一个数组，包含对象自身的所有键名，不管键名是 Symbol 或字符串，也不管是否可枚举
+     *
+     *  注意：以上在遍历属性键名，都按属性遍历的次序规则
+     *      1. 首先遍历所有【数值】键，按照数值升序排列
+     *      2. 其次遍历所有【字符串】键，按照加入时间升序排列
+     *      3. 最后遍历所有【Symbol】键，按照加入时间升序排列
+     * */
+    // 这里只例了 ownKeys, 其他同一原理
+    Reflect.ownKeys({ [Symbol()]:0, b:0, 10:0, 2:0, a:0 })
+    // ['2', '10', 'b', 'a', Symbol()] 看顺序：是不是先数字，字串，最后Symbol
+</script>
+</body>
+</html>

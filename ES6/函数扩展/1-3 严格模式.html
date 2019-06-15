@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>严格模式</title>
+</head>
+<body>
+<script type='text/javascript'>
+    /*
+         从ES5开始，函数内部可以设定 严格模式
+         ES2016 修改规定: 只要函数参数使用了【默认值/解构赋值/扩展运算符】
+         那么函数内部就【不能显式】设定为严格模式，否则会报错
+    */
+    // 1. 函数参数默认值
+    function doSomething(a, b = a) {
+      'use strict';
+      // code
+    }
+    // 2. 解构赋值
+    const doSomething = function ({a, b}) {
+      'use strict';
+      // code
+    };
+    const obj = {
+      // 报错
+      doSomething({a, b}) {
+        'use strict';
+        // code
+      }
+    };
+    // 3. 使用扩展运算符
+    const doSomething = (...a) => {
+      'use strict';
+      // code
+    };
+
+    /* 那么这么做，为啥呢：
+    *   首先，函数内部的严格模式适用 函数体和函数参数
+    *   但函数执行：先执行参数，后执行函数体
+    *   问题：只有代码执行到函数体后，才知道缓参数是否符合严格模式
+    *
+        function doSomething(value = 070) {
+          'use strict';
+          return value;// 报错
+        }
+        【解析：】
+        value = 070 八进制表示，但在严格模式下：八进制不能以 0 开头
+        但js 会先执行 value = 070 赋值操作；然后进入函数体
+        // 总感觉这样没什么，但权威说不行，咱有什么办法呢
+    */
+    // 以上有个不成熟的解决办法：就是手动让它先执行函数体，后参数；但这样就复杂了【ES6说的】
+    // 于是才有了这个规定
+
+    /* 对于这种规则，肯定有喜欢和不喜欢的人：那怎么避开这种规则呢 */
+    // 1. 设定全局性 严格模式
+    'use strict';
+    function doSomething(a, b = a) {
+      // code
+    }
+    // 2. 把函数包在一个无参数的立即执行函数里面
+    const doSomething = (function () {
+      'use strict';
+      return function (valur = 2) {
+        return value
+      };
+    })();
+</script>
+</body>
+</html>

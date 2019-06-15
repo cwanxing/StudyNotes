@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MySQL数据库</title>
+    <script type="text/javascript">
+        var con = new ActiveXObject("ADODB.Connection");
+        con.ConnectionString = "DRIVER={MySQL ODBC 5.1 Driver};OPTION=3;SERVER=127.0.0.1;User ID=root;Password=cwx123;Database=mysql;Port=3306";
+        con.open;
+        var rs = new ActiveXObject("ADODB.Recordset");
+        rs.open("select * from user", con);
+        while (!rs.eof) {
+            var u = rs.Fields("User");
+            document.write(u);
+            rs.moveNext;
+        }
+        rs.close();
+        rs = null;
+        con.close();
+        con = null;
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

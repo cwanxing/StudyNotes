@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>cookie就是document上的一个属性</title>
+        <script>
+            //document.cookie = 'age = 12';
+            //document.cookie = 'name = cwx';
+            //在cookie中‘=’号不是赋值，而是添加
+
+            //当我注释了上面两行代码
+            //相当于关闭了浏览器，我们会以为再打开浏览器cookie还在
+            //可是cookie没了,因为我们没有设置过期时间
+            //alert(document.cookie);
+
+            //设置过期时间
+            /*
+            先看看什么是Date
+            var oDate = new Date();
+
+            //和获取系统时间相对的还有一个
+            //设置时间setDate(设置的不是当前系统时间，而是获取到的时间)
+            oDate.setDate(oDate.getDate()+12);//设置系统时间(是通过oDate获取的，而非真正的系统时间)为12天后
+            
+            oDate.setMonth(2); 直接设置时间到 2月 
+            oDate.setFullYear(2); 直接设置时间到 公元2年
+            setDate(2): 直接设置时间到 2号
+            
+            alert(oDate.getFullYear()+'-'+(oDate.getMonth()+1)+'-'+oDate.getDate());//获取系统时间
+            */
+            //name cwx 这个cookie在 12天后过期
+            //当你指定过期日期时， cookie就不会在浏览器关闭后消失
+            var oDate = new Date();
+            oDate.setDate(oDate.getDate()+12)
+            document.cookie = 'name=cwx;expires='+oDate;
+            alert(document.cookie);
+
+            //封装函数：
+                //添加cookie
+            function setCookie(name, value, iDay){
+                var oDate = new Date();
+                oDate.setDate(oDate.getDate()+iDay);
+
+                document.cookie=name+'='+value+';expires='+oDate;
+            }
+                //读取cookie
+            function getCookie(name){
+                //首先你得知道多个cookie 怎么排的： name=cwx; age=12; sex=1; 中间是有空格的
+
+                //把cookie用 ;空格(空格绝对不能少) 拆分(去除;空格)
+                var arr = document.cookie.split('; ');
+                //循环每一个arr, 就是每一个cookie(如age=1)
+                for(var i = 0; i < arr.length; i++){
+                    //在根据=号分割，使cookie完全剩下age 和 1(去除=号)
+                    arr2 = arr[i].split('=');
+                    //如果age 等于 参数name
+                    if(arr2[0] == name){
+                        //则返回age的值 1
+                        return arr2[1];
+                    }
+                }
+                return '';//没有找到
+            }
+                //删除cookie
+            function removeCookie(name){
+                setCookie(name, 1, -1);
+                //要删除的cookie， 随便什么值，设置它的过期时间为-1(就是代表昨天)， 
+            }
+        </script>
+</head>
+<body>
+    
+</body>
+</html>

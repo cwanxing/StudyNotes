@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>字符的 Unicode 表示法</title>
+</head>
+<body>
+<script type='text/javascript'>
+    /* JavaScript 允许采用\uxxxx形式表示一个字符，其中xxxx表示字符的 Unicode 码点 */
+    // 范围：\u0000~\uFFFF 超出则必须用双字节的形式表示
+    "\u0061"; // "a"
+    "\uD842\uDFB7"; // "𠮷"
+
+    "\u20BB7"; // " 7" 这里会解释为：空格 + 最后一位字符
+
+    // ES6 改进：只要将码点放入【大括号】，就能正确解读该字符(大于0xFFFF)，如：
+    "\u{20BB7}"; // "𠮷" 这里的范围已经超出
+    "\u{41}\u{42}\u{43}"; // "ABC" 这里貌似是 ASCII 码
+    let hello = 123; // hell\u{6F} // 123
+    '\u{1F680}' === '\uD83D\uDE80'; // true 运用了{}后，超出的也能表示了
+
+    /* 这样的话 js就有6中方式可以表示一个字符了 */
+    '\z' === 'z'  // true
+    '\172' === 'z' // true
+    '\x7A' === 'z' // true
+    '\u007A' === 'z' // true
+    '\u{7A}' === 'z' // true
+</script>
+</body>
+</html>

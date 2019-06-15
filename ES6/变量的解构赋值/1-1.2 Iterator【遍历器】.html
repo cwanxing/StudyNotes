@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ES6-Iterator遍历器</title>
+</head>
+<body>
+    <script>
+        /* 【遍历器】
+        它是一种接口，为各种不同的数据结构提供统一的访问机制。任何数据结构只要部署Iterator接口，就能遍历
+        作用：
+            1. 为各种数据结构，提供一个统一的、简便的访问接口
+            2. 使得数据结构的成员能够按某种次序【排列】
+            3. ES6创造了一种新的遍历命令【for...of】循环，Iterator接口主要供for...of消费
+        */
+        /// 先来看看ES中的全部循环语句：
+        let arr = [1, 2, 3, 4]
+
+        // 1. for语句 循环【代码块】一定的次数
+        for(let i = 0, len = arr.length; i < len; i++){
+            console.log(arr[i])
+            typeof i; // Number 值
+        }
+        
+        // 2. for in语句用于遍历【数组】或者对象的【属性】（对数组或者对象的属性进行循环操作）通常循环的对象(不是数组)
+        for(let index in arr){
+            console.log(arr[index]) //1, 2, 3, 4
+            typeof index // String 是属性名(即下标)
+        }
+        /* 如果：arr.age = 'a'; 那么arr(index) ==> 1, 2, 3, 4, a 
+            所以才 typeof index 是字符串，也可以说明for in 给 对象用的
+            ES6 中的 for of 则解决这一问题，还可以break中断
+        */
+        let obj = {a: '1', b: '2', c: '3', d: '4'}
+        for (let o in obj) {
+            typeof o; // String 是属性名(下标)
+            console.log(o)    //遍历的是属性名称 a,b,c,d
+            console.log(obj[o])  //属性的值1，2，3，4
+            // 以上是不是觉得它只能遍历属性(键名)，不能遍历属性名(键值)
+        }
+
+        // 3. forEach(fn(value, index, arr))，每个元素传入回调函数，在没有【传完】之前，不能跳出，即break
+        arr.forEach(function (val, index, arr) {
+            console.log(val + '索引：' + index) // val是当前元素，index当前元素索引
+            console.log(arr) // arr数组
+        })
+
+        // 4. for of
+        // 循环数组
+        for(let o of arr){
+            console.log(o) // 1, 2, 3, 4 不是下标
+            typeof o // number
+        }
+        // 不可以循环对象【可以循环拥有enumerable属性的对象】
+        let obj1 = {a: '1', b: 2}
+        for(let o1 of obj1){
+            console.log(o1) // Uncaught TypeError: obj[Symbol.iterator] is not a function
+        }
+        // 循环属性
+        for(let o2 of Object.keys(obj1)){
+            console.log(o2) // a, b 是属性名哦
+        }
+        // 循环属性值
+        for(let o3 of Object.values(obj1)){
+            console.log(o3) // '1', 2 是属性值
+        }
+        // 循环字符串
+        let str = 'love'
+        for (let o of str) {
+            console.log(o) // l,o,v,e String类型
+            // 值得注意：console.log(o[0]) 效果一样，只能填 0 可填可不填
+        }
+        // 循环一个Map
+        let iterable = new Map([["a", 1], ["b", 2], ["c", 3]]);
+        for (let [key, value] of iterable) {
+            console.log(value); // 1, 2, 3
+        }
+        for (let entry of iterable) {
+            console.log(entry);// [a, 1]; [b, 2]; [c, 3]
+        }
+        // 循环Set
+        let iterable = new Set([1, 1, 2, 2, 3, 3]);
+        for (let value of iterable) {
+            console.log(value); // 1, 2, 3 以去除了重复
+        }
+
+        ///接下来就是 Iterator 接口
+        // 以下三种数据结构原生就有 Iterator 接口
+        var map = new Map(); // Map数据结构
+        console.log(map[Symbol.iterator] === map.entries)//true
+        var arr = new Array(); // 数组结构
+        console.log(arr[Symbol.iterator] === arr.values)//true
+        var set = new Set(); // Set数据结构 
+        console.log(set[Symbol.iterator] === set.values)//true
+
+        // 下面的例子是为了使你理解 Iterator 的原理
+        function makeIterator(arr){
+            let nextIndex = 0;
+            return {
+                next : function(){
+                    return nextIndex < arr.length ?
+                    {value: arr[nextIndex++], done: false}:
+                    {value: undefined, done: true}
+                }
+            }
+        }
+        /* 原理：
+            遍历器创建一个指向【数据结构】起始位置的【指针】
+            next方法，指针就【向后】移动一个位置，并返回【当前】位置上的成员，直至结束位置
+            next方法返回 value 和 done 两个属性的对象：
+            value：属性是当前遍历位置的值
+            done：属性是一个布尔值，表示遍历是否结束。
+        */
+        /// 这里解释一下，为什么对象没有原生的 Iterator, 因为对象不像数组、Set那样，是一个确定【顺序】的
+        /// 其实吧！给一个对象部署 Iterator 就是把它变为的顺序
+        // 怎么部署接口
+        var students = {}
+        students[Symbol.iterator] = function() {
+            let index = 1;
+            return {
+                next() {
+                    return {done: index>10, value: index++}
+                }
+            }
+        }
+        for(var i of students) {
+            console.log(i);
+        }
+        // 还有一种方式
+        let obj = {
+            data: [ 'hello', 'world' ],
+            [Symbol.iterator]() {
+                const self = this; // 请看下方
+                let index = 0;
+                return {
+                    next() {
+                        if (index < self.data.length) { // self.data.length ==> obj.data.length
+                            return {
+                                value: self.data[index++],
+                                done: false
+                            };
+                        } else {
+                            return { value: undefined, done: true };
+                        }
+                    }
+                };
+            }
+        };
+        
+        /* 注：对部署Iterator接口，还是很模糊，只能在今后的运用中懂了 */
+    </script>
+</body>
+</html>

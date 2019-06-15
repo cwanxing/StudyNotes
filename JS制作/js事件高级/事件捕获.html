@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>事件捕获</title>
+    <script>
+        //事件捕获：将页面上所有地方的事件都集中在一个元素上
+        /////////只兼容IE9以下浏览器，只用于IE浏览器//////////////
+        window.onload=function(){
+            var oBtn = document.getElementById('btn1');
+            oBtn.onclick=function(){
+                alert('事件捕获，我是input控件');
+            }
+            oBtn.setCapture();
+
+        }
+    </script>
+</head>
+<body>
+    <input id="btn1" type="button" value="按钮">
+</body>
+</html>

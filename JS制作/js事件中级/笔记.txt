@@ -1,0 +1,5 @@
+默认行为：浏览器自带的
+
+oncontextmenu 当用户单击右键时弹出菜单
+
+context 环境(右键) menu 菜单

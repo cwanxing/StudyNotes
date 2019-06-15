@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ES6新增的数学方法</title>
+</head>
+<body>
+<script>
+    // ES6 中的新增的 17个数学相关方法：它们只是静态方法，只能在Math对象上调用
+    /*  17 个方法总览：
+         Math.acosh(x) 返回 x 的反双曲余弦。
+
+         Math.asinh(x) 返回 x 的反双曲正弦。
+
+         Math.atanh(x) 返回 x 的反双曲正切。
+
+         Math.clz32(x) 返回 x 的 32 位二进制整数表示形式的前导 0 的个数。
+
+         Math.sinh(x) 返回x的双曲正弦。
+
+         Math.cosh(x) 返回 x 的双曲余弦。
+
+         Math.expm1(x) 返回 eˆx - 1。
+
+         Math.fround(x) 返回 x 的单精度浮点数形式。
+
+         Math.hypot(...values) 返回所有参数的平方和的平方根。
+
+         Math.imul(x, y) 返回两个参数以 32 位整数形式相乘的结果。
+
+         Math.log1p(x) 返回 1 + x 的自然对数。
+
+         Math.log10(x) 返回以 10 为底的x的对数。
+
+         Math.log2(x) 返回以 2 为底的 x 的对数。
+
+         Math.tanh(x) 返回 x 的双曲正切
+
+         Math.cbrt(x)函数：用于计算一个数的立方根
+
+         Math.sign(x)函数：用来判断一个数到底是正数、负数、还是零。
+
+         Math.trunc(x)函数：用于去除一个数的小数部分，返回整数部分
+    */
+    // 1. Math.trunc：用于去除一个数的小数部分，返回值：整数部分
+        Math.trunc(4.1) // 4
+        Math.trunc(4.9) // 4
+        Math.trunc(-4.1) // -4
+        Math.trunc(-4.9) // -4
+        Math.trunc(-0.1234) // -0
+     /* 非数值：Math.trunc 内部使用 Number() 将其先转为数值 */
+        Math.trunc('123.456') // 123
+        Math.trunc(true) //1
+        Math.trunc(false) // 0
+        Math.trunc(null) // 0
+    /* 【空值】和【无法截取整数】的值，返回NaN */
+        Math.trunc(NaN);      // NaN
+        Math.trunc('foo');    // NaN
+        Math.trunc();         // NaN
+        Math.trunc(undefined) // NaN
+    // 强大的ES6 为那些没能体验这个强大功能的环境【就是没有这个方法】特地编了个函数，效果一样：
+        Math.trunc = Math.trunc || function(x) {
+            return x < 0 ? Math.ceil(x) : Math.floor(x);
+        };
+    // 2. Math.sign：用来判断一个数到底是正数、负数、还是零【非数字，先Number后再处理，无法转的，返回NaN】
+    /* 返回值列表：
+        参数为正数，返回+1；
+        参数为负数，返回-1；
+        参数为 0，返回0；
+        参数为-0，返回-0;
+        其他值，返回NaN
+     */
+        Math.sign(-5) // -1
+        Math.sign(5) // +1
+        Math.sign(0) // +0
+        Math.sign(-0) // -0
+        Math.sign(NaN) // NaN
+        Math.sign('')  // 0
+        Math.sign(true)  // +1
+        Math.sign(false)  // 0
+        Math.sign(null)  // 0
+        Math.sign('9')  // +1
+        Math.sign('foo')  // NaN
+        Math.sign()  // NaN
+        Math.sign(undefined)  // NaN
+    // 强大的ES6 也考虑到了：
+        Math.sign = Math.sign || function(x) {
+            x = +x; // convert to a number
+            if (x === 0 || isNaN(x)) {
+              return x;
+            }
+            return x > 0 ? 1 : -1;
+        };
+    // 3. Math.cbrt：用于计算一个数的立方根【非数字，Number，再处理；转不了，NaN】
+        Math.cbrt(-1) // -1
+        Math.cbrt(0)  // 0
+        Math.cbrt(1)  // 1
+        Math.cbrt(2)  // 1.2599210498948734
+    // 强大的ES6时间到：
+    Math.cbrt = Math.cbrt || function(x) {
+        var y = Math.pow(Math.abs(x), 1/3);
+        return x < 0 ? -y : y;
+      };
+    // 4. Math.clz32：将参数转为 32 位无符号整数的形式，
+        Math.clz32(0) // 32
+        Math.clz32(1) // 31
+        Math.clz32(1000) // 22
+        Math.clz32(0b01000000000000000000000000000000) // 1
+        Math.clz32(0b00100000000000000000000000000000) // 2
+    /* 左移运算符（<<）与Math.clz32方法直接相关;  对于小数部分， */
+        Math.clz32(0) // 32
+        Math.clz32(1) // 31
+        Math.clz32(1 << 1) // 30
+        Math.clz32(1 << 2) // 29
+        Math.clz32(1 << 29) // 2
+        // 它值考虑整数【即无条件省去小数】
+        Math.clz32(3.2) // 30
+        Math.clz32(3.9) // 30
+    /* 非数值，Number，再处理 */
+        Math.clz32() // 32
+        Math.clz32(NaN) // 32
+        Math.clz32(Infinity) // 32
+        Math.clz32(null) // 32
+        Math.clz32('foo') // 32
+        Math.clz32([]) // 32
+        Math.clz32({}) // 32
+        Math.clz32(true) // 31
+    // 5. Math.imul：返回 两个数以 32 位带符号整数形式【相乘】的 结果【结果也是32位带符号整数】
+        Math.imul(2, 4)   // 8
+        Math.imul(-1, 8)  // -8
+        Math.imul(-2, -2) // 4
+    /* 出现此方法原因：js精度限制；*/
+    // 对于那些很大的数的乘法，低位数值 往往都是不精确的
+        // 如：(0x7fffffff * 0x7fffffff)|0 // 0 由于乘积超过了 2 的 53 次方，就把低位的值都变成了 0
+    // Math.imul(0x7fffffff, 0x7fffffff) // 1 imul 就能正确的返回【用到再深究】
+    // 6. Math.fround：返回一个 数的32位单精度浮点数 形式
+    /*
+        对于32位单精度格式来说，数值精度是 24 个二进制位（1 位隐藏位与 23 位有效位），
+        所以对于(-2^24, 2^24)之间的整数, 返回结果与参数本身一致。
+    */
+        Math.fround(0)   // 0
+        Math.fround(1)   // 1
+        Math.fround(2 ** 24 - 1)   // 16777215
+        // 绝对值大于 2^24，返回结果将丢失精度
+        Math.fround(2 ** 24)       // 16777216
+        Math.fround(2 ** 24 + 1)   // 16777216
+
+    // 主要作用：将64位双精度浮点数 ==> 32位单精度浮点数
+    /* 规则： 小数的精度超 24 个二进制位，返回值：不同于原值；否则：返回值不变【即与64位双精度值一致】 */
+
+        // 未丢失有效精度
+        Math.fround(1.125) // 1.125
+        Math.fround(7.25)  // 7.25
+
+        // 丢失精度
+        Math.fround(0.3)   // 0.30000001192092896
+        Math.fround(0.7)   // 0.699999988079071
+        Math.fround(1.0000000123) // 1
+    // 对于 NaN 和 Infinity，此方法返回原值，其他，先Number 再返回单精度浮点数
+        Math.fround(NaN)      // NaN
+        Math.fround(Infinity) // Infinity
+
+        Math.fround('5')      // 5
+        Math.fround(true)     // 1
+        Math.fround(null)     // 0
+        Math.fround([])       // 0
+        Math.fround({})       // NaN
+
+    // 强大ES6 时间到：
+    Math.fround = Math.fround || function (x) {
+        return new Float32Array([x])[0];
+      };
+
+    // 7. Math.hypot：返回所有参数的 平方和 的平方根【非数值，Nubmer；转不了，NaN】
+        Math.hypot(3, 4);        // 5
+        Math.hypot(3, 4, 5);     // 7.0710678118654755
+        Math.hypot();            // 0
+        Math.hypot(NaN);         // NaN
+        Math.hypot(3, 4, 'foo'); // NaN
+        Math.hypot(3, 4, '5');   // 7.0710678118654755
+        Math.hypot(-3);          // 3
+
+    /* 关于对数：*/
+    // 1. Math.expm1(x)：返回 ex - 1，即Math.exp(x) - 1
+        Math.expm1(-1) // -0.6321205588285577
+        Math.expm1(0)  // 0
+        Math.expm1(1)  // 1.718281828459045
+    // 强大ES6 时间到：
+    Math.expm1 = Math.expm1 || function(x) {
+        return Math.exp(x) - 1;
+      };
+    // 2. Math.log1p(x)：返回1 + x的自然对数，即Math.log(1 + x)。如果 x 【小于-1】，返回NaN
+        Math.log1p(1)  // 0.6931471805599453
+        Math.log1p(0)  // 0
+        Math.log1p(-1) // -Infinity
+        Math.log1p(-2) // NaN
+    // 强大ES6 时间到：
+    Math.log1p = Math.log1p || function(x) {
+        return Math.log(1 + x);
+      };
+    // 3. Math.log10(x)：返回以 10 为底的x的对数。如果x【小于 0】，则返回 NaN
+        Math.log10(2)      // 0.3010299956639812
+        Math.log10(1)      // 0
+        Math.log10(0)      // -Infinity
+        Math.log10(-2)     // NaN
+        Math.log10(100000) // 5
+    // 强大ES6 时间到：
+    Math.log10 = Math.log10 || function(x) {
+        return Math.log(x) / Math.LN10;
+      };
+    // 4. Math.log2(x)：返回以 2 为底的x的对数。如果x【小于 0】，则返回 NaN
+        Math.log2(3)       // 1.584962500721156
+        Math.log2(2)       // 1
+        Math.log2(1)       // 0
+        Math.log2(0)       // -Infinity
+        Math.log2(-2)      // NaN
+        Math.log2(1024)    // 10
+        Math.log2(1 << 29) // 29
+    // 强大ES6 时间到：
+    Math.log2 = Math.log2 || function(x) {
+        return Math.log(x) / Math.LN2;
+      };
+
+        /*8
+        * 其他方法，看总览，用到再去搞
+        * */
+</script>
+</body>
+</html>

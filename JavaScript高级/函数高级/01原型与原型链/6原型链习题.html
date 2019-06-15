@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>6原型链习题</title>
+</head>
+<body>
+<script type='text/javascript'>
+//    测试 1
+    function Fn() {}
+    Fn.prototype.n = 1;
+
+    var fn = new Fn();//实例后，原型内的数据已经确定
+    Fn.prototype = {//函数原型被指向另一个新对象
+        n: 2,
+        m: 3
+    };
+    var fn2 = new Fn();
+    //console.log(fn.n, fn.m, fn2.n, fn2.m);// 1 undefiend 2 3
+
+//   测试2
+    function Fn2() {}
+    Object.prototype.a = function () {
+        console.log('a()方法');
+    }
+    Function.prototype.b = function () {
+        console.log('b()方法');
+    }
+    
+    var fn3 = new Fn2();
+    //fn3.a();fn3.b();Fn2.a();Fn2.b();//a()方法 fn3不是函数 a()方法  b()方法
+    console.log(Object.prototype);
+    console.log(fn3);
+    console.log(Function.prototype);
+</script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!doctype html>
+<meta charset="utf-8">
+<script>
+	window.onload=function(){
+		
+		var oTab=document.getElementById('tab1');
+		/*
+		var oTbdy=oTab.getElementsByTagName('tbody')[0];
+		var oTr=oTbdy.getElementsByTagName('tr')[1];
+		var oTd=oTr.getElementsByTagName('td')[1];
+		alert(oTd.innerHTML);
+		alert(oTab.getElementsByTagName('tbody')[0].getElementsByTagName('tr')[1].getElementsByTagName('td')[1].innerHTML
+		);同作用于上一行
+		alert(oTab.tBodies[0].rows[1].cells[1].innerHTML
+		);
+		alert(oTab.tBodies[0].rows.length);
+		//隔行变色
+		for(var i=0;i<oTab.tBodies[0].rows.length;i++)
+		{
+			if(i%2)
+			{
+				oTab.tBodies[0].rows[i].style.background="red";
+			}
+			else
+			{
+				oTab.tBodies[0].rows[i].style.background="blue";
+			}
+		}
+		var oldColor='';这个变量是存放表格原先的颜色信息
+		for(var i=0;i<oTab.tBodies[0].rows.length;i++)
+		{
+			oTab.tBodies[0].rows[i].onmouseover=function()
+			{ 
+				oldColor=this.style.background;
+				this.style.background="#ccc";
+			};
+			oTab.tBodies[0].rows[i].onmouseout=function()
+			{
+				this.style.background=oldColor;
+			};
+			if(i%2)
+			{
+				oTab.tBodies[0].rows[i].style.background="red";
+			}
+			else
+			{
+				oTab.tBodies[0].rows[i].style.background="blue";
+			}
+		}*/
+		var aNam=document.getElementById('nam');
+		var oAge=document.getElementById('age');
+		var oBtn=document.getElementById('btn');
+		var id=oTab.tBodies[0].rows.length+1;
+		
+		oBtn.onclick=function(){
+			var oTr=document.createElement('tr');
+			//mmp搞了半天单词写成大写的了。。。。。
+			var oTd=document.createElement('td');
+			//以上是创建tr，td元素
+			//对于td来说，它里面要放东西
+			//父级.appendChild.子集
+			oTd.innerHTML=id++;//这里换成变量就不会出现ID重复的现象
+			//		id++  6;++id  7,记住 先加后使用 和 先使用后加
+			oTr.appendChild(oTd);
+			//这里都创建出一个td
+			var oTd=document.createElement('td');
+			oTd.innerHTML=aNam.value;
+			oTr.appendChild(oTd);
+			
+			var oTd=document.createElement('td');
+			oTd.innerHTML=oAge.value;
+			oTr.appendChild(oTd);
+			//oTr.appendChild(oTd)能整写为一个吗，都一样。
+			//以上已经把单元格放入行中
+			
+			
+			/*这里要求创建的是td，怎么会想到连接呢，a只是文本、、、正是本末倒置啊
+			var oA=document.createElement('a');
+			oTd.innerHTML=function(){
+					<a href="#">删除</a>
+				};
+			oTd.appendChild(oA);
+			*/
+			var oTd=document.createElement('td');
+			oTd.innerHTML='<a href="#">删除</a>';
+			oTr.appendChild(oTd);
+			
+			oTd.getElementsByTagName('a')[0].onclick=function()
+			{
+				/*这有个坑，卸载表格(包括了表头thead)
+				可前面的操作都是围绕tbody的
+				oTab.removeChild(this.parentNode.parentNode);
+				*/
+				oTab.tBodies[0].removeChild(this.parentNode.parentNode);	
+			};
+			oTab.tBodies[0].appendChild(oTr);
+		};
+}
+</script>
+姓名：<input id="nam" type="text" value="小英子">
+年龄：<input id="age" type="text" value="12">
+<input type="button" id="btn" value="添加">
+<table id="tab1" border="1" width="500">
+	<thead>
+		<td>ID</td>
+		<td>姓名</td>
+		<td>年龄</td>
+        <td>操作</td>
+	</thead>
+	<tbody>
+		<tr> 
+			<td>1</td>
+			<td>Blue</td>
+			<td>78</td>
+            <td></td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>Black</td>
+			<td>56</td>
+            <td></td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>张三</td>
+			<td>12</td>
+            <td></td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>李四</td>
+			<td>45</td>
+            <td></td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td>王五</td>
+			<td>23</td>
+            <td></td>
+		</tr>
+	</tbody>
+</table>

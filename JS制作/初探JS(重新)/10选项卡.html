@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+
+<style>
+*{margin:0;padding:0;}
+#div1 div{width:200px;height:300px;background:#ccc;display:none;}
+input{width:50px;height:25px;border:none;}
+.active{background:blue;}
+</style>
+<script>
+//1.怎么去除多个按钮之间的左右距离？
+//2.把font-size=0添加到按钮的父级样式中，当父级的文字就没了？
+window.onload=function(){
+		var oDiv=document.getElementById('div1');
+		var oBtn=oDiv.getElementsByTagName('input');
+		//oDiv不能用document
+		var aDiv=oDiv.getElementsByTagName('div');
+		//oDiv不能用document
+		for(var i=0;i<oBtn.length;i++)
+		{
+			oBtn[i].index=i;//index重点理解，方便找到当前div是哪个
+			oBtn[i].onmouseover=function()
+			{
+				for(var i=0;i<oBtn.length;i++)
+				{
+					oBtn[i].className='';
+					aDiv[i].style.display='none';
+				}
+				//思考：怎么确定当前的div是哪个。有this吗，不，this是指 当前发生事件
+				//解决方法：为每个按钮都加上一个index属性(自创的)，简单说就是由按钮的下标来确定当前的div(下标)
+				//就知道当前div了。
+				this.className='active';//
+				//alert(this.index);
+				//this.aDiv错
+				aDiv[this.index].style.display='block';
+			}
+			
+		}
+}
+</script>
+</head>
+
+<body>
+<div id="div1"><!-- style="font-size:0px;" -->
+	<input  class="active" type="button" value="教育" /><!--index='0' -->
+    <input style="" type="button" value="培训" /> <!--index='1' -->
+    <input type="button" value="招生"  /><!--index='2' -->
+    <input type="button" value="出国"  /><!--index='3' -->
+    <div style="display:block;">
+    	<a href="javascript:;">11111</a>
+    </div>
+    <div>
+    	<a href="javascript:;">222222</a>
+
+    </div>
+    <div>
+    	<a href="javascript:;">3333333</a>
+    </div>
+    <div>
+    	<a href="javascript:;">4444444</a>
+    </div>
+</div>
+</body>
+</html>

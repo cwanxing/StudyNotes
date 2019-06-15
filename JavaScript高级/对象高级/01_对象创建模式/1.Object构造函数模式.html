@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>1.Object构造函数模式</title>
+</head>
+<body>
+Object构造函数模式
+    * 套路：先创建空object对象，在动态添加属性/方法
+    * 适用场景：起始时不确定对象内部有哪些东西
+    * 缺点：语句太多
+
+<script type='text/javascript'>
+    /*
+    * 创建一个人：有名字，年龄，吃饭的能力
+    * */
+    var p = new Object()
+    p.name = 'cwx'
+    p.age = 12
+    p.getName = function () {
+        this.name = name
+    }
+    //测试
+    p.getName('cwx123')
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数值比较</title>
+</head>
+<body>
+<script>
+    /**
+     * 方法：Object.is()
+     * 参数：两个需要对比的数值
+     * 功能：同值相等（Same-value equality）算法，与严格相等运算符的行为基本一致
+     * 解决：ES5 中有 相等【==】运算符 和 严格相等【===】运算符
+     *      -->缺点：
+     *      1. 相等运算符：会自动转换数据类型
+     *      2. 严格相等运算符：NaN 不等于自身；+0 不等于 -0
+     * */
+    Object.is('foo', 'foo'); // true
+    Object.is({}, {}); // false 注：对象的比较是引用值【地址值】的比较，所以是不会相等
+
+    // ES6 和 ES5 的区别：
+    +0 === -0 //true
+    NaN === NaN // false
+    Object.is(+0, -0) // false
+    Object.is(NaN, NaN) // true
+
+    /* 没有此方法的环境，如何部署： */
+    Object.defineProperty(Object, 'is', {
+      value: function(x, y) {
+        if (x === y) {
+          // 针对+0 不等于 -0的情况
+          return x !== 0 || 1 / x === 1 / y;
+        }
+        // 针对NaN的情况
+        return x !== x && y !== y;
+      },
+      configurable: true,
+      enumerable: false,
+      writable: true
+    });
+</script>
+</body>
+</html>

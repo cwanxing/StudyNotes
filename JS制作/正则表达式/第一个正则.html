@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>第一个正则:字符串 str 中找出数字</title>
+    <script>
+        
+        var str = "abc123def";
+        var patt1 = /[0-9]+/;
+        //          不能使用小括号
+        document.write(str.match(patt1));//---->123
+        
+        //匹配以数字开头，并以 abc 结尾的字符串
+        
+        var str = "123abc";
+        var patt1 = /^[0-9]+abc$/;
+        document.write(str.match(patt1));
+
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

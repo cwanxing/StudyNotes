@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+*{
+	margin:0;
+	padding: 0;
+}
+#div1{width:200px;
+	height:200px;
+	background-color:red;
+	opacity:1;
+	filter:alpha(opacity:100);
+}
+.txtp{
+	width: 100px;
+	display:none;
+	height: 50px;
+	background-color:blue;
+}
+.txtp :hover{
+	display: block;
+}
+</style>
+<script>
+window.onload=function(){
+	var oDiv=document.getElementById('div1');
+	oDiv.onmouseover=function(){
+		setMoveColor(30);
+		//oTp.style.display='block';
+	}
+	oDiv.onmouseout=function(){
+		setMoveColor(100);
+		
+	}
+	
+	
+}
+var timer=null;
+var alpha=100;
+function setMoveColor(iTarget){//养成用参数的习惯，因为多少都是变量
+	var oDiv=document.getElementById('div1');//获取元素
+	//var oTp=document.getElementById('txtp');
+	clearInterval(timer);//关闭定时器，保证只有下面一个定时器工作
+	
+	timer=setInterval(
+		function(){
+			//思考：以前都是改变位置属性，可这是改变透明度。那怎么改变呢
+			//值是定死的，肯定不行；
+			//透明度没有想offsetLeft样的属性，所以用变量
+			/*
+			if(oDiv.style.opacity>.3)
+			{
+				iTarget=-.1;
+			}
+			else
+			{
+				iTarget=.1;
+			}
+			*/
+			//var speed=0;
+			if(alpha<iTarget)
+			{
+				speed=10;
+			}
+			else
+			{
+				speed=-10;
+			}
+			
+			if(alpha==iTarget)
+			{
+				clearInterval(timer);
+			}
+			else
+			{
+				alpha+=speed;
+				oDiv.style.filter='alpha(opactiy:'+alpha+')';
+				oDiv.style.opacity=alpha/100;
+
+				//opacity满值是1，所以得除以100
+			}
+			
+			/*
+			if(oDiv.style.opacity==.3)
+			{
+				clearInterval(timer);
+			}
+			else
+			{
+				//oDiv.style.opacity=1;
+				oDiv.style.opacity+=iTarget;
+			}
+			*/
+	},30);
+}
+</script>
+</head>
+
+<body>
+<div id="div1">
+	<p class="txtp">afdsffasdf</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>解决函数重复</title>
+    <!-- 
+    themes css
+        class     一次给一组元素加样式
+        行间样式    一次给一个元素加样式
+
+        js
+        原型：就是css里的class
+        给对象加东西
+     -->
+    <script>
+        var arr = new Array(25, 35, 15, 30);
+        var arr2 = new Array(1,2,3,4);
+        
+      //类(Array) 的 原型(prototype) 上加  方法名(sum)
+      //可以对系统的类加方法
+      //同样也可以对自定义的类加方法
+        Array.prototype.sum = function(){
+        //对所有Array 对象有用 类似于css中 的class
+        //arr.sum = function () {//只对arr对象有效 类似于css中行间样式
+            var result = 0;
+
+            for (var i = 0; i < this.length; i++) {
+                result += this[i];
+            }
+            return result;
+        }
+        alert(arr.sum());
+        alert(arr2.sum());//报错
+        //arr2对象没有sum方法
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

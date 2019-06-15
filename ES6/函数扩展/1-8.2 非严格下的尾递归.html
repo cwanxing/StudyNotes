@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>非严格模式下的尾递归</title>
+</head>
+<body>
+<script>
+    /** 以下为天书：
+     * 不在严格模式下；不支持尾递归环境下。如何自己实现尾递归优化
+     * 原理：由于调用栈太多，只有减少调用栈就行了
+     * 减少：【循环】换掉【递归】
+     * */
+    // 功能：参数x是需要累加的值，参数y控制递归次数
+    function sum(x, y) {
+      if (y > 0) {
+        return sum(x + 1, y - 1);
+      } else {
+        return x;
+      }
+    }// 一旦指定sum递归 100000 次，就会报错，提示超出调用栈的最大次数
+
+    sum(1, 100000)
+    // Uncaught RangeError: Maximum call stack size exceeded(…)
+
+    /**
+     * 蹦床函数（trampoline）：可以将递归执行转为循环执行
+     * 参数：函数f
+     * 条件：如果 f 执行后返回一个【函数】，就继续执行
+     * */
+    // 第一步：
+    function trampoline(f) {
+      while (f && f instanceof Function) {
+        f = f();
+      }
+      return f;
+    }
+    // 第二步：将原来的递归函数，改写为每一步返回另一个函数
+    function sum(x, y) {
+      if (y > 0) {
+        return sum.bind(null, x + 1, y - 1);
+      } else {
+        return x;
+      }
+    } // sum函数的每次执行，都会返回自身的另一个版本
+    // 最后调用：
+    trampoline(sum(1, 100000))// 100001
+
+    // ES6 你居然说不是真正的尾递归优化，还有更好的：
+    function tco(f) {
+      var value;
+      var active = false;
+      var accumulated = [];
+
+      return function accumulator() {
+        accumulated.push(arguments);
+        if (!active) {
+          active = true;
+          while (accumulated.length) {
+            value = f.apply(this, accumulated.shift());
+          }
+          active = false;
+          return value;
+        }
+      };
+    }
+
+    var sum = tco(function(x, y) {
+      if (y > 0) {
+        return sum(x + 1, y - 1)
+      }
+      else {
+        return x
+      }
+    });
+
+    sum(1, 100000)
+    // 100001
+
+    /*
+    * tco 函数是尾递归优化的实现，它的奥妙就在于状态变量active。
+    * 默认情况下，这个变量是不激活的。
+    * 一旦进入尾递归优化的过程，这个变量就激活了
+    * 然后，每一轮递归sum返回的都是undefined，所以就避免了递归执行
+    * 而 accumulated 数组存放每一轮 sum 执行的参数，总是有值的，
+    * 这就保证了accumulator函数内部的while循环总是会执行。
+    * 这样就很巧妙地将“递归”改成了“循环”，而后一轮的参数会取代前一轮的参数，保证了调用栈只有一层
+    * */
+
+    /// ES6 最后的参数尾部的 逗号
+    function clownsEverywhere(
+      param1,
+      param2 // 函数参数这样写，最后一个不允许加 , 号的
+    ) { /* ... */ }
+
+    clownsEverywhere(
+      'foo',
+      'bar' // ES6 规定能加了
+    );
+</script>
+</body>
+</html>

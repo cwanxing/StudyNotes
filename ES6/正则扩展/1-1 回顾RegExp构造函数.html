@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>回顾RegExp构造函数</title>
+</head>
+<body>
+<script type='text/javascript'>
+    /* 什么是正则：为正则定义一串特殊的字串规则。字串调用它的话，正则就会根据那串规则给出结果 */
+    /* 怎么使用呢？有两种使用方法
+
+    *   1. 构造函数方式创建正则表达式对象
+         var str = "abc123def";
+         var patt1 = /[0-9]+/;  意思是匹配数字
+         str.match(patt1); ==> 123
+    *   2. 直接量方式创建
+         var str="Every man";
+         var patt=new RegExp("man","g"); ==> /man/g; 全局查询 man 字串
+         str.replace(patt,"person"); str 调用 replace【替换字串用的】 方法 参数：就是正则规则，替换成person
+         就是：在str 字串中找到 man字串，替换为person 字串
+    * */
+    /* 接下来就是阮大佬的对在ES6入门中提到的 */
+    // ES5 中 RegExp 构造函数参数有两种情况：
+    // 1. 参数1: 字符串，参数2: 正则表达式的修饰符（全局、忽略大小写之类的）
+    var regex = new RegExp('xyz', 'i'); // 等效 var regex = /xyz/i;
+
+    // 2. 参数: 正则表示式【对象】。则会返回一个原有正则表达式的拷贝
+    var regex1 = new RegExp(/xyz/i); // 等价 var regex = /xyz/i;
+    /* 这样写，是不能写第二参数 否则报错
+    * var regex = new RegExp(/xyz/, 'i');
+     // Uncaught TypeError: Cannot supply flags when constructing one RegExp from another
+    * */
+    // 不过ES6就是牛，不过第一个参数【/abc/ig】中的修饰符【ig】会被第二个参数覆盖
+    var regex2 = new RegExp(/abc/ig, 'i').flag; // "i"
+</script>
+</body>
+</html>

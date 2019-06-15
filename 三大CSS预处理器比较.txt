@@ -1,0 +1,346 @@
+------------------------------------------------------------------------------
+通过【语法】、【变量】、【嵌套】、【混入(Mixin)】、【继承】、【导入】、【函数】和【操作符】等方面进行比较
+------------------------------------------------------------------------------
+
+一、 在使用 CSS 预处理器之前最重要的是理解语法，幸运的是基本上大多数预处理器的语法跟 CSS 都差不多
+---------------------------------------------------
+
+二、 可以使用变量
+
+Sass 的变量必须是 $ 开始，然后变量名和值使用冒号隔开，跟 CSS 的属性一致：
+
+$mainColor: #0982c1;
+$siteWidth: 1024px;
+$borderStyle: dotted;
+ 
+body {
+  color: $mainColor;
+  border: 1px $borderStyle $mainColor;
+  max-width: $siteWidth;
+}
+---------------------------------------------------
+而 Less 的变量名使用 @ 符号开始：
+
+@mainColor: #0982c1;
+@siteWidth: 1024px;
+@borderStyle: dotted;
+
+
+body {
+  color: @mainColor;
+  border: 1px @borderStyle @mainColor;
+  max-width: @siteWidth;
+}
+---------------------------------------------------
+Stylus 对变量名没有任何限定（ Stylus 的变量名不要用 @ 开头）
+mainColor = #0982c1
+siteWidth = 1024px
+$borderStyle = dotted
+ 
+body
+  color mainColor
+  border 1px $borderStyle mainColor
+  max-width siteWidth
+---------------------------------------------------
+最终编译：
+---------------------------------------------------
+body {
+  color: #0982c1;
+  border: 1px dotted #0982c1;
+  max-width: 1024px;
+}
+
+三、 嵌套
+section {
+  margin: 10px;
+}
+section nav {
+  height: 25px;
+}
+section nav a {
+  color: #0982C1;
+}
+section nav a:hover {
+  text-decoration: underline;
+}
+我们这里提到的三个 CSS 框架都是允许嵌套语法：
+----------------------------
+section {
+  margin: 10px;
+ 
+  nav {
+    height: 25px;
+ 
+    a {
+      color: #0982C1;
+ 
+      &amp;:hover { &amp; ===> 转义符 &
+        text-decoration: underline;
+      }
+    }
+  }
+}
+--------------------------------------
+
+四、 混入【同一段样式应用多个地方，原本需要写很多次，很像函数】
+ --- Sass 的混入语法 ---
+@mixin error($borderWidth: 2px) { // 变量：相当于默认值
+  border: $borderWidth solid #F00;
+  color: #F00;
+}
+ 
+.generic-error {
+  padding: 20px;
+  margin: 4px;
+  @ include error(); // ()内没有参数，则取默认值2px
+}
+.login-error {
+  left: 12px;
+  position: absolute;
+  top: 20px;
+  @ include error(5px); // 替换默认值，改为 5px
+}
+ ---Less CSS 的混入语法 ---
+.error(@borderWidth: 2px) {
+  border: @borderWidth solid #F00;
+  color: #F00;
+}
+ 
+.generic-error {
+  padding: 20px;
+  margin: 4px;
+  .error();
+}
+.login-error {
+  left: 12px;
+  position: absolute;
+  top: 20px;
+  .error(5px);
+}
+ --- Stylus 的混入语法 ---
+error(borderWidth= 2px) {
+  border: borderWidth solid #F00;
+  color: #F00;
+}
+ 
+.generic-error {
+  padding: 20px;
+  margin: 4px;
+  error();
+}
+.login-error {
+  left: 12px;
+  position: absolute;
+  top: 20px;
+  error(5px);
+}
+-----------------------------------
+最终编译：
+-----------------------------------
+.generic-error {
+  padding: 20px;
+  margin: 4px;
+  border: 2px solid #f00;
+  color: #f00;
+}
+.login-error {
+  left: 12px;
+  position: absolute;
+  top: 20px;
+  border: 5px solid #f00;
+  color: #f00;
+}
+
+五、继承(Inherit)
+p,
+ul,
+ol {
+  /* 一看明了 */
+}
+---在 Sass 和 Stylus 我们可以这样写----
+.block {
+  margin: 10px 5px;
+  padding: 2px;
+}
+ 
+p {
+  @extend .block;
+  border: 1px solid #EEE;
+}
+ul, ol {
+  @extend .block;
+  color: #333;
+  text-transform: uppercase;
+}
+------------------------
+最终编译
+-----------------------
+.block, p, ul, ol {
+  margin: 10px 5px;
+  padding: 2px;
+}
+p {
+  border: 1px solid #EEE;
+}
+ul, ol {
+  color: #333;
+  text-transform: uppercase;
+}
+
+---- Less 表现的稍微弱一些，更像是混入写法 ---
+.block {
+  margin: 10px 5px;
+  padding: 2px;
+}
+ 
+p {
+  .block; 
+  border: 1px solid #EEE;
+}
+ul, ol {
+  .block; 
+  color: #333;
+  text-transform: uppercase;
+}
+--------------------------
+最终编译
+--------------------------
+.block {
+  margin: 10px 5px;
+  padding: 2px;
+}
+p {
+  margin: 10px 5px;
+  padding: 2px;
+  border: 1px solid #EEE;
+}
+ul,
+ol {
+  margin: 10px 5px;
+  padding: 2px;
+  color: #333;
+  text-transform: uppercase;
+}
+/////.block 的样式将会被【插入】到相应的你想要继承的选择器中，但需要注意的是【优先级】的问题/////
+
+六、导入(顾名思义和在html中使用link引用外部css一样)
+ ---reset.css---
+ body{color: red}
+
+ ---main.css---
+@ import "reset.css";
+p {
+  background: #0982C1;
+}
+-----------------------
+最终编译
+-----------------------
+body{color: red}
+p{background: #0982C1;}
+
+七、颜色函数(特别像PS滤镜一样)
+    CSS 预处理器一般都会内置一些颜色处理函数用来对颜色值进行处理，例如加亮、变暗、颜色梯度等
+--- Sass -----
+lighten($color, 10%); 
+darken($color, 10%); // 内置好，不需要你编写
+例子：
+$color: #0982C1;
+h1 {
+  background: $color;
+  border: 3px solid lighten($color, 10%);
+}
+
+---- Less -----
+lighten(@color, 10%);
+darken(@color, 10%); // 内置好，不需要你编写
+例子：
+@color: #0982C1;
+h1 {
+  background: @color;
+  border: 3px solid darken(@color, 50%);
+}
+
+---- Stylus ----
+lighten(color, 10%); 
+darken(color, 10%); // 内置好，不需要你编写
+例子：
+color = #0982C1
+h1
+  background color
+  border 3px solid darken(color, 50%)
+
+八、运算符(就是不需要计算结果，只需写上公式，它就会给你算出来，牛)
+
+使用数值操作和变量可以很方便的实现适应屏幕大小的布局处理。
+----Sass-----
+$siteWidth: 1024px;
+$gutterWidth: 20px;
+$sidebarWidth: 300px;
+ 
+body {
+  margin: 0 auto;
+  width: $siteWidth;
+}
+.content {
+  float: left;
+  width: $siteWidth - ($sidebarWidth+$gutterWidth);
+}
+.sidebar {
+  float: left;
+  margin-left: $gutterWidth;
+  width: $sidebarWidth;
+}
+----Less CSS------
+
+@siteWidth: 1024px;
+@gutterWidth: 20px;
+@sidebarWidth: 300px;
+ 
+body {
+  margin: 0 auto;
+  width: @siteWidth;
+}
+.content {
+  float: left;
+  width: @siteWidth - (@sidebarWidth+@gutterWidth);
+}
+.sidebar {
+  float: left;
+  margin-left: @gutterWidth;
+  width: @sidebarWidth;
+}
+------Stylus-----
+
+siteWidth = 1024px;
+gutterWidth = 20px;
+sidebarWidth = 300px;
+ 
+body {
+  margin: 0 auto;
+  width: siteWidth;
+}
+.content {
+  float: left;
+  width: siteWidth - (sidebarWidth+gutterWidth);
+}
+.sidebar {
+  float: left;
+  margin-left: gutterWidth;
+  width: sidebarWidth;
+}
+------------------
+最终编译
+-------------------
+body {
+  margin: 0 auto;
+  width: 1024px;
+}
+.content {
+  float: left;
+  width: 704px;
+}
+.sidebar {
+  float: left;
+  margin-left: 20px;
+  width: 300px;
+}

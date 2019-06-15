@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>完美拖拽</title>
+    <style type="text/css">
+        /* 定位posittion：absolute 很重要 */
+        #div1 {
+            width: 100px;
+            height: 100px;
+            background: #ff4242;
+            position: absolute;
+            box-shadow: 4px 4px 17px 0px;
+            border-radius: 10px;
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload = function () {
+            var oDiv = document.getElementById('div1');
+
+            var disX = 0;
+            var disY = 0;
+            oDiv.onmousedown = function (ev) {
+                var oEvent = ev || event;
+                //获取鼠标在元素中位置(disX, disY)
+                //功能：获取此时鼠标在元素中的位置
+                disX = oEvent.clientX - oDiv.offsetLeft;
+                disY = oEvent.clientY - oDiv.offsetTop;
+                //鼠标移动
+                //功能：实现拖动元素的功能
+                //方法；通过改变元素的left/top值(首先元素要有定位posittion)
+                if (oDiv.setCapture) {
+                    document.onmousemove = mouseMove;
+                    //还有释放鼠标的动作
+                    document.onmouseup = mouseUp;
+                    oDiv.setCapture();
+                } else {
+                    document.onmousemove = mouseMove;
+                    //还有释放鼠标的动作
+                    document.onmouseup = mouseUp;
+                    return false;//chrome FF IE9 
+                }
+                function mouseMove(ev) {
+                    var oEvent = ev || event;
+                    var l = oEvent.clientX - disX;
+                    var t = oEvent.clientY - disY;
+                    //新增功能
+                    oDiv.style.left = l + 'px';
+                    oDiv.style.top = t + 'px';
+                };
+                function mouseUp() {
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+
+                    if (oDiv.releaseCapture) {
+                        oDiv.releaseCapture();
+                    }
+                }
+            };
+        }
+        /*这里是为了限制元素被拖动的空间，自己添加的
+        相当于新增功能
+        if(l < 5){
+            l = 0;
+        }else if(l > document.documentElement.clientWidth - oDiv.offsetWidth){
+            l = document.documentElement.clientWidth - oDiv.offsetWidth;
+        };
+        if(t < 5){
+            t = 0;
+        }else if(t > document.documentElement.clientHeight - oDiv.offsetHeight){
+            t = document.documentElement.clientHeight - oDiv.offsetHeight;
+        }*/
+    </script>
+</head>
+
+<body>
+    这里将展示一个完美拖拽<br>
+    <div id="div1">这是个元素</div>
+    完美拖拽就演示到这里<br>
+    更多请看别的
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="vue.js"></script>
+	<link rel="stylesheet" type="text/css" href="animate.css">
+	<style type="text/css">
+		p{
+			width: 100px;
+			height: 100px;
+			background-color: #f40;
+		}
+		span{
+			margin: 100px auto;
+			display: block;
+			width: 1px;
+		}
+		.txt{margin:100px auto;width: 1px;}
+	</style>
+</head>
+<body>
+	<div id="vm">
+		<div class="txt">
+			<input type="text" name="txt" v-model="show">
+		</div>
+		
+		<!-- 多个
+			1. 使用transition-group
+			2. 为每个变化元素加上 :key="index"【index索引可变】
+		 -->
+		<transition-group enter-active-class="zoomInLeft" leave-active-class="zoomOutRight">
+			<p class="animated" v-show="show" v-for="(val, index) in lists" :key="index">
+				{{val}}
+			</p>
+		</transition-group>
+	</div>
+	<script>
+		new Vue({
+			data:{
+				show:'',
+				list:['apple', 'banner', "after", 'zooma']
+			},
+			computed:{ 
+				// 当数据变化的时候，lists紧跟着变化
+				// 写这里好处，可以编写一些逻辑代码【如让数据动态】
+				lists(){
+					let arr = []; // 返回结果
+					let _that = this;
+					console.log('-------------')
+					this.list.forEach(function(val){			
+						if(val.indexOf(_that.show) != -1){
+							arr.push(val);
+							console.log(val)
+						}
+					})
+					return arr;
+				}
+			}
+		}).$mount('#vm')
+		/*
+			indexOf() --> 检测字符串中是否包含某个字符，返回-1、索引
+			如：
+				var str = hello World
+				str.indexOf('hello') -> 0
+				str.indexOf('world') -> -1
+				str.indexOf('World') -> 6
+		*/
+	</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>对象属性名的命名——可用表达式</title>
+</head>
+<body>
+<script>
+    // 在JS 中定义对象属性：
+    obj.foo = true; // 1
+    obj['a'+ 'ab'] = 123;// 2 用表达式作为属性名 【表达式在方括号内】
+
+    // 但如果使用对象字面量方式定义，则只有以下一种方法：
+    var obj2 = {
+      foo : true,
+      abc : 123
+    }
+
+    /* ES6 提出：可在使用对象字面量定义对象的时候，还可以用到上面的 属性名是表达式 */
+    // 1. 属性名是表达式
+    let propKey = 'foo';
+
+    let obj = {
+      [propKey]: true,  // 属性名是表达式
+      ['a' + 'bc']: 123 // 属性名是表达式
+    };
+    // 2.
+    let lastWord = 'last word';// => 3
+    const a = {
+      'first word': 'hello', // => 1
+      [lastWord]: 'world'    // => 2
+    };
+    a['first word']; // "hello" 1
+    a[lastWord]; // "world"     2
+    a['last word']; // "world"  3  --> a[lastWord]: 'world'
+    // 3. 定义方法名也可以使用哦
+    let obj = {
+      ['h' + 'ello']() {
+        return 'hi';
+      }
+    };
+    obj.hello() // hi
+
+    /* 注意： */
+    // 1. 【属性名表达式】与【简洁表示法】，不能同时使用哦
+    /* 简洁表示法：属性名可以是变量
+    // 报错
+    const foo = 'bar';
+    const bar = 'abc';
+    const baz = { [foo] };
+
+    // 正确
+    const foo = 'bar';
+    const baz = { [foo]: 'abc'};
+    */
+
+    // 2. 属性名表达式 如果是一个对象，默认情况下会自动将对象转为字符串【bject Object】
+    const keyA = {a: 1};
+    const keyB = {b: 2};
+
+    const myObject = {
+      [keyA]: 'valueA',
+      [keyB]: 'valueB'
+    };
+    myObject // Object {[object Object]: "valueB"}
+    /*
+    * [keyA]和[keyB]得到的都是[object Object]
+    * 所以[keyB]会把[keyA]【覆盖】掉，而myObject最后只有一个[object Object]属性
+    * */
+</script>
+</body>
+</html>

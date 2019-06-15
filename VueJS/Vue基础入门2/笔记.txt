@@ -1,0 +1,478 @@
+/****/
+    导读：
+        1. 简易微博制作
+        2. vue生命周期
+        3. 花括号闪烁 v-html
+        4. 计算属性 computed
+        5. vue对象本身拥有的一些方法 let vm = new Vue(..)
+            1. vm.$el 元素本身
+            2. vm.$data vue的data数据
+            3. vm.$mount('元素') 手动挂载vue
+            4. vm.$options vue对象的自定义属性
+            5. vm.$log() 数据状态
+            6. vm.$destroy 销毁对象
+        6. 过滤器
+            1. limitBy 取数据【数组】
+            2. filterBy 返回有指定字符
+            3. orderBy 按条件排序
+            4. debounce 配合事件，延迟执行
+        7. 自定义属性过滤器 Vue.filter('名称', function(){})
+        8. 自定义元素过滤器 Vue.filter('名称', function(){})
+        9. 自定义属性指令 Vue.directive('名称', function(){})
+        10. 自定义元素指令 Vue.elementDirective('名称', function(){}) 不推荐
+        11. 监听数据变化
+                       Vum.$watch('数据名称', function(){}) 监听基本数据类型
+                       Vum.$watch('数据名称', function(){}, {deep:true}) 监听引用数据类型
+        12. 自动键盘信息 Vue.directive('on').keyCodes.ctrl=17
+/****/
+
+vue 制作 000000 weibo
+	交互
+
+vue->  1.0
+	vue-resource	ajax	php 【例子为 php 环境】
+	服务器环境(node)
+
+    vue中ajax的两种写法
+
+    第一种
+	this.$http.get()/post()/jsonp()
+
+    另一种写法：
+	this.$http({
+		url:地址
+		data:给后台提交数据,
+		method:'get'/post/jsonp
+		jsonp:'cb' //cbName【callback 回调】
+	});
+----------------------------------
+vue事件:
+	@click=""
+数据:
+
+
+添加一条留言：
+
+获取某一页数据:
+	getPageData(1);
+----------------------------------
+vue-生命周期 1.0 版本【2.0往后有改动】
+	钩子函数:
+		整个new Vue({}) 类似一个对象
+		在实例创建后，开始编译、编译结束、插入文档树【DOM树】
+		通过以上多个步骤后，数据就被展示出来了
+
+		销毁vue对象之前、销毁vue对象之后【类似let a = {}; <=销毁前 a = null; 销毁后】
+
+		以下为vue里的函数【钩子函数】官方
+			就是让你知道加载到第几步了
+		注：你可以在这些函数之前之后执行一些操作
+			比如：你可以在编译之前【即花括号还没被解析之前】执行操作
+		1. created  ==>  实例创建完成【new Vue成功后】
+		2. beforeCompile  ==> 编译之前
+		3. compiled   ==> 编译之后  --> 【编译数据,花括号，载入内存】
+		4. ready  ==> 插入到文档树中 【相当于window.onload】
+
+		beforeDestroy   ==> 销毁之前
+		destroyed   ==> 销毁之后
+		以后此实例已经不能用了【渲染到DOM树中的元素还在哦！】
+----------------------------------
+当网速慢时，用户会看到花括号标记【刷新慢时，就会看见 {{msg}} 一闪而过】: 只有卡的人才懂
+    <style>
+        [v-cloak]{display:none}
+    </style>
+
+	1. v-cloak		防止闪烁, 比较大段落【比如用for in循环，渲染到 ul 中，就可以放在 ul 中】
+
+    2. v-text ==> 可以替换花括号
+    <span>{{msg}}</span>	    ->   v-text 1. 1.同{{}}效果一样
+    当data:{msg:'<strong>aaa</strong>'}有html时？ <span v-text="msg"></span>
+                                        打印 => <strong>aaa</strong>
+
+    3. v-html ==> 可以替换花括号
+    {{{msg}}}【vue 2.0已去除】   ->   v-html 1.同{{}}效果一样 2.能读取html
+                                        打印 => 粗体三个 a
+----------------------------------
+ng:  $scope.$watch
+
+计算属性的使用:
+    出现原因：data中不能写逻辑代码
+    标记：computed
+    data:{
+        a:1
+        // b:2 ==> 需求：在a 变化的时候，b跟着变化
+    }
+    实现：
+	computed:{
+	    // 这里的 b 是属性，它
+		b:function(){	// 默认就是调用 get 方法
+			return 值 // 值就是b【把b 写在这里原因：这里可以写一些逻辑
+			                      比如这里可以让 b 的值是通过 某运算得来的
+			                      而不是直接写在data中，定死的
+			                      】
+
+			 注：b 的值取决于return 返回值
+		}
+	}
+	--------------------------
+	以下才为【计算属性】的完整用法：
+	computed:{
+		b:function(){
+			get:function(){} // 获取 【默认】
+			set:function(){} // 设置
+		}
+	}
+
+	注：computed里面可以放置一些【业务逻辑代码】，一定记得【return】,没有return时，就没有属性值
+
+	例子：
+	html:
+        div#box:
+           a => {{a}} // 初次加载：1   单击页面：101 => 202
+           b => {{b}} // 初次加载：3   单击页面：202 => 204
+	js:
+	let vm = new Vue({
+	    el:'#box',
+	    data:{
+	        a: 1 ==> 单击页面后 变成101
+	    },
+	    computed:{
+	        // 可以写逻辑
+	        b:()=>{
+                get:()=>{
+                    return this.a+2; // b = 202 + 2 ==> 204
+                },
+                set:(val)=>{
+                    /*
+                        @ param {val} 202 由vm.b = 202;传入
+                    */
+                    this.a = val; // 单击页面后 a 变为202
+                }
+	        }
+	    }
+	})
+	document.click = function(){
+	    vm.a = 101;
+	    vm.b = 202; // 当我 为计算属性【如这里的 b】 赋值时，默认计算属性会自动调用 set 方法
+	}
+	执行：
+	    1. 初次加载 a => 1; b => 1+2
+	    2. 单击时，vm.a = 101 => a = 101 => 202
+	              vm.b = 202 => b = 202+2
+	            a 的变化如下
+	              vm.b = 202【给计算属性赋值时，自动调用计算属性set方法】 => this.a = val => a = 202
+	            b 的变化如下
+	              vm.b = 202【是为 a 赋值 a = 202】 => b 的值为get方法的return返回值 => 202+2
+---------------------------------
+vue 实例本身的简单方法:
+	1. vm.$el	->  就是元素 vm.$el.style.color = 'red'
+
+	2. vm.$data  ->  就是 data vm.$data.msg => 12
+
+	3. vm.$mount ->  手动挂载vue程序【省去 el:'元素'，可用这句代替】
+	var vm = new Vue({ // 也可以这样写
+	    data:{
+	        msg:'12'
+	    }
+	}).$mount('元素')
+
+	4. vm.$options	->   获取自定义属性
+	var vm = new Vue({ // 也可以这样写
+	    b:12, // 自定义属性
+        data:{
+            msg:'12'
+        },
+        show:function(){ // 自定义方法
+            alert('1')
+        }
+    }).$mount('元素')
+    vm.$options.b ==> 12
+    vm.$options.show(); ==> 弹出‘1’
+
+	5. vm.$destroy	->   销毁对象 【钩子函数】
+
+	6. vm.$log();	->  查看现在数据【data】的状态，就是当前有多少数据啊，更新了么
+
+---------------------------------
+循环：
+    let vm = new Vue({
+        data:{
+            msg:'12'
+        },
+    }).$mount('#box')
+	v-for="value in data" 无法循环出重复的数据
+
+	track-by='索引' 提高循环性能【预先加载索引】
+
+	track-by='$index/uid'  // uid 数据库id uerid
+
+	例子：它会过滤重复的数据，只会展示一次，再次展示时【报错】
+	    HTML：
+	        ul:li=>v-for="v in arr" 【加上】 track-by="$index" 【就可以添加重复数据】
+	            {{v}}
+	        button @click="add();"
+	    JS：
+	    let vm = new Vue({
+            data:{
+                arr:['apple', 'org', 'aaa']
+            },
+            methods:{
+                add:function(){
+                    this.arr.push('too')
+                }
+            }
+        }).$mount('#box')
+---------------------------------
+例子：时间格式转换
+
+过滤器:
+	vue提供过滤器:
+		capitalize	uppercase	currency....
+
+		1. debounce	配合事件，延迟执行
+		HTML：
+            input[text] @keyup="fn | debounce 2000" // 延迟2000毫秒后执行
+        JS：
+        let vm = new Vue({
+            data:{
+
+            },
+            methods:{
+                fn:function(){
+                    alert('1')
+                }
+            }
+        }).$mount('#box')
+
+	数据【后台给的数据格式：json/数组】配合使用过滤器:
+	    数组：后台给你100 个
+	    1. 需求：可你只要几个【下标从0 开始】
+		   格式：limitBy	限制几个 例子 v-for="v in arr limitBy 2" 取前两个
+
+		2. 需求：
+		    格式：limitBy 参数(取几个)
+
+		3. 需求：从指定位置开始取若干个
+	    	格式：limitBy 取几个 从哪开始 例子  v-for="v in arr limitBy 2 arr.length-2" 取最后两个
+
+		4. filterBy	过滤数据
+		    需求：取包含某些字符的数据
+	        格式：filterBy ‘谁’
+            例子：
+               html:
+                input[text] v-model="a"
+                ul=>li v-for="v in arr | filterBy a"
+                // 定死指定字符 ul=>li v-for="v in arr | filterBy 'a'"
+               data:
+                data:{
+                    a:'',
+                    arr:[width,height,back,arr]
+                }
+
+		5. orderBy	排序
+		    格式：orderBy 谁 1/-1
+			1  -> 正序
+			-1  -> 倒序
+			html:
+                input[text] v-model="a"
+                ul=>li v-for="v in arr | filterBy a" // 根据用户输入的数据排序
+                // 按a排序 ul=>li v-for="v in arr | orderBy 'a'"
+                // 正序 ul=>li v-for="v in arr | orderBy 1"
+                // 倒序 ul=>li v-for="v in arr | orderBy -1"
+                // 按照a 倒序 ul=>li v-for="v in arr | orderBy ‘a’ -1"
+            data:
+                data:{
+                    a:'',
+                    arr:[width,height,back,arr]
+                }
+
+    需求：比如转换时间的啊！全英文转英文简写，这时可以
+        1. 自定义过滤器:  model -> 过滤 -> view
+           格式： Vue.filter(name,function(input){
+
+                });
+            例子：数字前加 0【input参数是默认的：就是 num 谁调用就是谁】
+            Vue.filter('toDou',function(input, a, b){
+                return input<10?'0'+input:'0'+input
+            })
+            使用：数据时用户实时输入的
+            html: {{num | toDou}} // 无参数
+                  {{num | toDou 1 2}} // 有参数【其他操作和函数一样】
+                  input[text] v-model="num"
+            data:{
+                num:''
+            }
+            例子：时间转化器
+                Vue.filter('dateTime',function(input){
+                    let oDateTime = new Date(input);
+                    return oDateTime.getFullYear()+'-'+(oDateTime.getMonth()+1)+'-'+oDateTime.getDate()+'-'+oDateTime.getHours()+'-'+oDateTime.getMinutes()+'-'+oDateTime.getSeconds();
+                })
+                使用：数据时用户实时输入的
+                html: {{num | dateTime}}
+                data:{
+                    num:Date.now() // 时间撮
+                }
+
+
+
+        2. 双向过滤器:
+        例子：过滤html标记
+        需求：当 data 数据直接包含html标签时，如何解析？
+        html:
+              // 普通的v-model【双向数据绑定】 ！原样打印 msg
+              input[text] v-model="msg"
+
+              // 增加了自定义过滤html的过滤器 ！解析了html，貌似在文本框是显示不了效果的【具体可以filter.html】
+              input[text] v-model="msg | filterHTML"
+
+              // vue对象本身自带的【可以解析html标签】 ！解析html
+              div v-html="msg"
+
+              // 普通的显示数据 ！原样打印 msg
+              div {{msg}}
+        js:
+        Vue.filter('filterHtml',{
+            read:function(input){ // model-view 【默认】
+                return input.replace(/<[^<+]>/g,'');
+                // return input.replace(/<[^>]*>/g, '');
+            },
+            write:function(val){ //view -> model
+                return val;
+            }
+        });
+        vue:
+            data:{
+                msg:'<div style="color:red">welcome</div>'
+            }
+	数据 -> 视图
+	model -> view
+
+	view -> model
+---------------------------------
+v-text
+v-for
+v-html
+	指令: 扩展html语法
+
+自定义属性指令:
+	Vue.directive(指令名称,function(参数){
+		this.el	-> 原生DOM元素
+	});
+
+	<div v-red="参数"></div>
+
+	指令名称: v-red  ->  red
+
+	* 注意:
+	    1. 使用指令：必须以 v-开头
+	    2. 命名指令：不用谢 v-
+
+	例子：拖拽
+	    html:
+	        div v-drag :style="{width:'100px',height:'100px',background:'red',position:'absolute',right:0,top:0}"
+	    Vue.directive(function(ev){
+            let oDiv = this.el;
+
+	    })
+	-------------------------------
+自定义元素指令:（用处不大）不推荐使用
+	Vue.elementDirective('zns-red',{
+	    bind:function(){
+	        this.el.style.background='red';
+	    }
+	});
+	div#box
+	    <zns-red></zns-red>
+------------------------------------------------
+自定义键盘信息:
+@keydown.up
+@keydown.enter
+
+下面可以用哦
+@keydown.a/b/c....点击键盘a、b、c 键【键盘上能看见的键，vue基本给你封装了】
+@keydown.17 // 直接写键码
+下面是没有用的
+@keydown.ctrl 【作者不可能把键盘全部封装】所以可以利用@keydown.键码 来自定义键盘信息
+
+	Vue.directive('on').keyCodes.ctrl=17; 给ctrl取了17键码 @keydown.17 同样效果
+	Vue.directive('on').keyCodes.myenter=13;
+------------------------------------------------
+监听数据变化:
+	vm.$el/$mount/$options/.... 元素、Vue对象自动挂载、vue对象的自定义属性
+
+	格式1：vm.$watch(name,fnCb);  // 浅度
+	      参数1. 要监听变化的数据名
+	      参数2. 数据变化后执行什么操作
+
+	格式2：vm.$watch(name,fnCb,{deep:true});  // 深度监视
+	      参数1. 要监听变化的数据名
+	      参数2. 数据变化后执行什么操作
+	      参数3. 用于监听引用数据类型【标识它这是引用数据类型】
+	例子：
+	    需求：当我点击页面时，弹出 ‘数据改变了’
+	    HTML：
+	        div#box  {{a}} {{b}} {{z | json} 【z 的数据格式为json，要引用json过滤器，才能正确显示json数据格式】
+	    js:
+	    var vm=new Vue({
+            el:'#box',
+            data:{
+                a:111,
+                // 注【这里普通的数据格式】vm.$watch(name,fnCb) 基本数据类型
+                z:{name:'cwx', age:12},
+                // 注：【json数据格式呢？】vm.$watch(name,fnCb,{deep:true}); 引用数据类型
+                b:2
+            }
+        });
+        // 数据监听【浅监听】基本数据类型
+        vm.$watch('a', function(){
+            console.log('数据发送变化了')
+            // 逻辑代码
+        })
+
+        // 数据监听【深监听】引用数据类型
+        vm.$watch('a', function(){
+            console.log('json数据格式变化了')
+            // 逻辑代码
+        },{deep:true})
+
+        document.onclick = function(){ vm.a = 1 } // 基本数据类型
+        document.onclick = function(){ vm.z.name = 'zzz' } // 引用数据类型
+------------------------------------------------
+vue组件:
+组件间各种通信
+slot
+vue-loader	webpack   .vue
+vue-router
+
+
+
+
+
+				
+	
+	
+		
+		
+	
+	
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

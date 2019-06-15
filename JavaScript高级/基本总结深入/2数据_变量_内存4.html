@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2数据_变量_内存4</title>
+</head>
+<body>
+问题：在js调用函数时传递变量参数时，是值传递还是引用传递
+     答：值传递
+    * 理解1：都是值(基本/地址)传递
+    * 理解2: 可能是值传递，也可能是引用传递(地址值)
+<script>
+    var a = 3;
+    function fn(a) { //这里的a是一个变量，
+        a = a + 1;
+    }
+    fn(a);//a表示的是3
+    console.log(a);// 3
+
+    function fn2(obj) { //这里的obj和var obj不一样，它是另一个变量
+        console.log(obj.name);
+    }
+    var obj = {name: 'cwx'};
+    fn2(obj);// cwx
+</script>
+</body>
+</html>

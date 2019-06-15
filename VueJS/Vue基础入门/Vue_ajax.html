@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue 交互ajax</title>
+    <script src="vue.js"></script>
+    <script src="vue-resource.js"></script>
+    <link rel="stylesheet" href="lib/bootstrap.min.css">
+    <script src="lib/jquery-1.7.2.js"></script>
+    <script src="lib/bootstrap.js"></script>
+    <script>
+        window.onload = function() {
+            new Vue({
+                el:'body',
+                data:{
+                    myData:[],
+                    data:'',
+                    now:-1,
+                    getData:[],
+                    Data:'',
+                    getNow:-1
+                },
+                methods:{
+                    get:function(){
+                        this.$http.get('a.txt').then(function(res){
+                            console.log(res.data)  // 成功 的文本 data
+                        },function(res){ // 失败
+                            console.log(res.status)
+                            // data 失败的文本
+                        })
+                    },
+                    get1:function(){
+                        this.$http.get('get.php',{
+                            a:1,
+                            b:2
+                        }).then(res=>{
+                            console.log(res.data);
+                        },res=>{
+                            console.log(res.status)
+                        })
+                    },
+                    post:function(){
+                        this.$http.post('post.php',{
+                            a:1,
+                            b:20
+                        },{
+                            emulateJSON:true // 模拟一个json数据【这样才能把post数据发送】
+                        }).then(res=>{
+                            console.log(res.data);
+                        },res=>{
+                            console.log(res.status)
+                        })
+                    },
+                    jsonp:function(){
+                        this.$http.jsonp('https://sug.so.360.cn/suggest',{
+                            word:'0'
+                        },{
+                            //emulateJSON:true  jsonp是走get方式的，所以这句是不需要
+                        }).then(function(res){
+                            console.log(res.data.s)
+                        },function(res){
+                            console.log(res.status)
+                        })
+                    },
+                    jsonpBaidu:function(){
+                        this.$http.jsonp('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',{
+                            wd:'1'
+                        },{
+                            jsonp:'cb'
+                        }).then(function(res){
+                            console.log(res.data)
+                        },function(res){
+                            console.log(res.status);
+                        })
+                    },
+                    jsonpGet:function(ev){
+                        if(ev.keyCode == 38 || ev.keyCode == 40)return;
+                        let url = '';
+                        if(ev.keyCode == 13){
+                            url = 'https://www.baidu.com/s?wd=' + this.data;
+                            window.open(url);
+                        }else{
+                            url = 'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su';
+                        }
+                        this.$http.jsonp(url,{
+                            wd:this.data
+                        },{
+                            jsonp:'cb'
+                        }).then(function(res){ // 成功：把数据添加到myData中
+                            this.myData=res.data.s;
+                        },function(res){
+                            console.log(res.status)
+                        })
+
+                    },
+                    changeDown:function(){
+                        this.now++;
+                        if(this.now >= this.myData.length){
+                            this.now = 0;
+                        }
+                        this.data = this.myData[this.now];
+                    },
+                    changeUp:function(){
+                        this.now--;
+                        if(this.now < 0){
+                            this.now = this.myData.length - 1;
+                        }
+                        this.data = this.myData[this.now];
+                    },
+                    change:function(ev){
+                        /*
+                         if(ev.keyCode == 38){ --> 上键
+                         this.now--;
+                         if(this.now >= this.myData.length){
+                         this.now = 0;
+                         }
+                         this.data = this.myData[this.now];
+                         }
+                         if(ev.keyCode == 40){
+                         this.now++;
+                         if(this.now < 0){
+                         this.now = this.myData.length - 1;
+                         }
+                         this.data = this.myData[this.now]
+                         }
+                         */
+                    },
+                    getCrossDomain:function(){
+                        /*
+                         let url = 'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=' + this.Data;
+                         this.$http.get(url,{
+                         wd:this.Data
+                         },{
+                         emulateJSON:true
+                         }).then(function(res){
+                         console.log(res.data.s)
+                         },function(rej){
+                         console.log(rej.status)
+                         })
+                         */
+                        var url = 'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/s?wd=1';
+                        var script = document.createElement('script');
+                        script.setAttribute('src', url);
+                        document.body.appendChild(script);
+                    }
+                }
+            })
+
+
+
+        };
+
+    </script>
+    <style>
+        .gary{background-color:#edf4fa}
+    </style>
+</head>
+<body class="">
+get:
+获取一个普通文本【a.txt】
+<input class="btn btn-primary btn-sm" type="button" value="按钮" @click="get();">
+<br>
+get:
+给服务器发送数据
+<input type="button" value="发送" @click="get1();">
+<br>
+post
+给服务器发送数据
+<input type="button" value="发送" @click="post()">
+<br>
+jsosp
+获取本域之外的数据360
+<input type="button" value="获取" @click="jsonp();">
+<br>
+jsosp
+获取本域之外的数据baidu【跨域】
+<input type="button" value="获取jsonp" @click="jsonpBaidu();">
+<br>
+<input placeholder="jsonp跨域" class="form-control" type="text" v-model="data" @keyup="jsonpGet($event)" @keydown.down="changeDown()" @keydown.up.prevent="changeUp()">
+<!--keydown.up时 为啥加了 prevent【阻止默认行为：按上时，光标到最前面去了】-->
+<ul>
+    <!-- key, value -->
+    <li v-for="(key,value) in myData" :class="{gary:key==now}">
+        {{value}} | {{key}}
+    </li>
+</ul>
+<p v-show="myData.length==0">暂无数据....</p>
+<br>
+get
+获取本域之外的数据baidu【跨域】
+<input type="button" value="获取get" @click="getCrossDomain();">
+<br>
+<input placeholder="get跨域" class="form-control" type="text" v-model="Data">
+<!--keydown.up时 为啥加了 prevent【阻止默认行为：按上时，光标到最前面去了】-->
+<ol>
+    <!-- key, value -->
+    <li v-for="(key,value) in getData" :class="{gary:key==getNow}">
+        {{value}} | {{key}}
+    </li>
+</ol>
+<p v-show="getData.length==0">暂无数据....</p>
+</body>
+</html>

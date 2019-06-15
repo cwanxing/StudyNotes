@@ -1,0 +1,267 @@
+/******************************
+   * 用户密码设计
+        1. 保存密码
+            规则1. 永远使用哈希保存
+        2. 密码重置
+            规则2. 找回密码==重置密码【哈希无法还原】
+            规则3. 重置密码不使用随机生成，再告知用户；
+                   给本网站重置密码的页面链接【记得设置链接的失效时间】
+            规则4. 重置密码前【确认用户】，用户邮箱地址填写错误【不要提示邮箱错误】
+                   不管用户输入的邮箱地址，照样发送。
+                   邮箱内容【有人想重置密码，但数据库无该邮箱，还有申请人IP地址】
+            规则5. 确认用户最后用邮箱，而不是用户确认用户
+            规则6. 重置密码前，可以询问用户个人问题，确认本人操作
+*/
+** 保存密码：
+       1. 明文保存  严禁使用
+       2. 加密保存  使用密钥，还是可以用密钥还原。不推荐
+       3. 哈希保存  推荐使用，单向运算，无法还原
+            密码进行哈希算法，数据库保存哈希值【每个用户还有一个盐值】
+
+** 重置密码：
+       1. 网站自动生成随机密码，告知用户【邮箱/短信】过程可能泄露
+       2. 给用户本网站重置密码页，并且设置失效时间【页面】
+
+** 如何判断谁在重置密码：
+       1. 通过邮箱，而不是用户确认用户
+
+** 过滤用户：
+       1. 防止机器人攻击，加上验证码Captcha
+       2. 除此之外：小李 知道 小王的邮箱，那么小李就可以让系统向 小王邮箱发送重置的密码
+
+
+********************************************
+可以查看grid.html
+    Grid布局：
+        1. 了解相关概念：
+            * 容器(container)和项目(item)
+                <div> 容器
+                    <div><p>111</p></div> 项目
+                    <div><p>222</p></div> 项目
+                <div>
+                注：项目只能是容器的顶层子元素【不是孙子，就只能是子】
+                    如：p 就不是项目
+            * 行和列【不多解释】
+            * 单元格【n 行，m 列；就有n * m 个单元格】
+            * 网格线【n 行，m 列；就有 n+1 条，m+1 条】
+
+        2. 容器属性【 顶层子元素个数 对理解这些属性至关重要】
+            Grid布局属性分两种：
+                定义在容器上：容器属性
+                定义在项目上：项目属性
+
+            容器属性：
+                * display：grid【容器采用网格布局】
+                div { display: grid }【默认容器元素是 块级元素】
+                div {display: inline-grid}【改为行内元素】
+                注：设置网格布局后，容器子元素【项目】的
+                    float/display/display:inline-block/display:table-cell
+                    vertical-align/column-* 将全部失效
+
+                * grid-template-rows：行的高度
+                * grid-template-columns：列的宽度
+                .container {
+                    display:grid;
+                    grid-template-rows:100px 100px 100px;
+                    grid-template-columns:100px 100px 100px;
+                } // 三行三列表格，列宽和行高都是100px【还可以使用百分比】
+
+                以下为它的一些属性：
+                1. repeat() 替换重复同样的值
+                    .container {
+                        display:grid;
+                        grid-template-rows: repeat(3, 33%);
+                        grid-template-columns: repeat(3, 22%);
+                    }
+                    例子：
+                      grid-template-columns: repeat(2, 100px 20px 40px)
+                      定义 6 列
+                        第一列100px宽 第二列20px宽 第三列40px宽
+                        第四列100px宽 第五列20px宽 第六列40px宽
+
+                2. auto-fill 自动填充
+                    需求：单元格固定，容器不定；希望每一行【每一列】尽可能容纳多的单元格
+                    .container {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill 100px)
+                    } // 每列宽度100px，然后自动填充，直到容器不能放置更多的列
+
+                3. fr 比例计算
+                    需求：希望前者列宽是后者列宽的两倍
+                    grid-template-columns: 1fr 2fr;
+                    需求：同宽
+                    grid-template-columns: 1fr 1fr;
+
+                4. auto 由浏览器自己决定长度
+                    grid-template-columns: 100px auto 100px;
+                    //  上面的第二列宽度基本等于该列单元格最大宽度
+                    //* 除非单元格内容设置了min-width，且值大于最大宽度
+
+                5. minmax() 长度范围【长度就在这个范围】最小值-最大值
+                    grid-template-columns: 1fr 2fr minmax(100px, 1fr);
+                    // 100px < 列宽 < 1fr
+
+                6. 网格线的名称 使用方括号命名每一根网络线【便于以后引用】
+                    grid-template-columns: [c1] 10px [c2] 10px [c3] auto [c4];
+                    grid-template-rows: [r1] 10px [r2] 10px [r3] auto [r4];
+                    // 网格布局3 * 3，所以有8根线方括号内就是它们的名字
+                    // [fifth-line row-5] 为同一根线有多个名字
+
+                7. 布局实例【常用】
+                    两栏布局
+                        display: grid;
+                        grid-template-columns: 70% 30%;
+                    12网格布局
+                        display: grid;
+                        grid-template-columns: repeat(12, 1fr)
+                * grid-row-gap 行间距
+                * grid-column-gap 列间距
+                * grid-gap 行间距和列间距的合并简写
+                    .container {
+                        display: grid;
+                        grid-row-gap: 10px;    // 行间距
+                        grid-column-gap: 10px; // 列间距
+                        // grid-gap: 10px 10px; 行+列间距
+                        // 注：grid-gap只写一个值，默认一样
+                    }
+                    注意：最新规定前缀删除了row-gap/column-gap/gap
+
+                * grid-template-areas 指定区域【单个或多个单元格】
+                    grid-template-columns: 100px 100px auto;
+                    grid-template-rows: 100px 100px 100px;
+                    grid-template-areas:'a b c'
+                                        'd e f'
+                                        'g h i';
+                    // 3 * 3 网格布局【9个单元格】
+
+                    // 合并 'header header header' 成一个区域
+                            'main main sidebar'
+                            'footer footer footer';
+
+                    // 某个区域不需要利用，可以使用 点 表示
+                        'a . c'
+                        'd e .'
+                        '. h i'; // => 点表示没有用到该单元格，或该单元格不属于任何区域
+
+                    注：这样定义区域，会影响网格线
+                        它会自动为每个区域的起始线命名：区域名-start
+                                         终止线命名：区域名-end
+                        如：区域名header
+                            起始位置水平网格线和垂直网格线：header-start
+                            终止位置水平网格线和垂直网格线：header-end
+
+                具体还是看文档吧，说的有点清楚
+                * grid-auto-flow 顶层子元素放置顺序【先行后列】填满第一行，再填第二行...
+                    grid-auto-flow: rows; 默认
+                    1 2 3
+                    4 5 6
+                    ...
+
+                    grid-auto-flow: column;
+                    1 4 7
+                    2 5 8
+                    3 6 9
+
+                    还有row dense/column dense：
+                        在某些项目指定位置后，决定后面项目要怎么放置
+
+                * justify-items 控制单元格 内容 水平位置【左中右】
+                * align-items   控制单元格 内容 垂直位置【上中下】
+                    都有以下值：
+                        start：   对齐单元格起始边缘
+                        center：  居中
+                        end：     对齐单元格结束边缘
+                        stretch： 拉伸，占满单元格整个宽度【默认】
+                * place-items 是以上两种合并写法【值和上面一样】忽略第二值，就一样
+
+                * justify-content 整个内容区域 在 容器中的 水平位置
+                * align-content   整个内容区域 在 容器中的 垂直位置
+                    都有以下值：
+                        start：   对齐容器起始边框
+                        center：  居中于容器
+                        end：     对齐容器结束边框
+                        stretch： 项目没有指定大小时，拉伸
+                        space-around：项目与项目两侧间隔相等【项目间隔 是 项目与容器边框 的两倍】
+                        space-between：项目与项目间隔相等，和容器无间距
+                        space-evenly：项目与项目间隔相等，项目与容器边框间隔也相等
+
+                * place-content 是以上两种合并写法【值和上面一样】忽略第二值，就一样
+
+                * grid-auto-columns
+                * grid-auto-rows
+                    // -> 设置浏览器自动创建的多余网格的列宽和行高【具体看文档】
+                    // 不指定，根据内容撑
+
+            项目属性：
+                项目位置可以完全定位：指定是个边框，分别定位在哪跟网格线上
+                * grid-column-start 左边框所在垂直网格线
+                * grid-column-end   右边框所在垂直网格线
+                * grid-row-start    上边框所在水平网格线
+                * grid-row-end      下边框所在水平网格线
+                    例子：item-1{
+                        grid-column-start: 2
+                        grid-column-end: 4
+                    } // 本项目左边框是第二根垂直网格线
+                      //      右边框是第四根垂直网格线
+                注：不设置，根据grid-auto-flow属性决定
+                    例子：
+                        item1{
+                            grid-column-start: 1;
+                            grid-column-end: 3;
+                            grid-row-start: 2;
+                            grid-row-end: 4;
+                        }
+                        2222 3333 4444
+                        2222 3333 4444
+                        111111111 5555
+                        111111111 6666
+                        7777 8888 9999
+                    注：还可以直接写名字哦【若指定了的话】
+                        gird-column-start: header-start;
+                        grid-column-end: header-end;
+                        还可以
+                        grid-column-start: span 2; 【跨越】鸡肋
+                        // grid-column-end: span 2; 同效果
+
+                        111111111 2222
+                        111111111 2222
+                        3333 4444 5555
+                        3333 4444 5555
+                        6666 7777 8888
+                        6666 7777 8888
+
+                    注：项目重叠【z-index】调整层级
+
+                * grid-column // gird-column-start/end
+                * grid-row   //  grid-rows-start/end
+                    如：grid-column； 1 / 2
+                        同样【也可以使用span】
+                        grid-column-start: 1;
+                        grid-column-end: 2;
+
+                * grid-area 指定项目放在哪个区域
+                    【grid-template-areas还记得吗，就是他划分的区域】
+                    注：grid-area: 1 / 1 / 3 / 3
+                       看样子应该知道了吧!!
+
+                * justify-self
+                * align-self  // 看样子就知道。内容排列方式【只作用于单个项目】
+                * place-self 简写以上两种
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

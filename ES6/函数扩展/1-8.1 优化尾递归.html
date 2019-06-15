@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>怎么改写尾递归——优化尾递归</title>
+</head>
+<body>
+<script>
+    // 就是确保最后一步是：只调用自身
+    function factorial(n, total) {
+      if (n === 1) return total;
+      return factorial(n - 1, n * total);
+    }
+
+    factorial(5, 1) // 120
+    /**
+     * 功能：尾递归优化
+     * 方法：把所有用到的【内部变量】改写尾【函数参数】
+     *      内部变量：total
+     *      函数参数：total
+     * 以下都是解决上述不够直观
+     * */
+
+    //1. ES6 说上面的还不直观，要像下面：通过一个正常形式的阶乘函数factorial，调用尾递归函数tailFactorial
+    function tailFactorial(n, total) {
+      if (n === 1) return total;
+      return tailFactorial(n - 1, n * total);
+    }
+    function factorial(n) {
+      return tailFactorial(n, 1);
+    }
+
+    factorial(5) // 120
+    /* 还提出一个概念： 柯里化*/
+    // 柯里化：将 多参数的函数 转换成 单参数的形式
+    // 代码大致意思：尾递归函数tailFactorial变为只接受一个参数的factorial
+    function currying(fn, n) {
+      return function (m) {
+        return fn.call(this, m, n);
+      };
+    }
+
+    function tailFactorial(n, total) {
+      if (n === 1) return total;
+      return tailFactorial(n - 1, n * total);
+    }
+
+    const factorial = currying(tailFactorial, 1);
+
+    factorial(5) // 120
+
+    // 2. ES6 的函数默认值方法：参数total有默认值1，所以调用时不用提供这个值
+    function factorial(n, total = 1) {
+      if (n === 1) return total;
+      return factorial(n - 1, n * total);
+    }
+
+    factorial(5) // 120
+
+    /**
+     * ES6 的尾调用优化只在 严格模式 下开启，正常模式是无效的，原因如下：
+     * 因为在正常模式下，函数内部有两个变量，可以跟踪函数的调用栈：
+     *     1. func.arguments：返回调用时函数的参数
+     *     2. func.caller：返回调用当前函数的那个函数
+     *     尾调用优化发生时，函数的调用栈会改写，因此上面【两个变量】就会失真。
+     *     严格模式禁用这两个变量，所以尾调用模式仅在严格模式下生效。
+     *
+    function restricted() {
+      'use strict';
+      restricted.caller;    // 报错
+      restricted.arguments; // 报错
+    }
+    restricted();
+    */
+</script>
+</body>
+</html>

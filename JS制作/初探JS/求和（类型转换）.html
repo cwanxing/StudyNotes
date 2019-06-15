@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+
+<script>//注意语句的格式，一句结束要加分号；
+window.onload=function()
+{
+	var oTxt1=document.getElementById('txt1');
+	var oTxt2=document.getElementById('txt2');
+	var oBtn=document.getElementById('btn1');
+	oBtn.onclick=function()
+	{
+		//alert(typeof oTxt1.value);
+		//alert(parseInt(oTxt1.value)+parseInt(oTxt2.value));//效果解释:"42"+"41"=4142
+		var n1=parseInt(oTxt1.value);
+		var n2=parseInt(oTxt2.value);
+		if (isNaN(n1))
+		{
+			alert('你输入的第一个数有误，求重新输入');
+		}
+		else if(isNaN(n2))
+		{
+			alert('你输入的第二数有误，亲重新输入');
+		}
+		alert(n1+n2);
+	};
+};
+//var a="12";
+//alert(parseInt(a)+1);//字符转换为数值
+//var a="12px";
+//alert(parstInt(a)+1);
+//运行规则是从左到右查询，遇到非数值的直接停止，不在查询，给出结果；
+
+//var a="adsf";
+//alert(parseInt(a));
+//弹出的NaN，解释为Not a number
+//12+NaN=NaN
+
+
+//var c=(parseInt('bac'));
+//var b=(parseInt('bac'));
+//alert(isNaN(c));
+
+//alert(c==b);
+//NaN和NaN不相等的
+</script>
+
+</head>
+
+
+<body>
+<input id="txt1" type="text" />
+<input id="txt2" type="text" />
+<input id="btn1" type="button" value="求和"/>
+</body>
+</html>

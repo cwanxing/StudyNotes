@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Objec.getOwnPropertyDescriptors 对象所有的描述属性</title>
+</head>
+<body>
+<script>
+    /**
+     * 方法：1. Object.getOwnPropertyDescriptors() ES6【一个参数，全部】
+     *      2. Object.getOwnPropertyDescriptor() ES5 【两个参数，查看某个属性】
+     * 参数：1. 该对象
+     *      2. object：包含属性的对象；propertyname：具体属性名称【要用引号】
+     * 功能：
+     *      1. 返回指定对象所有自身属性（非继承属性）的描述【对象】
+     *      2. 某个属性的具体描述
+     * 返回：1. 一个自有属性对应的属性描述符
+     *      2. 指定对象的所有自身属性的描述符，如果没有任何自身属性，则返回【空对象】
+     * */
+    // 1. Object.getOwnPropertyDescriptors()
+    const obj = {
+      foo: 123,
+      get bar() { return 'abc' }
+    };
+
+    Object.getOwnPropertyDescriptors(obj)
+    // { foo:
+    //    { value: 123,
+    //      writable: true,
+    //      enumerable: true,
+    //      configurable: true },
+    //   bar:
+    //    { get: [Function: get bar],
+    //      set: undefined,
+    //      enumerable: true,
+    //      configurable: true }
+    // }
+    // 部署：
+    function getOwnPropertyDescriptors(obj) {
+      const result = {};
+      for (let key of Reflect.ownKeys(obj)) {
+        result[key] = Object.getOwnPropertyDescriptor(obj, key);
+      }
+      return result;
+    }
+    // 2. Object.getOwnPropertyDescriptor()
+    var person = {
+      name: '张三',
+      age: 18
+    };
+
+    var desc = Object.getOwnPropertyDescriptor(person, 'name'); // person:目标对象；name:目标对象内属性名称
+    console.log(desc);  //结果如下
+    // {
+    //     configurable: true,
+    //     enumerable: true,
+    //     writable: true,
+    //     value: "张三"
+    // }
+
+
+    /* 引入的原因：主要解决assign 无法正确拷贝get 和 set 属性的问题：*/
+    // 1. 第一应用：
+    const source = {
+      set foo(value) { // source 下的 foo属性值是一个赋值函数，可assign 是无法拷贝赋值方法或取值方法的【只能是具体值】
+        console.log(value);
+      }
+    };
+
+    const target1 = {};
+    Object.assign(target1, source);
+
+    Object.getOwnPropertyDescriptor(target1, 'foo')
+    // { value: undefined, 正因为上述原因，所以value 的值为 undefined
+    //   writable: true,
+    //   enumerable: true,
+    //   configurable: true } ==> 那如何实现拷贝赋值方法或取值方法【其实就是函数】
+    const source = {
+      set foo(value) {
+        console.log(value);
+      }
+    }; //==> 通过 defineProperties 和 getOwnPropertyDescriptors
+    /*
+    * 方法：Object.defineProperty()
+    * 功能：直接在一个对象上定义一个新属性 / 修改一个对象的现有属性， 并返回这个对象
+    * 参数：
+    *       1. obj：被操作的目标对象
+    *       2. prop：目标对象需要定义或修改的属性的名称
+    *       3. descriptor: 将被定义或修改的属性的描述符
+    *
+            var obj = new Object();
+            Object.defineProperty(obj, 'name', {
+              configurable: false,
+              writable: true,
+              enumerable: true,
+              value: '张三'
+            }) //console.log(obj.name) => 张三
+    */
+    /*
+    * 方法：Object.defineProperties()
+    * 功能：直接在一个对象上定义一个或多个新的属性或修改现有属性，并返回该对象
+    * 参数：
+    *       1. obj: 将要被添加属性 或 修改属性的对象
+    *       2. props: 该对象的一个或多个键值对定义了将要为对象添加或修改的属性的具体配置
+    *
+    *        var obj = new Object();
+             Object.defineProperties(obj, {
+                 name: {
+                 value: '张三',
+                 configurable: false,
+                 writable: true,
+                 enumerable: true
+             },
+             age: {
+                 value: 18,
+                 configurable: true
+             }
+             }) console.log(obj.name, obj.age) => 张三, 18
+    *
+    * */
+    const target2 = {};
+    Object.defineProperties(target2, Object.getOwnPropertyDescriptors(source));
+    Object.getOwnPropertyDescriptor(target2, 'foo')
+    // { get: undefined,
+    //   set: [Function: set foo],
+    //   enumerable: true,
+    //   configurable: true }
+    /* 封装 */
+    const shallowMerge = (target, source) => Object.defineProperties(
+      target,
+      Object.getOwnPropertyDescriptors(source)
+    );
+
+    // 2. 第二个应用：配合Object.create()，将对象属性克隆到一个新对象【浅拷贝】
+    const clone = Object.create(Object.getPrototypeOf(obj),
+      Object.getOwnPropertyDescriptors(obj));
+    // 或者
+    const shallowClone = (obj) => Object.create(
+      Object.getPrototypeOf(obj),
+      Object.getOwnPropertyDescriptors(obj)
+    ); // ==> 克隆 obj
+    /* Object.getOwnPropertyDescriptors()方法可以实现一个对象继承另一个对象 */
+    // 以前写法：
+    const obj = {
+      __proto__: prot,
+      foo: 123,
+    };// => 去除 __proto__【无法手动部署该属性，只用浏览器自身部署】，也可用下面：
+    const obj = Object.create(prot);
+    obj.foo = 123;
+    // 或者
+    const obj = Object.assign(
+      Object.create(prot),
+      {
+        foo: 123,
+      }
+    );
+    /* 有了Object.getOwnPropertyDescriptors()，我们就有了另一种写法 */
+    const obj = Object.create(
+      prot,
+      Object.getOwnPropertyDescriptors({
+        foo: 123,
+      })
+    );
+
+    /* Object.getOwnPropertyDescriptors()也可以用来实现 Mixin（混入）模式 */
+    // 什么是Mixin 模式：参考后面吧
+    let mix = (object) => ({
+      with: (...mixins) => mixins.reduce(
+        (c, mixin) => Object.create(
+          c, Object.getOwnPropertyDescriptors(mixin)
+        ), object)
+    });
+
+    // multiple mixins example
+    let a = {a: 'a'};
+    let b = {b: 'b'};
+    let c = {c: 'c'};
+    let d = mix(c).with(a, b);
+
+    d.c // "c"
+    d.b // "b"
+    d.a // "a"
+</script>
+</body>
+</html>

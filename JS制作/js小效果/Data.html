@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>js制作日历</title>
+	<style>
+		body{padding: 0;margin: 0;background-color:rgb(70, 56, 56);}
+		p,h3{margin: 0}
+		.wrap{
+			width: 300px;
+			height: 600px;
+			margin: 80px auto;
+		}
+		.main{
+			height: 460px;
+			background-color: #FFE633;
+			display: flex;
+			justify-content: space-around;
+			flex-wrap: wrap;
+		}
+		.footer{
+			height: 140px;
+			background-color: #4c4c4c;
+		}
+		.main div{
+			width: 60px;
+			height: 60px;
+			background-color: #4C4C4C;
+			border-radius: 5px;
+			text-align: center;
+			margin: 10px;
+			cursor: pointer;
+			border: 2px solid transparent;
+			color: #FFFFFF;
+		}
+		/*outline: 2px solid red*/
+		.main div:hover{border: 2px solid #fff;}
+		.main div h3{margin:5px 0;}
+
+		.footer{
+			text-align: center;
+			line-height: 100px;
+			color: #fff;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<div class="main" id="main">
+			<div>
+				<h3>1</h3>
+				<p>Jan</p>
+			</div>
+			<div>
+				<h3>2</h3>
+				<p>Jan</p>
+			</div>
+			<div>
+				<h3>3</h3>
+				<p>Jan</p>
+			</div>
+			<div>
+				<h3>4</h3>
+				<p>Jan</p>
+			</div>
+			<div>
+				<h3>5</h3>
+				<p>Jan</p>
+			</div>
+			<div>
+				<h3>6</h3>
+				<p>Jan</p>
+			</div>
+			<div>
+				<h3>7</h3>
+				<p>Jan</p>
+			</div>
+			<div>
+				<h3>8</h3>
+				<p>Jan</p>
+			</div>
+			<div>
+				<h3>9</h3>
+				<p>Jan</p>
+			</div>
+			<div>
+				<h3>10</h3>
+				<p>Jan</p>
+			</div>
+			<div>
+				<h3>11</h3>
+				<p>Jan</p>
+			</div>
+			<div>
+				<h3>12</h3>
+				<p>Jan</p>
+			</div>
+		</div>
+		<div class="footer">
+			<h3 id="mom">10月</h3>
+			<p id="content">地方撒反对撒法阿道夫</p>
+		</div>
+	</div>
+	<script>
+		let oMain = document.querySelectorAll('#main div');
+		let oMom = document.querySelector('#mom');
+		let oContent = document.querySelector('content');
+		/*
+			生成英文简写：
+			var date = new Date("1/13");【没有年份】
+			date.toDateString();  Sat Jan 2001【不同电脑不一样】
+			date.toDateString().split(" ")[1]; Jan
+		*/
+		//数据：
+		data={
+
+		}
+
+		for(let i = 0, len = oMain.length; i < len; i++){
+			oMain[i].addEventListener('mouseover', function(){
+				oMom.innerHTML = i+1 + '月';
+			})
+		}
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>参数默认值的位置</title>
+</head>
+<body>
+<script type='text/javascript'>
+    /* 定义函数参数默认值的时候，改参数应该放在最后
+    *  好处：
+    *       统一，一眼就能知道哪些参数可以省略
+    *  不放在最后的坏处：
+    *       有默认值的参数都不是尾参数。这时，无法只省略该参数，而不省略它后面的参数，除非显式输入undefined
+    * */
+    // 例一
+    function f(x = 1, y) { // 设默认值的参数放在第一个位置
+      return [x, y];
+    }
+    /* 由于编辑器报错，只能注释：
+        f() // [1, undefined]
+        f(2) // [2, undefined])
+        f(, 1) // 报错  就像这样，省略有默认参数的，但你不能连没有设默认值的参数一起省略吧
+                       可当你写了，就报错了。 除非手动输入 undefined
+        f(undefined, 1) // [1, 1]  这就是手动输入 undefined
+    */
+
+    // 例二
+    function f(x, y = 5, z) { // 设置默认值的参数放在第二个位置
+      return [x, y, z];
+    }
+    /* 一样
+        f() // [undefined, 5, undefined]
+        f(1) // [1, 5, undefined]
+        f(1, ,2) // 报错 同上理
+        f(1, undefined, 2) // [1, 5, 2]
+    */
+
+    // 这个例子像是undefined 和 null 的比较
+    function foo(x = 5, y = 6) {
+    console.log(x, y);
+    }
+
+    foo(undefined, null)// 5 null
+    /* undefined 触发了默认值； 而null则替换了默认值*/
+</script>
+</body>
+</html>

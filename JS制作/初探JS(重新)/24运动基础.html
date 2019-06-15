@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+#div1{width:250px;height:180px;background:red; position:absolute;top:150px;left:200px;margin:50px;}
+</style>
+<script>
+window.onload=function()
+{
+	var oDiv=document.getElementById('div1');
+	var timer=null;
+	//alert(oDiv.offsetTop);//oDiv对象离窗口上边的距离
+	//alert(oDiv.offsetLeft);//oDiv对象离窗口左边的距离
+	//alert(oDiv.offsetHeight);//oDiv对象离窗口的距离
+	//alert(oDiv.offsetWidth);//oDiv对象离窗口上边的距离
+	//alert(oDiv.offsetParent);
+	function setLeft()
+	{
+		oDiv.style.left=oDiv.offsetLeft+10+'px';
+		//对象离左的距离加10，再返回给它
+	}
+	
+	timer=setInterval(
+	setLeft,1000
+	);
+}
+</script>
+</head>
+
+<body>
+<div id="div1" onclick="alert(this.offsetTop);"></div>
+</body>
+</html>

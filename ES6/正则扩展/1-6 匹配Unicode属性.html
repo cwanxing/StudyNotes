@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>匹配Unicode属性</title>
+</head>
+<body>
+<script>
+    // Unicode 貌似就是编码表
+    /* ES2018 引入了一种新的类的写法 \p{...} 和 \P{...} ，允许正则表达式匹配符合 Unicode 某种属性的所有字符
+
+        const regexGreekSymbol = /\p{Script=Greek}/u;
+        regexGreekSymbol.test('π') // true \p{Script=Greek}指定匹配一个希腊文字母，所以匹配π成功
+    */
+    // Unicode 属性类要指定【属性名】和【属性值】
+    /*  \p{ UnicodePropertyName = UnicodePropertyValue } */
+
+    // 不过对于某些属性，可以只写属性名，或者只写属性值
+    /*
+        \p{UnicodePropertyName}
+        \p{UnicodePropertyValue}
+    */
+
+
+    // 注意：这两个只对 Unicode 有效：所以使用的时候一定要加上 u 修饰符，不加会报错
+
+    // 属性类指定匹配所有十进制字符，可以看到【各种字型】的十进制字符都会匹配成功:
+    /*
+       const regex = /^\p{Decimal_Number}+$/u;
+       regex.test('𝟏𝟐𝟑𝟜𝟝𝟞𝟩𝟪𝟫𝟬𝟭𝟮𝟯𝟺𝟻𝟼') // true
+    */
+
+    // 匹配所有数字
+    /*
+        const regex = /^\p{Number}+$/u;
+        regex.test('²³¹¼½¾') // true
+        regex.test('㉛㉜㉝') // true
+        regex.test('ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫ') // true
+    */
+
+    // 下面为的例子：
+    // 匹配所有空格
+    /* \p{White_Space} */
+
+    // 匹配各种文字的所有字母，等同于 Unicode 版的 \w
+    /* [\p{Alphabetic}\p{Mark}\p{Decimal_Number}\p{Connector_Punctuation}\p{Join_Control}] */
+
+    // 匹配各种文字的所有非字母的字符，等同于 Unicode 版的 \W
+    /* [^\p{Alphabetic}\p{Mark}\p{Decimal_Number}\p{Connector_Punctuation}\p{Join_Control}] */
+
+    // 匹配 Emoji
+    /* /\p{Emoji_Modifier_Base}\p{Emoji_Modifier}?|\p{Emoji_Presentation}|\p{Emoji}\uFE0F/gu */
+
+    // 匹配所有的箭头字符
+    /*
+        const regexArrows = /^\p{Block=Arrows}+$/u;
+        regexArrows.test('←↑→↓↔↕↖↗↘↙⇏⇐⇑⇒⇓⇔⇕⇖⇗⇘⇙⇧⇩') // true
+    */
+
+    // \P{…}是\p{…}的反向匹配，即匹配不满足条件的字符
+</script>
+</body>
+</html>

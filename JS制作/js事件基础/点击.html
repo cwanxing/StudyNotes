@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script type="text/javascript">
+	window.onload=function(){
+		//document 就是整个网页从 <!DOCTYPE html>到尾部
+		document.onclick=function(ev){
+		//document.body.onclick=function(){//body里要有元素
+			//IE
+			//alert(event.clientX+','+event.clientY);
+			//获取鼠标的纵横坐标
+
+			//FF 需要function(ev)一个参数
+			//alert(ev.clientX+','+ev.clientY)
+			//获取鼠标的纵横坐标
+
+			var oEvent=ev||event;//兼容写法，取为true的值 
+			alert('X: '+oEvent.clientX+','+'Y: '+oEvent.clientY);
+		}
+	}
+	</script>
+</head>
+<!-- <body style="border: 1px solid rgb(255, 0, 0);"> -->
+<body style="height: 2000px;">
+
+</body>
+</html>

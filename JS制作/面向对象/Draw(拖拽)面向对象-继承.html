@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>面向对象(拖拽例子)--继承怎么用</title>
+    <style type="text/css">
+        #div1 {
+            width: 200px;
+            height: 200px;
+            background: mediumseagreen;
+            position: absolute;
+        }
+
+        #div2 {
+            width: 200px;
+            height: 200px;
+            background: mediumorchid;
+            position: absolute;
+        }
+    </style>
+    <script src="Drag.js"></script>
+    <script src="LimitDrag.js"></script>
+    <script type="text/javascript">
+        /*
+            把一个面向过程的程序 改写为 一个面向对象的编程的步骤：
+            1. 去掉函数间的嵌套
+            2. 把onload 变为构造函数，然后改乱七八糟东西
+            以下是原面向过程编程代码
+            window.onload = function(){
+                var oDiv = document.getElementById('div1');
+                var disX = 0;
+                var disY = 0;
+                oDiv.onmousedown = function(ev){
+                    var oEvent = ev || event;
+                    disX = oEvent.clientX - oDiv.offsetLeft;
+                    disY = oEvent.clientY - oDiv.offsetTop;
+                    oDiv.onmousemove = function(ev){
+                        var oEvent = ev || event;
+                        //开始移动div是，div离上/左边的距离变化，计算的是这个
+                        var l = oEvent.clientX - disX;
+                        var t = oEvent.clientY - disY;
+                        oDiv.style.left = l + 'px';
+                        oDiv.style.top = t + 'px';
+                        document.title = (l+':'+t);
+                        oDiv.onmouseup = function(){
+                            oDiv.onmousemove = null;
+                            oDiv.onmouseup = null;
+                        };
+                    };
+                };
+            };
+        */
+        //1.去嵌套：
+        
+        window.onload = function(){
+            new Drag('div1');
+            new LimitDrag('div2');
+        }
+        
+    </script>
+</head>
+
+<body>
+    <div id="div1">普通拖拽</div>
+    <div id="div2">限制范围</div>
+    我是内容，看不见我，看不见我，<br>
+    我是内容，看不见我，看不见我，
+</body>
+
+</html>

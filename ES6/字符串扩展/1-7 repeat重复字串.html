@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>repeat</title>
+</head>
+<body>
+<script type='text/javascript'>
+    /* repeat方法返回一个新字符串，表示将原字符串重复n次 */
+    'x'.repeat(3); // "xxx"
+    'hello'.repeat(2); // "hellohello"
+    'na'.repeat(0); // ""
+
+    /// 以下为几种参数的特殊情况
+    // 1. 正小数：2.2/1.6 无条件舍去小数取整
+    'a'.repeat(2.2) // "aa"
+    // 2. 负 0
+    'a'.repeat(0) // ""
+    // 3. NaN
+    'a'.repeat(NaN) // ""
+    // 4. Infinity 和 负数
+    'a'.repeat(Infinity) // 报错 RangeError
+    // 5. 字符串：‘2’ 和 ‘aaa’
+    'a'.repeat('2') // "aa"
+    'a'.repeat('aaa') // ""
+    // 6. (0, 1) 和 (-1, 0)
+    'a'.repeat(0.3) // ""
+    'na'.repeat(-0.9) // ""
+</script>
+</body>
+</html>

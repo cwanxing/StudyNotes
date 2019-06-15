@@ -1,0 +1,22 @@
+npm install X:
+    1. 把 X 包安装到 node_modules目录
+    2. 不会修改 package.json
+    3. 之后 npm install命令时，不会自动安装 X 包
+----------------------------------------------
+npm install X –save:
+    1. 会把 X 包安装到 node_modules 目录中
+    2. 会在 package.json 的 dependencies 属性下添加 X
+    3. 之后运行 npm install 命令时，会自动安装 X 到 node_modules 目录中
+    4. 之后运行 npm install –production 或者注明 NODE_ENV 变量值为 production 时，会自动安装 msbuild 到 node_modules 目录中
+----------------------------------------------
+npm install X –save-dev:
+    1. 会把 X 包安装到 node_modules 目录中
+    2. 会在 package.json 的 devDependencies 属性下添加 X
+    3. 之后运行 npm install 命令时，会自动安装 X 到 node_modules 目录中
+    4. 之后运行 npm install –production 或者注明 NODE_ENV 变量值为 production 时，不会自动安装 X 到 node_modules 目录中
+
+****【运行时】需要用到的包使用 –save，否则使用 –save-dev ****
+
+* devDependencies : 开发环境中使用(编码)
+有个测试环境，模拟真实环境(线上)
+* dependencies : 线上环境使用，已经投入使用(收集用户反馈，再优化)

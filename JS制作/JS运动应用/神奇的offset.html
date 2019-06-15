@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>qwer</title>
+<style>
+#div1{
+	width:200px;
+	height:100px;
+	background:red;
+	border:100px solid black;
+}
+</style>
+<script>
+window.onload=function()
+{
+	var oBtn=document.getElementById('btn');
+	oBtn.onclick=function(){
+		setInterval(  timer);
+	}
+}
+/*获取非行间样式*/
+function getStyle(obj,name){
+	if(obj.currentStyle)
+	{
+		return obj.currentStyle[name];
+	}
+	else
+	{
+		return getComputedStyle(obj,false)[name];
+	}
+}
+var timer=null;
+clearInterval(timer);
+timer=setInterval(function(){
+		var oDiv=document.getElementById('div1');
+		
+		oDiv.style.width=parseInt(getStyle(oDiv,'width'))-1+'px';
+		
+	},30);
+
+	//document.title=oDiv.style.width;
+/*
+function startMove(){
+	
+	timer=setInterval(function(){
+		var oDiv=document.getElementById('div1');
+		oDiv.style.width=oDiv.offsetWidth-1+'px';
+		document.title=oDiv.style.width+','+oDiv.offsetWidth;
+		//width它不算border的，而offsetWidth把border算进去了
+	},1000)
+}
+*/
+
+
+</script>
+</head>
+
+<body>
+<input type="button" name="" value="开启">
+<div id="div1" ></div><!-- 样式加在行间不好，可以通过获取非行间样式来实现 -->
+</body>
+</html>

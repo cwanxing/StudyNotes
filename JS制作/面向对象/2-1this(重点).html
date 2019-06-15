@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>this的深刻理解</title>
+    <script>
+        var arr = [1,2,3,4];
+
+        arr.a = 12;
+
+        arr.show = function(){
+            alert(this.a);// ----> 12
+            /*
+             this: 当前发生事件的对象
+                更完整的表示：当前的方法属性谁，它就表示谁
+            系统会自动调用
+
+            更好的理解(例子):
+            oDiv.onclick = function(){
+                alert(this);
+            }
+            */
+        }
+        arr.show();
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

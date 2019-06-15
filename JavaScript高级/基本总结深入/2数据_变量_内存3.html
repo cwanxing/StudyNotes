@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2数据_变量_内存3</title>
+</head>
+<body>
+关于引用变量的赋值问题
+    * 多个引用变量指向同一个对象，通过一个变量修改对象内部数据，其他所有变量看到的是修改之后的数据
+    * 2个引用变量指向同一个对象，让其中一个引用变量指向另一个对象，另一个引用对象依然指向前一个变量
+<script>
+    //多个引用变量指向同一个对象
+    var obj1 = {name : 'cwx'};
+    var obj2 = obj1;
+
+    //通过一个变量修改对象内部数据，另一个看到的是修改之后的数据
+    obj2.age = 12;
+    console.log(obj1.age);// 12
+
+    function fn(obj) {
+        obj.name = 'Bob';//给原有对象<修改>值
+    }
+    fn(obj1);//此时传入的obj1={name:'cwx'; age:12}; 函数执行后修改了obj1的内容
+    console.log(obj2.name); // Bob 此时不管弹出obj1/obj2的name都是Bob
+    //变量赋值，只是这个变量的的内容是一个地址值(就他么是对象的意思了)
+
+    <!------------------ -------------------------------------------------------------->
+
+    //2个引用变量指向同一个对象，让其中一个引用变量指向另一个对象，另一个引用对象依然指向前一个变量
+    var a = {age: 12};
+    var b = a;
+    a = {name: 'BOB', age: 14};//这个操作的还是a对象，只不过是添加了一个name：'BOB'属性
+    b = {age: 20};//而这个则是另一个对象了，和a毫无关系
+    console.log(b.age, a.name, a.age);//20 BOB 14
+
+    var abc = null;
+    function fn2(obj) {
+        obj = {age: 50};//给原有对象<赋值>，此时的obj就他么神奇的变为了一个独立的对象，然后就他么没有了用了
+        abc = obj;
+        return abc;
+    }
+    fn2(a);//此时的a对象内容已变{name:'BOB', age:14}, 此函数表示obj = {age: 50}
+    //函数执行完，函数内部的局部变量就会自动释放，此时obj就是一个垃圾对象，就是已经取不到
+    console.log(a.age);// 14
+    console.log(abc.age);//50; 这他么变了
+
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+//function createFunction() {
+//    var result = new Array();
+//    for (var i = 0; i < 10; i++) {
+//        result[i] = function () {
+//            return i;
+//        }
+//    }
+//    return result;
+//}
+//createFunction()
+
+var i=1;
+function f(){
+    i++;
+    console.log("-------------  :  "+i)
+    return k;
+    function k() {
+        return "I love you!"
+    }
+}
+f();
+console.log("111111111111")
+f()()
+alert(f()())
+
+</script>
+
+</body>
+</html>

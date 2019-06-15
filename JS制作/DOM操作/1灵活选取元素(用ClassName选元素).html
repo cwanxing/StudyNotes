@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<script>
+//通过class获取元素
+function getByClass(aParent,sClass)
+{
+	var aResult=[];
+	var aEle=aParent.getElementsByTagName('*');
+	
+	for(var i=0;i<aEle.length;i++)
+	{
+		if(aEle[i].className==sClass)
+		{
+			aResult.push(aEle[i]);//向aResult数组中存入数据
+			//aEle[i].style.background='red';
+			//return aEle[i];Class会经常变
+		}
+		
+		////return aEle
+	}
+	return aResult;
+	
+}
+
+/*
+通过下面传的参数
+上面的函数运行为：
+function getByClass(oUl,box){
+	var aResult=[];
+	var aEle=oUl.getElementsByTagName('*');
+
+	for(var i=0;i<aEle.length;i++)
+	{
+		if(aEle.className=='box')
+		{
+			aResult.push(aEle[i]);
+		}
+		return aResult;
+	}
+}
+*/
+window.onload=function()
+{
+	var oUl=document.getElementById('ul1');
+	var aBox=getByClass(oUl,'box');
+	
+	for(var i=0;i<aBox.length;i++)
+	{
+		aBox[i].style.background='red';
+	}
+
+	/*通过document获取元素操作元素
+	var aLi=document.getElementsByTagName('li');
+	for(var i=0;i<aLi.length;i++)
+	{
+		if(aLi[i].className=='box')
+		{
+			aLi[i].style.background='red';
+		}
+	}
+	*/
+	
+}
+</script>
+</head>
+
+<body>
+<ul id="ul1">
+	<li class="box"></li>
+    <li></li>
+    <li class="box"></li>
+    <li></li>
+    <li class="box"></li>
+</ul>
+</body>
+</html>

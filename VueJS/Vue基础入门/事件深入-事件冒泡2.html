@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>智能社——http://www.zhinengshe.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <style>
+
+    </style>
+    <script src="vue.js"></script>
+    <script>
+        window.onload=function(){
+            new Vue({
+                el:'#box',
+                data:{
+
+                },
+                methods:{
+                    show:function(ev){//使用click.stop就不需要参数(其实写着也没事，不过最好删了吧)
+                    	//ev.cancelBubble=true;传参阻止的冒泡事件
+                        alert(1);
+                    },
+                    show2:function(){
+                        alert(2);
+                    }
+                }
+            });
+        };
+    </script>
+</head>
+<body>
+    <div id="box">
+        <div @click="show2()">
+            <!--<input type="button" value="按钮" @click="show()">往show()方法中传入$event, 然后在此方法中写上ev.cancelBubble=true-->
+            <input type="button" value="按钮" @click.stop="show()"><!--click.stop="方法" 就能阻止冒泡了-->
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

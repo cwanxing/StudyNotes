@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2数据_变量_内存2</title>
+</head>
+<body>
+问题：var a = xxx；a内存中到底保存了什么
+    xxx是基本数据类型，存储的就是xxx数据
+    xxx是对象，保存的就是xxx对象的地址值
+    xxx是变量，保存的是xxx的内存内容(基本数据，也可能是地址值)
+<script>
+    var a = 2;//xxx是基本数据类型
+    a = function () {
+
+    };
+    //xxx是变量，保存的是xxx的内存内容(1.基本数据，2.地址值(对象))
+    var b = 'abc';
+    var c = b;
+    var d = {};
+    var e = d;
+
+</script>
+</body>
+</html>

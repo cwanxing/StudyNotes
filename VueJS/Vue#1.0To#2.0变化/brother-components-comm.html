@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>兄弟组件相互通信</title>
+	<script src="vue2.0.js"></script>
+</head>
+<body>
+	<div id="box">
+		{{giveData.boss}}
+		<br>
+		<input type="text" name="" v-model="giveData.boss">
+		
+		<br>
+		<br>
+		<my-aaa></my-aaa>
+		<br>
+		<my-bbb></my-bbb>
+		<br>
+		<my-ccc :msg="giveData"></my-ccc>
+	</div>
+
+	<template id="aaa">
+		<div>
+			<span>我是a组件</span><br>
+			我的数据为：{{childAaa}}
+			<input type="button" name="btn" value="发送组件数据" @click="send">
+		</div>
+	</template>
+
+	<template id="bbb">
+		<div>
+			<span>我是b组件</span><br>	
+			我的数据为：{{childBbb}}
+			<input type="button" name="btn2" value="发送组件数据" @click="send">
+		</div>	
+	</template>
+
+	<template id="ccc">
+		<div>
+			<span>我是c组件</span>
+			这是大boss的数据：{{msg.boss}}
+			<br>
+			我是兄弟组件的数据：{{c_data}}
+			<br>
+			<input type="button" name="" value="接收" @click="get">
+		</div>
+	</template>
+
+	<script>
+		let Event = new Vue();
+
+		new Vue({
+			data:{
+				giveData:{
+					boss:"我是大BOSS数据"
+				}
+			},
+			components:{
+				'my-aaa':{
+					data () {
+						return {
+							childAaa:'我是子组件AAA的数据'
+						}
+					},
+					methods:{
+						send(){
+							Event.$emit('brother-data', this.childAaa)
+						}
+					},
+					template:'#aaa'
+				},
+				'my-bbb':{
+					data () {
+						return {
+							childBbb:'我是子组件BBB的数据'
+						}
+					},
+					methods:{
+						send(){
+							Event.$emit('brother-data', this.childBbb)
+						}
+					},
+					template:'#bbb'
+				},
+				'my-ccc':{
+					data () {
+						return {
+							childCcc:'我是子组件CCC的数据',
+							c_data:'',
+							boss_data:''
+						}
+					},
+					props:['msg'],
+					// mounted () {
+					// 	this.boss_data = this.boss
+					// },
+					methods:{
+						get(){
+							console.log(this.boss_data)
+							this.boss_data = this.msg.boss
+							//this.msg.boss = '改变';
+							console.log()
+						}
+					},
+					template:'#ccc',
+					mounted(){
+						let _this = this;
+						Event.$on('brother-data', function(data){
+							this.c_data = data;
+						}.bind(this))
+					}
+				}
+			}
+		}).$mount('#box')
+
+	</script>
+</body>
+</html>

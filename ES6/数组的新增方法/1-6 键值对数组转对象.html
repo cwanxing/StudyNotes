@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Object.fromEntries 键值对数组转对象</title>
+</head>
+<body>
+<script>
+    /**
+     * 方法：Object.fromEntries()
+     * 关系：和Object.entries() 刚好相反
+     * 功能：将一个【键值对数组】 转 【对象】
+     * 参数：键值对数组
+     *      Object.fromEntries([
+                ['foo', 'bar'],
+                ['baz', 42]
+            ]) // { foo: "bar", baz: 42 }
+     *
+     * */
+    // Object.fromEntries()：主要目的是将键值对的数据结构还原为对象【适合将Map结构转为对象】
+    // 例一
+    const entries = new Map([
+        ['foo', 'bar'],
+        ['baz', 42]
+      ]);
+
+    Object.fromEntries(entries) // { foo: "bar", baz: 42 }
+
+    // 例二
+    const map = new Map().set('foo', true).set('bar', false);
+    Object.fromEntries(map) // { foo: true, bar: false }
+
+    // 第二应用：配合URLSearchParams对象，将查询字符串转为对象【感觉挺重要的，涉及到ajax】
+    Object.fromEntries(new URLSearchParams('foo=bar&baz=qux'))// { foo: "bar", baz: "qux" }
+
+    /**
+     * 方法：Object.entries()
+     * 功能：可以把一个【对象的键值】以【数组】的形式遍历出来，结果和 for...in 一致，但不会遍历原型属性
+     * 关系：和Object.fromEntries() 相反
+     * 参数：貌似什么都好传，来看看例子
+     *
+     * */
+    // 1. 对象
+    const obj = { foo: 'bar', baz: 'abc' };
+    console.log(Object.entries(obj));  // [['foo', 'bar'], ['baz', 'abc']]
+
+    // 2. 数组
+    const arr = [1, 2, 3]; // 自动给你把下标打印出来
+    console.log(Object.entries(arr));  // [['0', 1], ['1', '2'], ['2', '3']]
+
+    // 3. 数组（数组中包含对象）
+    const arr1 = [{ a: 1 }, 2, 3]; // 第一个位置：是个对象；第二个位置：2；第三个位置：3
+    console.log(Object.entries(arr1));  // [['0', { a: 1 }], ['1', '2'], ['2', '3']]
+
+    // 4.  数组（数组中的值全部为对象）
+    const arr2 = [{ a: 1 }, { b: 2 }, { c: 3 }];
+    console.log(Object.entries(arr2));  // [['0', { a: 1 }], ['1', { b: 2 }], ['2', { c: 3 }]]
+
+    // 5. 字符串
+    const str = '123';
+    console.log(Object.entries(str));  // [['0', '1'], ['1', '2'], ['2', '3']]
+
+    // 6. 数字，浮点数
+    const num = 123;
+    console.log(Object.entries(num));  // []
+
+    const float1 = 12.3;
+    console.log(Object.entries(float1));  // []
+
+    // 应用：将Object 转 Map
+    const obj2 = { foo: 'bar', baz: 'abc' };
+    console.log(Object.entries(obj2));  // [['foo', 'bar'], ['baz', 'abc']]
+    const map = new Map(Object.entries(obj2));
+    console.log(map); // Map {'foo' => 'bar', 'baz' => 'abc'}
+</script>
+</body>
+</html>

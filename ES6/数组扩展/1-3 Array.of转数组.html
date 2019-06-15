@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>一组值转数组</title>
+</head>
+<body>
+<script>
+    /**
+     * 方法：Array.of();
+     * 作用：将一组值 转为 数组
+     * 目的：弥补数组构造函数Array 的不足
+     * 原因：因为参数的不同，会导致Array 的行为有差异
+     * 好处：Array.of基本上可以用来替代Array()或new Array()，
+     *      并且不存在由于参数不同而导致的重载
+     * 返回值：Array.of 总是返回参数值组成的数组。如果没有参数，就返回一个空数组
+     * */
+    Array.of(3, 11, 8); // [3,11,8]
+    Array.of(3); // [3]
+    Array.of(3).length; // 1
+
+    // 有点糊里糊涂的
+    Array() // []
+    Array(3) // [, , ,] 是指定数组的长度
+    Array(3, 11, 8) // [3, 11, 8]
+
+    // Array.of 很明了
+    Array.of() // []
+    Array.of(undefined) // [undefined]
+    Array.of(1) // [1]
+    Array.of(1, 2) // [1, 2]
+
+    // 不支持这个方法的话，要怎么写：
+    function ArrayOf(){
+      return [].slice.call(arguments);
+    }
+</script>
+</body>
+</html>

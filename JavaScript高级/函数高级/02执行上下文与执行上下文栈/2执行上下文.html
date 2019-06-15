@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2执行上下文</title>
+</head>
+<body>
+1. 代码分类(位置)
+    * 全局代码
+    * 函数(局部)代码
+20. 全局执行上下文
+    * 在执行全局代码前将window确定为全局执行上下文
+    * 对全局数据进行预处理(所以才会有变量提升)
+        * var定义的全局变量==>undefined，添加为window的属性
+        * function声明的全局函数==>赋值(fun)，添加为window的方法
+        * this==>赋值(window)
+    * 开始执行全局代码
+3. 函数执行上下文
+    * 在调用函数，准备执行函数体之前，创建对应的函数执行上下文对象(虚拟，存在于内存栈中)
+    * 对全局数据进行预处理(所以才会有函数提升)
+        * 形参变量==>赋值(实参)==>添加为执行上下文的属性
+        * arguments==>赋值(实参列表)，添加为执行上下文的属性
+        * var定义的局部变量==>undefined，添加执行上下文的属性
+        * function声明的函数==>赋值(fun)，添加执行上下文的方法
+        * this==>赋值(调用函数对象)
+    * 开始执行函数代码
+
+
+注：函数声明如果发生冲突就会覆盖变量声明(如：变量名和函数名相等时)
+
+<script type='text/javascript'>
+
+    console.log(x);//是函数名为x的函数体
+    console.log(y);//undefined
+
+    console.log(o);//undefined
+    console.log(q);//undefined
+
+    console.log(h);//undefined
+
+    console.log(k);//undefined
+    //var x  = 1;
+    var y = 2;
+    //判断语句和for语句无法创建作用域
+    for(var i = 0; i < 3; i++){
+        var h = 9;
+    }
+    if(true){
+        var o = 1;
+    }else {
+        var q = 9;
+    }
+    //函数声明如果发生冲突就会覆盖变量声明(如：变量名和函数名相等时)
+    function x() {
+        
+    }
+
+    //全局执行上下文，window
+    console.log(a1, window.a1);//同等效果
+    window.a2();
+    console.log(this);
+
+    //浏览器
+    var a1 = 3;//已经加载到window全局对象中去了(预处理)
+    var b1 = 2;//
+    function a2() {
+        var b = 3;//
+        console.log('a2()');
+    }
+    console.log('----------------------');
+
+    //函数执行上下文
+    function fn(num) {
+        console.log(a1);// 3，已经全局定义
+        console.log(b);// undefined
+        c();//c()
+        console.log(this);//window,调用函数的对象
+        console.log(arguments);//伪数组 1, 2
+
+        var b = 10;
+        function c() {
+            console.log('c()');
+        }
+    }
+    fn(1, 2)//window.fn(1, 2);
+</script>
+</body>
+</html>

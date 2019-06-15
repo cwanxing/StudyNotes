@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+div{
+	width:100px;
+	height:50px;
+	background:red;
+	margin:10px;
+	border:10px solid black;
+}
+</style>
+
+<script type="text/javascript">
+//巧妙的思维：给物体一个定时器
+window.onload=function(){
+	var oDiv=document.getElementsByTagName('div');//这有多个div,所以用到for
+
+	for(var i=0;i<oDiv.length;i++)
+	{
+		//var timer[i]=null;
+		oDiv[i].timer=null;//给当前物体(div)加定时器
+		//当我们没有为每个物体加定时器的时候，鼠标移动的快一点，就会出现:宽度还没等于目标值就被停止了
+		oDiv[i].onmouseover=function()
+		{//传参数了
+			startMove(this,400);
+		}
+		oDiv[i].onmouseout=function()
+		{
+			startMove(this,100);
+		}
+	}
+}
+// 运动框架
+//上边已经定义var timer=null;//初始
+
+function startMove(obj,iTarget){
+	//obj代表设置那个物体运动(因为这是多物体运动)
+	clearInterval(obj.timer);//先关掉//现在关的是当前物体的定时器
+
+	obj.timer=setInterval(function(){//开的也是当前物体的定时器
+		var speed=(iTarget-obj.offsetWidth)/6;
+		speed=speed>0?Math.ceil(speed):Math.floor(speed);//取整
+		if(obj.offsetWidth==iTarget)
+		{
+			clearInterval(obj.timer);//现在关的是当前物体的定时器，各个物体的计时器已经分离了
+			//
+		}
+		else
+		{
+			obj.style.width=obj.offsetWidth+speed+'px';
+		}
+	},30);
+
+}
+/*
+定时器框架大致模板(具体还是看案例)
+
+val 定时器名=null;
+function 函数名(参数1,参数2..){
+	clearInterval(定时器名);先关掉以前的定时器
+
+开定时器
+	定时器名=setInterval(function(){
+		speed(计算速度，有时候速度是不一定的)
+		1.匀速运动
+			if(对象离目标上下左右的距离 >或< 给的目标值(可以是变量哦))
+			{speed=数值(>负,<正) }else{ (speed=数值(>正,<负) )}
+		2.变速运动(缓冲运动)
+			var speed=(目标值-对象离页面上下左右的距离)/数值
+			重点:取整
+			目的:怕除出小数来,会导致物体在目标处来回弹
+			格式:speed=speed>0?Math.ceil(speed):Math.floor(speed);
+		if(对象离页面上下左右的距离==目标值)
+		{
+			clearInterval(定时器名);
+		}
+		else
+		{
+			物体.style.上下左右=物体.对象离目标上下左右的距离+speed+'px';
+		}
+	},时间间隔)
+}
+ */
+
+</script>
+</head>
+
+<body>
+<div></div>
+<div></div>
+<div></div>
+</body>
+</html>

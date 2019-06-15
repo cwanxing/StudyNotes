@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>关于函数length属性</title>
+</head>
+<body>
+<script>
+    /* 在函数设置了参数默认值后，函数的length：返回那些没有设置默认值参数的个数 */
+
+    /* 由于编辑器【用ES6的话来说：length失真了】
+         (function (a) {}).length // 1
+         (function (a = 5) {}).length // 0
+         (function (a, b, c = 5) {}).length // 2
+     */
+    // 这个和 rest参数一样
+    /* 编辑器
+        (function(...args) {}).length // 0
+    */
+
+    // 重点：如果设置了默认值的参数【不是尾参数】，那么length属性也【不再计入后面】的参数了
+    /* 编辑器
+        (function (a = 0, b, c) {}).length // 0
+        (function (a, b = 1, c) {}).length // 1
+    */
+    // length属性含义：
+    /*
+        该函数预期传入的参数个数。
+        某个参数指定默认值以后，预期传入的参数个数就不包括这个参数了【记住就好】
+        同理，后文的 rest 参数也不会计入length属性。
+    */
+</script>
+</body>
+</html>
